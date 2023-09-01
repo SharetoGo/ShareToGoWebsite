@@ -12,7 +12,7 @@ export default function FeaturesBlocks() {
           {/* 1st item */}
           <div className="relative flex flex-col items-center p-6 bg-white bg-opacity-20 rounded-3xl shadow-xl transition-transform transform hover:-translate-y-2 hover:scale-105">
             <Image src={Money} width={200} height={200} alt="App preview" />
-            <h4 className="text-3xl font-bold leading-snug tracking-tight mb-1">Ahora</h4>
+            <h4 className="text-3xl font-bold leading-snug tracking-tight mb-1">Ahorra</h4>
             <p className="text-gray-800 text-center font-bold mt-6 mb-6">Ahorra dinero y consigue premios irresistibles…</p>
             <p className="text-gray-600 text-center italic">"SharetoGo es la herramienta que necesitas para empezar a ahorrar."</p>
           </div>

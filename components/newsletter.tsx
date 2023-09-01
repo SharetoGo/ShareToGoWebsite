@@ -1,6 +1,6 @@
 export default function Newsletter() {
   return (
-    <section>
+    <section className="relative">
       <div className="max-w-6xl mt-60 sm:mt-60 mx-auto px-4 sm:px-6">
         <div className="pb-12 md:pb-20">
 
