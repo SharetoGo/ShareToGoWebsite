@@ -1,8 +1,8 @@
 export default function Newsletter() {
   return (
-    <section className="relative">
-      <div className="max-w-6xl mt-60 sm:mt-60 mx-auto px-4 sm:px-6">
-        <div className="pb-12 md:pb-20">
+    <section className="relative bg-green-100">
+      <div className="max-w-6xl pt-20 mx-auto px-4 sm:px-6 bg-green-100">
+        <div className="pb-12 md:pb-20 bg-green-100">
 
           {/* CTA box */}
           <div className="relative bg-green-900 rounded py-10 px-8 md:py-16 md:px-12 shadow-2xl overflow-hidden" data-aos="zoom-y-out">
@@ -33,7 +33,7 @@ export default function Newsletter() {
               </svg>
             </div>
 
-            <div className="relative flex flex-col lg:flex-row justify-between items-center">
+            <div className="relative flex flex-col lg:flex-row justify-between items-center ">
 
               {/* CTA content */}
               <div className="text-center lg:text-left lg:max-w-xl">

@@ -42,7 +42,7 @@ export default function MobileMenu() {
         onClick={() => setMobileNavOpen(!mobileNavOpen)}
       >
         <span className="sr-only">Menu</span>
-        <svg className="w-6 h-6 fill-current text-gray-900" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-4 h-4 fill-current text-gray-900" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <rect y="4" width="24" height="2" />
           <rect y="11" width="24" height="2" />
           <rect y="18" width="24" height="2" />
@@ -68,7 +68,7 @@ export default function MobileMenu() {
               <Link href="/" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Quiénes somos?</Link>
             </li>
             <li>
-              <Link href="/" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contacto</Link>
+              <Link href="/contact" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contacto</Link>
             </li>
             <li>
               <Link href="/" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 w-full my-2" onClick={() => setMobileNavOpen(false)}>
