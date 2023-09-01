@@ -12,14 +12,22 @@ export default function Policy() {
           <p className="text-3xl italic">Bienvenido a nuestra página de Política de Privacidad.</p>
           <p className="text-xl mt-4">A continuación encontrará enlaces a nuestros documentos de privacidad y condiciones de uso en formato PDF.</p>
         </div>
-        <div className="space-y-4">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="md:flex md:space-x-4">
+          <div className="rounded-lg overflow-hidden">
             <iframe
               src="/pdfs/politicas-de-privacidad-y-condiciones-de-uso-trabajo-laura-pdf.pdf"
               className="w-full h-96 md:h-128"
             />
           </div>
-        </div>
+  
+  <div className="rounded-lg overflow-hidden">
+    <iframe
+      src="/pdfs/politica-de-cookies-share-to-go-trabajo-laura.pdf"
+      className="w-full h-96 md:h-128"
+    />
+  </div>
+</div>
+
       </div>
     </section>
   );
