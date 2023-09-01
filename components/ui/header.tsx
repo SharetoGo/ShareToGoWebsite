@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 
 import Link from 'next/link'
 import Logo from './logo'
-import Dropdown from '@/components/utils/dropdown'
 import MobileMenu from './mobile-menu'
 
 export default function Header() {
@@ -40,7 +39,7 @@ export default function Header() {
                 <Link href="/" className="font-medium text-gray-600 hover:underline hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Quiénes somos?</Link>
               </li>
               <li>
-                <Link href="/" className="font-medium text-gray-600 hover:underline hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
+                <Link href="/signin" className="font-medium text-gray-600 hover:underline hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
               </li>
               <li>
                 <Link href="/" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
