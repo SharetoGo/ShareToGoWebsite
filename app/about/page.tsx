@@ -8,7 +8,7 @@ import AboutPic from '@/public/images/about.png'
    
 export default function About() {
   return (
-        <section className="bg-green-100 py-16">
+        <section className="bg-green-50 py-16">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mt-10">
               <h2 className="text-4xl font-extrabold text-gray-800 mb-4">Quiénes somos?</h2>

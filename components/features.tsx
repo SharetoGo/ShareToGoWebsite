@@ -45,7 +45,7 @@ export default function Features() {
               {/* Tabs buttons */}
               <div className="mb-8 md:mb-0">
                 <a
-                  className={`flex items-center text-lg p-5 rounded-2xl border transition duration-300 ease-in-out mb-3 ${tab !== 1 ? 'bg-white shadow-lg border-gray-200 hover:shadow-lg' : 'bg-green-100 border-transparent'}`}
+                  className={`flex items-center text-lg p-5 rounded-2xl border transition duration-300 ease-in-out mb-3 ${tab !== 1 ? 'bg-white shadow-lg border-gray-200 hover:shadow-lg' : 'bg-green-50 border-transparent'}`}
                   href="#0"
                   onClick={(e) => { e.preventDefault(); setTab(1); }}
                 >
@@ -58,7 +58,7 @@ export default function Features() {
                   </div>
                 </a>
                 <a
-                  className={`flex items-center text-lg p-5 rounded-2xl border transition duration-300 ease-in-out mb-3 ${tab !== 2 ? 'bg-white shadow-md border-gray-200 hover:shadow-lg' : 'bg-green-100 border-transparent'}`}
+                  className={`flex items-center text-lg p-5 rounded-2xl border transition duration-300 ease-in-out mb-3 ${tab !== 2 ? 'bg-white shadow-md border-gray-200 hover:shadow-lg' : 'bg-green-50 border-transparent'}`}
                   href="#0"
                   onClick={(e) => { e.preventDefault(); setTab(2); }}
                 >

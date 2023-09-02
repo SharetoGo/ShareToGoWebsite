@@ -5,7 +5,7 @@ export const metadata = {
   
   export default function Contact() {
     return (
-      <section className="bg-green-100 py-16">
+      <section className="bg-green-50 py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
                 <h2 className="text-4xl font-extrabold text-gray-800 mb-4">Ayuda</h2>
