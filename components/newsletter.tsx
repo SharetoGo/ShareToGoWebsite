@@ -48,7 +48,7 @@ export default function Newsletter() {
                   </div>
                   {/* Success message */}
                   {/* <p className="text-sm text-gray-400 mt-3">Thanks for subscribing!</p> */}
-                  <p className="text-sm text-gray-300 mt-3">No es basura. puedes darte de baja en cualquier momento</p>
+                  <p className="text-sm text-gray-300 mt-3">No es SPAM. puedes darte de baja en cualquier momento</p>
                 </form>
               </div>
 

@@ -49,8 +49,8 @@ export default function Footer() {
                   </path>
                 </svg>
                 <div className="text-left">
-                  <div className="mb-1 text-xs">Download on the</div>
-                  <div className="-mt-1 font-sans text-sm font-semibold">Mac App Store</div>
+                  <div className="mb-1 text-xs">Descarga desde la</div>
+                  <div className="-mt-1 font-sans text-sm font-semibold">App Store</div>
                 </div>
               </a>
               <a href="#"
@@ -62,7 +62,7 @@ export default function Footer() {
                   </path>
                 </svg>
                 <div className="text-left">
-                  <div className="mb-1 text-xs">Get in on</div>
+                  <div className="mb-1 text-xs">Consiguelo en</div>
                   <div className="-mt-1 font-sans text-sm font-semibold">Google Play</div>
                 </div>
               </a>
