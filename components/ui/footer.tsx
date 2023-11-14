@@ -100,7 +100,7 @@ export default function Footer() {
           </ul>
 
           {/* Copyrights note */}
-          <div className="text-sm text-gray-600 mr-4">&copy; sharetogo.vercel.app. All rights reserved.</div>
+          <div className="text-sm text-gray-600 mr-4">&copy; sharetogo.org. All rights reserved.</div>
 
         </div>
 
