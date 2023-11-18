@@ -45,11 +45,11 @@ export default function Newsletter() {
                 <form className="w-full lg:w-auto">
                   <div className="flex flex-col sm:flex-row justify-center max-w-xs mx-auto sm:max-w-md lg:mx-0">
                     <input type="email" className="form-input rounded-lg w-full appearance-none bg-gray-800 border border-gray-700 focus:border-gray-600 px-4 py-3 mb-2 sm:mb-0 sm:mr-2 text-white placeholder-gray-500" placeholder="Tu email…" aria-label="Tu email…" />
-                    <a className="btn text-white bg-green-800 hover:bg-green-900 shadow rounded-lg" href="#0">Subscribir</a>
+                    <a className="btn text-white bg-green-800 hover:bg-green-900 shadow rounded-lg" href="#0">Enviar</a>
                   </div>
                   {/* Success message */}
                   {/* <p className="text-sm text-gray-400 mt-3">Thanks for subscribing!</p> */}
-                  <p className="text-sm text-gray-300 mt-3">No es SPAM. puedes darte de baja en cualquier momento</p>
+                  <p className="text-sm text-gray-300 mt-3">Puedes darte de baja cuando quieras, solamente deberás ponerte en contacto con nosotros en: contactosharetogo@gmail.com</p>
                 </form>
               </div>
 
