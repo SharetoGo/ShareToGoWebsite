@@ -5,7 +5,9 @@ export default function Hero() {
   return (
     <section className="relative bg-green-50 py-16">
       <div className="max-w-6xl mx-auto sm:px-6">
-        <div className="pt-12 pb-20 md:pt-40 md:pb-20 flex flex-col md:flex-row-reverse justify-around items-center">
+
+      <p className="text-4xl text-center pt-20 text-gray-800 font-bold" data-aos="zoom-y-out">Tu aplicación para compartir coche diariamente</p>
+        <div className="pt-6 pb-20 md:pt-10 md:pb-20 flex flex-col md:flex-row-reverse justify-around items-center">
           <div className="md:max-w-none mx-auto md:flex-shrink-0 md:mr-50">
             <Image src={AppPreview} width={900} height={862} alt="App preview" data-aos="zoom-y-out" data-aos-delay="180" />
           </div>

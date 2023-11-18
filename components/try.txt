@@ -1,3 +1,26 @@
+b38129bbe39ce0452710ddaeed1cbd06
+Host:
+live.smtp.mailtrap.io
+Port:
+587 (recommended), 2525 or 25
+Username:
+api
+Password:
+********bd06Copy
+Auth:
+PLAIN, LOGIN
+STARTTLS:
+Required
+
+var transport = nodemailer.createTransport({
+  host: "live.smtp.mailtrap.io",
+  port: 587,
+  auth: {
+    user: "api",
+    pass: "b38129bbe39ce0452710ddaeed1cbd06"
+  }
+});
+
 'use client'
 
 import { useState, useRef, useEffect } from 'react'

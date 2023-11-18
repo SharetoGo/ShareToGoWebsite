@@ -8,8 +8,6 @@ export default function FeaturesBlocks() {
   return (
     <section className="relative bg-gradient-to-br from-green-200 via-green-500 to-green-700 text-white py-16">
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
-      <p className="text-4xl text-center text-gray-800 font-bold mb-8">Tu applicación para compartir coche diariamente</p>
-
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start md:max-w-2xl lg:max-w-none">
           {/* 1st item */}
           <div className="relative flex flex-col items-center p-6 bg-white bg-opacity-20 rounded-3xl shadow-xl transition-transform transform hover:-translate-y-2 hover:scale-105">

@@ -1,4 +1,5 @@
 export default function Newsletter() {
+
   return (
     <section className="relative bg-green-50">
       <div className="max-w-6xl pt-20 mx-auto px-4 sm:px-6 bg-green-50">
