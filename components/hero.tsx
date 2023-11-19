@@ -7,7 +7,7 @@ export default function Hero() {
       <div className="max-w-screen-2xl mx-auto sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left pt-20">
-            <span className="bg-clip-text md:text-9xl text-6xl md:pl-10 text-center font-extrabold tracking-tighter text-transparent bg-green-800" data-aos="zoom-y-out">SharetoGo</span>
+            <span className="bg-clip-text md:text-9xl text-5xl md:pl-10 text-center font-extrabold tracking-tighter text-transparent bg-green-800" data-aos="zoom-y-out">SharetoGo</span>
             <h1 className="text-4xl md:text-3xl font-bold text-teal-950 text-center pt-10" data-aos="zoom-y-out">
               Tu aplicación para compartir coche diariamente
             </h1>
