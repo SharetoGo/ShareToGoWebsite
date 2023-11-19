@@ -53,6 +53,7 @@ export default function Options() {
                     <a href="/passenger">
                       <button className="pt-4 pb-4 text-white font-bold text-center">Conviértete en pasajero</button>
                     </a>
+                    
                   </div>
                 </div>
               </div>
