@@ -36,15 +36,15 @@ export default function Header() {
             {/* Desktop sign in links */}
             <ul className="flex grow justify-end flex-wrap items-center">
               <li>
-                <Link href="/about" className="font-medium text-gray-600 hover:underline hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Quiénes somos?</Link>
+                <Link href="/about" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Quiénes somos?</Link>
               </li>
               <li>
-                <Link href="/contact" className="font-medium text-gray-600 hover:underline hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
+                <Link href="/contact" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
               </li>
               <li>
-                <Link href="/" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
+                <Link href="/" className="btn-sm text-white bg-teal-950 hover:bg-teal-700 ml-3">
                   <span>ÚNETE</span>
-                  <svg className="w-3 h-3 fill-current text-gray-400 shrink-0 ml-2 -mr-1" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-3 h-3 fill-current text-white shrink-0 ml-2 -mr-1" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11.707 5.293L7 .586 5.586 2l3 3H0v2h8.586l-3 3L7 11.414l4.707-4.707a1 1 0 000-1.414z" fillRule="nonzero" />
                   </svg>
                 </Link>
