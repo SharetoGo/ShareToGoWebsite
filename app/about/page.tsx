@@ -5,7 +5,7 @@ import Logo from '@/public/images/logos/logocoche.png';
 
 export default function About() {
   return (
-    <section className="bg-green-50 py-16">
+    <section className="bg-green-50 py-16 px-8">
         <h1 className="text-5xl font-extrabold text-teal-950 mb-4 py-8 text-center">Quiénes somos?</h1>
       <div className="max-w-screen-2xl mx-auto sm:px-40">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
