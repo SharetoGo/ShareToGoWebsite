@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <section className="relative bg-gradient-to-b from-green-50 to-green-100 py-20 md:py-32 lg:py-40 min-h-screen">
+    <section className="relative bg-gradient-to-b from-green-50 to-green-200 py-20 md:py-32 lg:py-40 min-h-screen">
       <div className="max-w-screen-2xl mx-auto sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left pt-20">

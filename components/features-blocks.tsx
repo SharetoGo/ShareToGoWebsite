@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export default function FeaturesBlocks() {
   return (
-<section className="bg-gradient-to-b from-green-100 to-green-600 text-white py-16">
+<section className="bg-gradient-to-b from-green-200 to-green-600 text-white py-16">
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 items-start md:max-w-2xl lg:max-w-none">
           {/* 1st item */}

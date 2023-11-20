@@ -8,14 +8,14 @@ export const metadata = {
       <section className="bg-green-50 py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-                <h2 className="text-4xl font-extrabold text-gray-800 mb-4">Ayuda</h2>
-                <p className="text-gray-600 mb-2 font-bold text-2xl">Ponte en contacto con nosotros</p>
-                <p className="text-gray-600 mb-8 text-lg">Contacta con nosotros para cualquier duda o consulta y te ayudaremos lo antes posible.</p>
+                <h2 className="text-4xl font-extrabold text-teal-950 mb-4">Ayuda</h2>
+                <p className="text-teal-950 mb-2 font-bold text-2xl">Ponte en contacto con nosotros</p>
+                <p className="text-teal-950 mb-8 text-lg">Contacta con nosotros para cualquier duda o consulta y te ayudaremos lo antes posible.</p>
             </div>
 
-          <form className="bg-transparent rounded-lg shadow-2xl p-6 grid grid-cols-2 gap-4">
+          <form className="bg-transparent bg-white rounded-lg shadow-2xl p-6 grid grid-cols-2 gap-4">
             <div className="col-span-1">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nombre">
+              <label className="block text-teal-950 text-sm font-bold mb-2" htmlFor="nombre">
                 Nombre
               </label>
               <input
@@ -28,7 +28,7 @@ export const metadata = {
               />
             </div>
             <div className="col-span-1">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="apellido">
+              <label className="block text-teal-950 text-sm font-bold mb-2" htmlFor="apellido">
                 Apellido/s
               </label>
               <input
@@ -42,7 +42,7 @@ export const metadata = {
             </div>
   
             <div className="col-span-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              <label className="block text-teal-950 text-sm font-bold mb-2" htmlFor="email">
                 Correo electrónico (obligatorio)
               </label>
               <input
@@ -56,7 +56,7 @@ export const metadata = {
             </div>
   
             <div className="col-span-2">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mensaje">
+              <label className="block text-teal-950 text-sm font-bold mb-2" htmlFor="mensaje">
                 Mensaje
               </label>
               <textarea
@@ -70,7 +70,7 @@ export const metadata = {
   
             <div className="col-span-2 text-center">
               <button
-                className="bg-green-500 text-white py-2 px-4 rounded-lg"
+                className="bg-green-600 text-white py-2 px-4 rounded-lg"
                 type="submit"
               >
                 Enviar mensaje
