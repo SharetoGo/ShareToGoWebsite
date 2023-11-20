@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'SharetoGo - Quienes somos?',
+  description: 'Quien es SharetoGo?',
+};
+
 import Image from 'next/image';
 import AboutPic from '@/public/images/about.png';
 import Traffic from '@/public/images/traffic.png';

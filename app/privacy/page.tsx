@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'SharetoGo - Privacy policy',
-  description: 'Privacy policy of SharetoGo',
+  title: 'SharetoGo - Políticas de privacidad',
+  description: 'Políticas de privacidad de SharetoGo',
 }
 
 export default function Policy() {
