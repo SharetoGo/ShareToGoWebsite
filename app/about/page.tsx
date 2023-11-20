@@ -33,7 +33,7 @@ export default function About() {
             <Image src={AboutPic} alt="about picture" width={800} height={600} />
           </div>
           <div className="text-center md:text-right">
-          <div className="text-3xl font-bold text-teal-950 mb-4 pt-16">Nuestra historía</div>
+          <div className="text-3xl font-bold text-teal-950 mb-4 pt-16">Nosotros</div>
           <p className="text-teal-950 mb-12 text-lg text-justify">
               Somos un grupo de personas que trabajamos ambiciosamente día tras día para poder conseguir un cambio de hábitos en la movilidad de la ciudadanía.
               Para nosotros, mantener al equipo unido y conectado ha sido siempre una pieza angular y prioritaria para que “la idea” inicial se materialice en un proyecto de aplicación móvil sólido.  
