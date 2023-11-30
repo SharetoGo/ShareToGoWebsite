@@ -12,13 +12,13 @@ export default function Policy() {
       <div className="bg-green-50 flex flex-col items-center justify-center text-white min-h-full">
       <h1 className="text-5xl font-bold mb-6 text-green-800 text-center mt-20">Condiciones generales de uso</h1>
         <div className="text-center max-w-lg mb-8 text-teal-950">
-          <p className="text-2xl italic text-teal-950">Política de Privacidad, condiciones de uso y política de cookies</p>
+          <p className="text-2xl italic text-teal-950">POLITICA DE PRIVACIDAD, CONDICIONES DE USO Y POLITICA DE COOKIES</p>
         </div>
 
         <div className="bg-white pt-12 flex flex-col text-white min-h-full xl:w-3/4">
           <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">1. General</h1>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Se informa a los usuarios de que SharetoGo, plataforma digital y en concreto, aplicación móvil, interviniendo como responsable del tratamiento de datos, se compromete a proteger y a respetar tu privacidad. Este documento (la “Política de Privacidad”) está diseñado para informarte sobre nuestras prácticas en lo referente a la recopilación, uso y divulgación de la información que nos proporciones a través de nuestra plataforma, accesible desde la página web y/o nuestras aplicaciones móviles.
+              Se informa a los usuarios de que SharetoGo, plataforma digital y en concreto, aplicación móvil, interviniendo como responsable del tratamiento de datos, se compromete a proteger y a respetar tu privacidad. Este documento (la “Política de Privacidad”) está diseñado para informarte sobre nuestras prácticas en lo referente a la recopilación, uso y divulgación de la información que nos proporciones a través de nuestra plataforma, accesible desde la página web y/o nuestras aplicaciones móviles. 
               Esta Política de Privacidad (junto con nuestros Términos y Condiciones) establece el marco según el cual se recogerán tus datos personales. Es muy importante que leas detenidamente este texto para que comprendas nuestra posición y prácticas respecto a tus datos personales y cómo los trataremos.
             </p>
             <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">2. Información que recogemos:</h1>
@@ -110,25 +110,10 @@ export default function Policy() {
               8.6 También tienes derecho a presentar una reclamación a la autoridad de control de protección de datos pertinente, o a solicitar una compensación por la vía judicial, si crees que se han vulnerado tus derechos.
               8.7 Para ejercer tus derechos, contacta con (contactosharetogo@gmail.com ).
             </p>
-            <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">Política de cookies SharetoGo</h1>
-            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">¿Qué son las cookies?</h2>
+            <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">9. Política de cookies SharetoGo</h1>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Las cookies son unos archivos de texto que se guardarán en tu dispositivo, nos ayudan a mejorar la experiencia y ofrecerte un mejor contenido.
+            Para saber más a este respecto, puedes ver nuestra Política de Cookies (abajo).
             </p>
-            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">¿Para qué utilizamos las cookies en SharetoGo?</h2>
-            <p className="text-justify px-14 mb-8 text-teal-950">
-              - Cookies esenciales: Cookies básicas y necesarias para el funcionamiento de la aplicación.
-              - Cookies de rendimiento y análisis: Recopilan información sobre cómo utilizas la aplicación, para ayudar a mejorar el rendimiento y la funcionalidad de la aplicación.
-              - Cookies de publicidad: Para mostrarte anuncios relevantes basados en tus actividades de la aplicación.
-            </p>
-            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">Terceros y cookies de redes sociales</h2>
-            <p className="text-justify px-14 mb-8 text-teal-950">
-              En nuestra aplicación puedes encontrar enlaces a sitios externos (sitios web, redes sociales, ...). Estos utilizan sus propias cookies al interactuar con su contenido. No tenemos control sobre el uso de cookies de estos terceros, por lo que te recomendamos revisar las políticas de privacidad y cookies de dichos sitios web para obtener más información.
-            </p>
-            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">Actualizaciones de la Política de Cookies</h2>
-            <p className="text-justify px-14 mb-8 text-teal-950">
-              Nuestra política de cookies será actualizada ocasionalmente al realizar cambios en la aplicación. Te recomendamos que revises nuestra política periódicamente para estar informado sobre cómo utilizamos las cookies.
-              Para cualquier duda o consulta, puede ponerse en contacto con SharetoGo a través del siguiente email: contactosharetogo@gmail.com            </p>
             <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">10. Confidencialidad de tu contraseña</h1>
             <p className="text-justify px-14 mb-8 text-teal-950">
               Cuando decidas establecer una contraseña de acceso a tu cuenta en nuestra Plataforma, será tu responsabilidad mantenerla en secreto. Por favor, no reveles tu contraseña a nadie.
@@ -228,36 +213,56 @@ export default function Policy() {
             </p>
             <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">5. Condiciones financieras</h1>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              El acceso y el registro en la App, así como la búsqueda, visualización y publicación de Anuncios, no implican coste alguno. No obstante, a veces, la reserva , dependiendo de cada caso/trayecto, se realizará tras el pago correspondiente de una tarifa simbólica, bajo las condiciones descritas a continuación.            </p>
+              El acceso y el registro en la App, así como la búsqueda, visualización y publicación de
+              Anuncios, no implican coste alguno. No obstante, a veces, la reserva , dependiendo de cada
+              caso/trayecto, se realizará tras el pago correspondiente de una tarifa simbólica, bajo las
+              condiciones descritas a continuación.
+            </p>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.1 Costes Compartidos</h2>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Los costes compartidos los determina la aplicación. Según el Municipio, las Empresas con las que tengamos acuerdos(grandes corporaciones) y las Administración Pública, la cantidad que recibirá el conductor por pasajero variará. Está estrictamente prohibido obtener ningún tipo de beneficio mediante el uso de nuestra App.            </p>
-            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.2 Gastos de Gestión</h2>
+              Los costes compartidos los determina la aplicación. Según el Municipio, las Empresas con
+              las que tengamos acuerdos(grandes corporaciones) y las Administración Pública, la
+              cantidad que recibirá el conductor por pasajero variará. Está estrictamente prohibido
+              obtener ningún tipo de beneficio mediante el uso de nuestra App.
+            </p>
+            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.1 Costes Compartidos</h2>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">(
-              Importante: Los pagos se pueden realizar por la aplicación, ya que, tenemos contratado un acuerdo con un SaaS llamado Stripe. (Software as a Service)
-              EL CONDUCTOR:
-              Puede reclamar mediante la aplicación los pagos del trayecto y SharetoGo le asegura el cobro de los trayectos máximo 48 horas más tarde.
-              Puede reclamar mediante la aplicación los pagos del trayecto indicando el Pasajero deudor y SharetoGo le asegura el cobro de los trayectos máximo 48 horas más tarde.
-              SI pasadas 24 horas el conductor NO reclama, los pagos se dan por cobrados.
-              SI pasadas 24 horas el conductor NO reclama, los pagos se dan por cobrados.)
-              Está estrictamente prohibido obtener ningún tipo de beneficio mediante el uso de nuestra App.            
+              Importante: Los pagos se pueden realizar por la aplicación, ya que, tenemos contratado un acuerdo con un SaaS llamado Stripe. (Software as a Service)            
             </h2>
+            <p className="text-justify px-14 mb-8 text-teal-950">
+              Puede reclamar mediante la aplicación los pagos del trayecto y SharetoGo le asegura el cobro de los trayectos máximo 48 horas más tarde.
+              SI pasadas 24 horas el conductor NO reclama, los pagos se dan por cobrados.
+              Está estrictamente prohibido obtener ningún tipo de beneficio mediante el uso de nuestra App.
+            </p>
             <p className="text-justify px-14 mb-8 text-teal-950">
               Los costes recomendados son los siguientes: 0,10 CÉNTIMOS POR KM RECORRIDO, POR PASAJERO.
             </p>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.3 Autorización de cobro</h2>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Al utilizar la App como Conductor para Trayectos con reserva, concedes a SharetoGo una autorización de cobro de la cantidad de Costes compartidos en tu nombre y a tu nombre.
-              Por consiguiente, en el contexto de un Trayecto, y tras la aceptación automática o manual de la Reserva, SharetoGo cobra la cantidad total subvencionada con la administración pública, empresa o municipio (Cantidad de costes compartidos), depositando en la cuenta del Conductor la Cantidad de costes compartidos.
+              Al utilizar la App como Conductor para Trayectos con reserva, concedes a SharetoGo una
+              autorización de cobro de la cantidad de Costes compartidos en tu nombre y a tu nombre.
+              Por consiguiente, en el contexto de un Trayecto, y tras la aceptación automática o manual
+              de la Reserva, SharetoGo cobra la cantidad total subvencionada con la administración
+              pública, empresa o municipio (Cantidad de costes compartidos), depositando en la cuenta
+              del Conductor la Cantidad de costes compartidos.
+              Reconoces y aceptas que ninguna de las cantidades mencionadas recibidas por SharetoGo
+              en nombre del Conductor otorgan derecho al cobro de intereses. Te comprometes a
+              responder con debida diligencia a cualquier solicitud de SharetoGo, y en general, a
+              cualquier autoridad administrativa o judicial competente, especialmente en lo relacionado
+              con la prevención del blanqueo de capitales. Fundamentalmente aceptas proporcionar, tras
+              su solicitud, cualquier elemento de prueba de tu dirección y/o identidad que sea de utilidad.
             </p>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Reconoces y aceptas que ninguna de las cantidades mencionadas recibidas por SharetoGo en nombre del Conductor otorgan derecho al cobro de intereses. Te comprometes a
-              responder con debida diligencia a cualquier solicitud de SharetoGo, y en general, a cualquier autoridad administrativa o judicial competente, especialmente en lo relacionado con la prevención del blanqueo de capitales. Fundamentalmente aceptas proporcionar, tras su solicitud, cualquier elemento de prueba de tu dirección y/o identidad que sea de utilidad.
               En caso de falta de respuesta a dichas solicitudes, SharetoGo podrá tomar las medidas que considere necesarias, como por ejemplo congelar las cantidades pagadas y/o suspender tu Cuenta o resolver las presentes CGU.
             </p>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.4 Emisión de justificante de pago y/o de cobro del Trayecto</h2>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Los justificantes del pago realizado por los Pasajeros o del cobro de los costes compartidos por parte del Conductor se enviarán a los Usuarios bajo demanda. El Usuario deberá indicar el trayecto en cuestión del cuál quiere el justificante y deberá especificar además si fue Pasajero o Conductor en dicho trayecto, comunicando finalmente si desea un ticket o una factura; en caso de este último, necesitaremos además los datos pertinentes para la realización de una factura.
+             Los justificantes del pago realizado por los Pasajeros o del cobro de los costes compartidos
+              por parte del Conductor se enviarán a los Usuarios bajo demanda. El Usuario deberá indicar
+              el trayecto en cuestión del cuál quiere el justificante y deberá especificar además si fue
+              Pasajero o Conductor en dicho trayecto, comunicando finalmente si desea un ticket o una
+              factura; en caso de este último, necesitaremos además los datos pertinentes para la
+              realización de una factura.           
             </p>
             <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">6. Objetivo no comercial y no empresarial de los servicios y la app</h1>
             <p className="text-justify px-14 mb-8 text-teal-950">
@@ -413,6 +418,26 @@ export default function Policy() {
             <p className="text-justify px-14 mb-8 text-teal-950">
               Estos CGU se han redactado en español, de conformidad con la legislación española.
               Si fuese necesario, también podrás presentar tus reclamaciones con respecto a nuestra Plataforma o Servicios en la plataforma de resolución de litigios en línea de la Comisión Europea. La Comisión Europea enviará tu reclamación al organismo nacional competente. En cumplimiento de la legislación aplicable al arbitraje, tienes la obligación de, antes de solicitar el arbitraje, comunicar a SharetoGo por escrito cualquier reclamación o litigio con el objetivo de obtener una solución amistosa.
+              Para cualquier duda o consulta, puede ponerse en contacto con SharetoGo a través del siguiente email: contactosharetogo@gmail.com
+            </p>
+            <h1 className="font-bold text-justify px-14 text-xl mb-8 text-teal-950">Política de cookies SharetoGo</h1>
+            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">¿Qué son las cookies?</h2>
+            <p className="text-justify px-14 mb-8 text-teal-950">
+              Las cookies son unos archivos de texto que se guardarán en tu dispositivo, nos ayudan a mejorar la experiencia y ofrecerte un mejor contenido.
+            </p>
+            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">¿Para qué utilizamos las cookies en SharetoGo?</h2>
+            <p className="text-justify px-14 mb-8 text-teal-950">
+              - Cookies esenciales: Cookies básicas y necesarias para el funcionamiento de la aplicación.
+              - Cookies de rendimiento y análisis: Recopilan información sobre cómo utilizas la aplicación, para ayudar a mejorar el rendimiento y la funcionalidad de la aplicación.
+              - Cookies de publicidad: Para mostrarte anuncios relevantes basados en tus actividades de la aplicación.
+            </p>
+            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">Terceros y cookies de redes sociales</h2>
+            <p className="text-justify px-14 mb-8 text-teal-950">
+              En nuestra aplicación puedes encontrar enlaces a sitios externos (sitios web, redes sociales, ...). Estos utilizan sus propias cookies al interactuar con su contenido. No tenemos control sobre el uso de cookies de estos terceros, por lo que te recomendamos revisar las políticas de privacidad y cookies de dichos sitios web para obtener más información.
+            </p>
+            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">Actualizaciones de la Política de Cookies</h2>
+            <p className="text-justify px-14 mb-8 text-teal-950">
+              Nuestra política de cookies será actualizada ocasionalmente al realizar cambios en la aplicación. Te recomendamos que revises nuestra política periódicamente para estar informado sobre cómo utilizamos las cookies.
               Para cualquier duda o consulta, puede ponerse en contacto con SharetoGo a través del siguiente email: contactosharetogo@gmail.com
             </p>
         </div>
