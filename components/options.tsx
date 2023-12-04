@@ -22,7 +22,7 @@ export default function Options() {
                 <div className="lg:pt-10 lg:pb-10 lg:pl-10 lg:pr-5">
                   <h1 className="mb-2 md:text-4xl text-3xl font-bold tracking-tight text-teal-950 dark:text-teal-950 text-center pt-4">"Ahorra dinero sin cambiar tu rutina"</h1>
                   <h1 className="text-lg text-teal-950 pt-2 text-center">Publica las plazas libres de tu coche y consigue ahorrar en gastos sin cambiar tu trayecto. Conecta con otras personas.</h1>
-                  <div className="bg-green-600 w-60 rounded-2xl mx-auto mb-3 mt-4 shadow-2xl text-center">
+                  <div className="bg-green-600 w-60 hover:bg-green-700 rounded-2xl mx-auto mb-3 mt-4 shadow-2xl text-center">
                     <a href="/driver">
                       <button className="pt-4 pb-4 text-white font-bold text-center">Conviértete en conductor</button>
                     </a>
@@ -49,7 +49,7 @@ export default function Options() {
                 <div className="lg:pt-10 lg:pb-10 lg:pl-10 lg:pr-5">
                   <h1 className="mb-2 md:text-3xl text-3xl font-bold tracking-tight text-teal-950 dark:text-teal-950 text-center pt-4">"Busca las mejores plazas libres para moverte"</h1>
                   <h1 className="text-lg text-teal-950 pt-2 text-center">Gracias a SharetoGo, según tus preferencias podrás encontrar las mejores opciones para realizar tus trayectos diarios.</h1>
-                  <div className="bg-green-600 w-60 rounded-2xl mx-auto mb-3 mt-4 shadow-2xl text-center">
+                  <div className="bg-green-600 hover:bg-green-700 w-60 rounded-2xl mx-auto mb-3 mt-4 shadow-2xl text-center">
                     <a href="/passenger">
                       <button className="pt-4 pb-4 text-white font-bold text-center">Conviértete en pasajero</button>
                     </a>

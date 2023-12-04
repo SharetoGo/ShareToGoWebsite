@@ -31,7 +31,7 @@ export default function Driver() {
             Para ti, para todos, comparte.          </p>
           <div className="flex items-center space-x-1">
             <p className="text-gray-900 text-lg mt-6 font-extrabold">
-            Pedro Costa
+            Tomás López
             </p>
             <div className="flex items-center space-x-1 pt-5 pl-5">
                 <svg className="w-4 h-4 text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">

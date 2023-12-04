@@ -24,7 +24,7 @@ export default function Footer() {
               <h6 className="text-teal-700 font-medium mb-2">SharetoGo</h6>
               <ul className="text-sm">
                 <li className="mb-2">
-                  <a href="/" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Home</a>
+                  <a href="/" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Inicio</a>
                 </li>
                 <li className="mb-2">
                   <a href="/about" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Quiénes somos</a>
@@ -33,7 +33,7 @@ export default function Footer() {
                   <a href="/contact" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Contacto</a>
                 </li>
                 <li className="mb-2">
-                  <a href="/privacy" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Políticas de privacidad</a>
+                  <a href="/privacy" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Política de privacidad</a>
                 </li>
               </ul>
             </div>
@@ -50,7 +50,7 @@ export default function Footer() {
                     </path>
                   </svg>
                   <div className="text-left text-white">
-                    <div className="-mt-1 font-sans text-sm font-semibold">Descarga desde la App Store</div>
+                    <div className="-mt-1 font-sans text-sm font-semibold">Proximamente en la App Store</div>
                   </div>
                 </a>
                 <a href="#"
@@ -62,7 +62,7 @@ export default function Footer() {
                     </path>
                   </svg>
                   <div className="text-left text-white">
-                    <div className="-mt-1 font-sans text-sm font-semibold">Descarga desde la Play Store</div>
+                    <div className="-mt-1 font-sans text-sm font-semibold">Proximamente en la Play Store</div>
                   </div>
                 </a>
               </div>
