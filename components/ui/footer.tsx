@@ -50,7 +50,7 @@ export default function Footer() {
                     </path>
                   </svg>
                   <div className="text-left text-white">
-                    <div className="-mt-1 font-sans text-sm font-semibold">Proximamente en la App Store</div>
+                    <div className="-mt-1 font-sans text-sm font-semibold">Próximamente en la App Store</div>
                   </div>
                 </a>
                 <a href="#"
@@ -62,7 +62,7 @@ export default function Footer() {
                     </path>
                   </svg>
                   <div className="text-left text-white">
-                    <div className="-mt-1 font-sans text-sm font-semibold">Proximamente en la Play Store</div>
+                    <div className="-mt-1 font-sans text-sm font-semibold">Próximamente en la Play Store</div>
                   </div>
                 </a>
               </div>
