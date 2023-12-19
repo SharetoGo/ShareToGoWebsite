@@ -35,7 +35,7 @@ export default function Hero() {
             </div>
           </div>
           <div className="text-center md:text-right">
-            <Image src={AppPreview} width={1200} height={1148} alt="App preview" data-aos="zoom-y-out" data-aos-delay="180" />
+            <Image src={AppPreview} priority={true} width={1200} height={1148} alt="App preview" data-aos="zoom-y-out" data-aos-delay="180" />
           </div>
         </div>
       </div>

@@ -23,14 +23,14 @@ export default function About() {
             </p>
           </div>
           <div className="text-center md:text-righ">
-            <Image src={Traffic} width={1200} height={1148} alt="App preview" data-aos="zoom-y-out" data-aos-delay="180" />
+            <Image src={Traffic} width={1200} height={1148} priority={true} alt="App preview" data-aos="zoom-y-out" data-aos-delay="180" />
           </div>
         </div>
       </div>
       <div className="max-w-screen-2xl mx-auto sm:px-40">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="text-center md:text-left pt-20">
-            <Image src={AboutPic} alt="about picture" width={800} height={600} />
+            <Image src={AboutPic} priority={true} alt="about picture" width={800} height={600} />
           </div>
           <div className="text-center md:text-right">
           <div className="text-3xl font-bold text-teal-950 mb-4 pt-16">Nosotros</div>
@@ -47,7 +47,7 @@ export default function About() {
         </p>
         <div className="flex justify-center items-center">
           <div className="text-center">
-            <Image src={Logo} alt="logo picture" width={100} height={100} />
+            <Image src={Logo} priority={true} alt="logo picture" width={100} height={100} />
           </div>
         </div>
       </div>
