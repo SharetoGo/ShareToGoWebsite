@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import { metadata } from './metadata';
 
 export default function Contact() {
   const [formData, setFormData] = useState({

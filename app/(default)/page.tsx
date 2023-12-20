@@ -1,12 +1,10 @@
 export const metadata = {
-  title: 'SharetoGo - Home',
+  title: 'SharetoGo - Inicio',
   description: 'Main page of SharetoGo',
 }
 
 import Hero from '@/components/hero'
-import Features from '@/components/features'
 import FeaturesBlocks from '@/components/features-blocks'
-import Newsletter from '@/components/newsletter'
 import Options from '@/components/options'
 
 

@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
+import Head from 'next/head';
+
 
 import AOS from 'aos'
 import 'aos/dist/aos.css'
@@ -24,6 +26,11 @@ export default function DefaultLayout({
 
   return (
     <>
+
+      <Head>
+        <title>SharetoGo - Contacto</title>
+      </Head>
+
       <main className="grow">
 
         {children}
