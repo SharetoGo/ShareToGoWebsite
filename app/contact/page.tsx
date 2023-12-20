@@ -11,6 +11,8 @@ export default function Contact() {
     mensaje: '',
   });
 
+  const [isSuccess, setIsSuccess] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -29,9 +31,12 @@ export default function Contact() {
         },
         body: JSON.stringify(formData),
       });
-  
+
       if (response.ok) {
         console.log('Email sent successfully!');
+        setIsSuccess(true);
+        const form = e.target as HTMLFormElement;
+        form.reset();
       } else {
         console.error('Failed to send email.');
       }
@@ -50,6 +55,11 @@ export default function Contact() {
         </div>
         <form className="bg-transparent rounded-lg shadow-2xl p-6 grid grid-cols-2 gap-4"
           onSubmit={handleSubmit}>
+            {isSuccess && (
+              <div className="col-span-2 text-center">
+              <p className="text-green-600 bg-green-200 rounded-lg p-2 text-xl font-bold">Hemos recibido tu mensaje con éxito. En breves te contactaremos.</p>
+            </div>
+          )}
           <div className="col-span-1">
             <label className="block text-teal-950 text-sm font-bold mb-2" htmlFor="nombre">
               Nombre

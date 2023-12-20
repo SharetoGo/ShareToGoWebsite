@@ -25,8 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const acknowledgmentMailOptions = {
         from: myemail,
         to: email,
-        subject: 'Gracias por contactar con nosotros!',
-        text: `Holà ${nombre} ${apellido},\n\nGracias por ponerte en contacto con nosotros. Hemos recibido tu mensaje y nos pondremos en contacto contigo en breve..\n\nSaludos cordiales,\nEquipo de SharetoGo`,
+        subject: '¡Gracias por contactar con nosotros!',
+        text: `Hola ${nombre} ${apellido},\n\nGracias por ponerte en contacto con nosotros. Hemos recibido tu mensaje y nos pondremos en contacto contigo en breve.\n\nSaludos cordiales,\n\nEquipo de SharetoGo`,
       };
 
       await transporter.sendMail(acknowledgmentMailOptions);
