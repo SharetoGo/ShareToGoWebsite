@@ -52,9 +52,12 @@ export default function Driver() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-6">
-          Realizo un trayecto diario de Barcelona centro a Castelldefels. Antes de conocer SharetoGo iba solo y aburrido y gastaba mucho dinero, además, sentía que estaba dañando a mi planeta. SharetoGo ha sido un descubrimiento. Con solo un click publico mi trayecto y hay personas que se unen a mi coche. Todos salimos ganando.          
-          </p>
-          
+            Realizo un trayecto diario de Barcelona centro a Martorell.
+             Antes de conocer SharetoGo iba solo, aburrido y gastaba mucho dinero.
+             Además, sentía que estaba dañando nuestro planeta.
+            SharetoGo ha sido un descubrimiento. Con solo un click, publico mi trayecto
+             y hay compañeros de trabajo que se unen a mi coche. Todos salimos ganando.
+          </p>          
           <div className="flex items-center space-x-1">
             <p className="text-gray-900 text-lg mt-6 font-extrabold">
             María García
@@ -78,10 +81,12 @@ export default function Driver() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-2">
-            Me desplazo en coche cada día a la universidad. 
-            Cuando me di cuenta de todos los coches con una sola persona que hay en la carretera, tuve que actuar. 
-            Encontré SharetoGo y sorprendentemente, en menos de 1 minuto pude publicar mi trayecto para compartir coche. Lo que más me sorprendió fué el poco tiempo que tardaron en unirse pasajeros a mí coche. 
-            Sin cambiar de ruta, ahorro mucho dinero en combustible. 
+            Me desplazo en coche cada día a la universidad. Cuando me di cuenta de todos
+             los coches con una sola persona que hay en la carretera, tuve que actuar. 
+             Encontré SharetoGo y sorprendentemente, en menos de 1 minuto pude publicar
+             mi trayecto para compartir coche. Lo que más me sorprendió fué el poco tiempo
+             que tardaron en unirse pasajeros a mí coche. Sin cambiar de ruta, ahorro mucho
+               dinero en combustible.
           </p>
           <p className="text-gray-600 text-lg mt-6">¡Mi coche va lleno!</p>
 

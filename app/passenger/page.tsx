@@ -51,7 +51,13 @@ export default function Passenger() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-6">
-          Me solía desplazar en transporte público a mi trabajo, y era un caos. Cuando conocí SharetoGo y las diferentes opciones que tenía para unirme a cualquier coche fue una gran alegría. La app me permite conocer a gente la cual su ruta coincide con la mía y evitar las colas y retrasos de los trenes y autobuses. SharetoGo, totalmente recomendado.          </p>
+            Me solía desplazar en transporte público a mi trabajo, 
+            y era un caos. Cuando conocí SharetoGo y las diferentes opciones 
+            que tenía para unirme a cualquier coche fue una gran alegría. La 
+            app me permite conocer a gente la cual su ruta coincide con la mía 
+            y evitar las colas y retrasos de los trenes y autobuses. SharetoGo, 
+            totalmente recomendado.
+          </p>
           <div className="flex items-center space-x-1">
             <p className="text-gray-900 text-lg mt-6 font-extrabold">
             Olga Giménez
@@ -75,13 +81,12 @@ export default function Passenger() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-2">
-            Vivo en las afueras de la ciudad y cada día tengo que ir a la universidad en el centro. 
-            Las conexiones son realmente pésimas y tuve que buscar solución. 
-            Un día, encontré SharetoGo y me di cuenta que muchos de mis compañeros de universidad salen cerca mío y puedo ocupar las plazas libres de sus coches. 
-            La vida ahora es mucho más cómoda y puedo realizar los trayectos de manera más relajada. 
-          </p>
-          <p className="text-gray-600 text-lg mt-6">¡Mi coche va lleno!</p>
-          
+            Vivo en las afueras de la ciudad y cada día tengo que ir a trabajar al centro. 
+            Las conexiones son realmente pésimas y tuve que buscar solución. Un día, en mi 
+            empresa nos introdujeron SharetoGo, me di cuenta que muchos de mis compañeros 
+            salen cerca mío y puedo ocupar las plazas libres de sus coches. La vida ahora 
+            es mucho más cómoda y puedo realizar los trayectos de manera más relajada.
+          </p>          
 
         </div>
       </div>
