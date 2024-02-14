@@ -1,4 +1,4 @@
-import AppPreview from '@/public/images/couple-preview.png';
+import AppPreview from '@/public/images/twoPhones.png';
 import Image from 'next/image';
 
 export default function Hero() {
