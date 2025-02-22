@@ -21,10 +21,9 @@ export default function Passenger() {
             ¿Quieres ahorrar dinero y hacer tus trayectos diarios de manera mucho más cómoda?
           </p>
           <p className="text-gray-600 text-lg mb-6">
-          Con SharetoGo encontrarás las plazas libres que más te convengan según tus preferencias. Gracias a la app, podrás reservar tu plaza en los trayectos que necesites y unirte al coche que prefieras.
-          </p>
+          Con SharetoGo encontrarás las plazas libres que más te convengan según tus preferencias. Gracias a la app, podrás reservar tu plaza cada día en el coche que prefieras y desplazarte al trabajo con un compañero de trabajo de manera gratuita.          </p>
           <p className="text-gray-600 text-lg mb-2">
-          Únete al coche de un compañero y comparte tu trayecto diario
+          Únete al coche de un compañero y comparte tu trayecto diario. 
           </p>
           <p className="text-gray-700 text-lg mb-6 text-center italic font-bold">
             Para ti, para todos, comparte.          </p>
@@ -51,12 +50,7 @@ export default function Passenger() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-6">
-            Me solía desplazar en transporte público a mi trabajo, 
-            y era un caos. Cuando conocí SharetoGo y las diferentes opciones 
-            que tenía para unirme a cualquier coche fue una gran alegría. La 
-            app me permite conocer a gente la cual su ruta coincide con la mía 
-            y evitar las colas y retrasos de los trenes y autobuses. SharetoGo, 
-            totalmente recomendado.
+          Me solía desplazar en transporte público a mi trabajo, y era un caos. Cuando la empresa implantó SharetoGo fue un tremendo alivio. La app me permite, de manera gratuita, evitar colas, retrasos de los trenes, autobuses y mejorar mi satisfacción para ir a trabajar. SharetoGo, totalmente recomendado.
           </p>
           <div className="flex items-center space-x-1">
             <p className="text-gray-900 text-lg mt-6 font-extrabold">
@@ -81,11 +75,7 @@ export default function Passenger() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-2">
-            Vivo en las afueras de la ciudad y cada día tengo que ir a trabajar al centro. 
-            Las conexiones son realmente pésimas y tuve que buscar solución. Un día, en mi 
-            empresa nos introdujeron SharetoGo, me di cuenta que muchos de mis compañeros 
-            salen cerca mío y puedo ocupar las plazas libres de sus coches. La vida ahora 
-            es mucho más cómoda y puedo realizar los trayectos de manera más relajada.
+          ivo a las afueras de la ciudad y cada día tengo que ir a trabajar al centro. Las conexiones son realmente pésimas y los gastos elevados. En mi empresa , somos 250 trabajadores por turno, y tuvieron que implantar un plan de movilidad sostenible al trabajo, por ley. Me di cuenta que muchos de mis compañeros salen cerca mío, y puedo ocupar las plazas libres de sus coches de manera gratuita. Vivo mucho más cómoda y más relajada.
           </p>          
 
         </div>
