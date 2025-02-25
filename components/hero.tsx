@@ -33,6 +33,9 @@ export default function Hero() {
                 </span>
               </a>
             </div>
+            <div className="flex flex-col items-center md:justify-center">
+              <p  className="text-lg text-teal-950 mb-8 italic text-center pt-4" data-aos="zoom-y-out" data-aos-delay="300"> Carpooling Corporativo</p>
+            </div>
           </div>
           <div className="text-center md:text-right">
             <Image src={AppPreview} priority={true} width={1200} height={1148} alt="App preview" data-aos="zoom-y-out" data-aos-delay="180" />

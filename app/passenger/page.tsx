@@ -1,5 +1,5 @@
 export const metadata = {
-    title: 'SharetoGo - Driver',
+    title: 'SharetoGo',
     description: 'Driver SharetoGo',
 };
 
@@ -26,7 +26,7 @@ export default function Passenger() {
           Únete al coche de un compañero y comparte tu trayecto diario. 
           </p>
           <p className="text-gray-700 text-lg mb-6 text-center italic font-bold">
-            Para ti, para todos, comparte.          </p>
+            Para tí, para todos, comparte.          </p>
             <div className="flex items-center space-x-1">
             <p className="text-gray-900 text-lg mt-6 font-extrabold">
               Ray Cordova
@@ -75,7 +75,7 @@ export default function Passenger() {
             </div>
           </div>
           <p className="text-gray-600 text-lg mt-2">
-          ivo a las afueras de la ciudad y cada día tengo que ir a trabajar al centro. Las conexiones son realmente pésimas y los gastos elevados. En mi empresa , somos 250 trabajadores por turno, y tuvieron que implantar un plan de movilidad sostenible al trabajo, por ley. Me di cuenta que muchos de mis compañeros salen cerca mío, y puedo ocupar las plazas libres de sus coches de manera gratuita. Vivo mucho más cómoda y más relajada.
+          Vivo a las afueras de la ciudad y cada día tengo que ir a trabajar al centro. Las conexiones son realmente pésimas y los gastos elevados. En mi empresa , somos 250 trabajadores por turno, y tuvieron que implantar un plan de movilidad sostenible al trabajo, por ley. Me di cuenta que muchos de mis compañeros salen cerca mío, y puedo ocupar las plazas libres de sus coches de manera gratuita. Vivo mucho más cómoda y más relajada.
           </p>          
 
         </div>

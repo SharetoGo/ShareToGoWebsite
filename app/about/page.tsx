@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'SharetoGo - Quienes somos?',
+  title: 'SharetoGo',
   description: 'Quien es SharetoGo?',
 };
 
@@ -43,7 +43,7 @@ export default function About() {
           </div>
         </div>
         <p className="text-teal-950 mb-4 py-12 text-2xl text-center font-bold italic">
-          Para ti, para todos, comparte.
+          Para tí, para todos, comparte.
         </p>
         <div className="flex justify-center items-center">
           <div className="text-center">

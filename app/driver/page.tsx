@@ -1,6 +1,6 @@
 export const metadata = {
-    title: 'SharetoGo - Driver',
-    description: 'Driver SharetoGo',
+  title: 'SharetoGo',
+  description: 'Driver SharetoGo',
 };
 
 import Image from 'next/image'
@@ -28,7 +28,7 @@ export default function Driver() {
             No lo dudes, comparte, tus gastos disminuirán considerablemente.
           </p>
           <p className="text-gray-700 text-lg mb-6 text-center italic font-bold">
-            Para ti, para todos, comparte.          </p>
+            Para tí, para todos, comparte.          </p>
           <div className="flex items-center space-x-1">
             <p className="text-gray-900 text-lg mt-6 font-extrabold">
             Tomás López
