@@ -97,7 +97,7 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-            <div className="text-sm text-white mr-4">&copy; sharetogo.org. All rights reserved.</div>
+            <div className="text-sm text-white mr-4">&copy; sharetogo.es. All rights reserved.</div>
           </div>
         </div>
       </div>

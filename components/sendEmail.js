@@ -11,7 +11,7 @@ async function sendWelcomeEmail(email) {
     });
 
   const mailOptions = {
-    from: 'contact@sharetogo.org',
+    from: 'contact@sharetogo.es',
     to: email,
     subject: 'Bienvenidos a ShareToGo',
     text: '¡Gracias por suscribirse!',

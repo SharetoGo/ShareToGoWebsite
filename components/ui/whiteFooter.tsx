@@ -99,7 +99,7 @@ export default function WFooter() {
             </li>
           </ul>
 
-          <div className="text-sm text-gray-600 mr-4">&copy; sharetogo.org. All rights reserved.</div>
+          <div className="text-sm text-gray-600 mr-4">&copy; sharetogo.es. All rights reserved.</div>
 
         </div>
 
