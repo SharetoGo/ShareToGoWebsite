@@ -51,7 +51,7 @@ export default function Contact() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
             <h2 className="text-4xl font-extrabold text-teal-950 mb-4">Ayuda</h2>
-            <p className="text-teal-950 mb-2 font-bold text-2xl">Ponte en contacto con nosotros</p>
+            <p className="text-teal-950 mb-2 font-bold text-2xl">Ponte en contacto con nosotros.</p>
             <p className="text-teal-950 mb-8 text-lg">Contacta con nosotros para cualquier duda o consulta y te ayudaremos lo antes posible.</p>
         </div>
         <form className="bg-transparent rounded-lg shadow-2xl p-6 grid grid-cols-2 gap-4"
