@@ -1,35 +1,45 @@
-import Plant from '@/public/images/plant.png';
-import People from '@/public/images/people.png';
-import Money from '@/public/images/money.png';
+import AppImage from '@/public/images/captura_inicio.png';
+import { MdOutlineEco } from "react-icons/md";
+import { MdOutlineEuroSymbol } from "react-icons/md";
+import { IoIosPeople } from "react-icons/io";
 import Image from 'next/image';
 
 export default function FeaturesBlocks() {
   return (
-<section className="bg-gradient-to-b from-green-200 to-green-600 text-white py-16">
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 items-start md:max-w-2xl lg:max-w-none">
-          {/* 1st item */}
-          <div className="flex flex-col items-center p-6 bg-white bg-opacity-20 rounded-3xl shadow-xl transition-transform transform hover:-translate-y-2 hover:scale-105">
-            <Image src={Money} width={120} height={120} alt="Money Icon" />
-            <h4 className="text-xl font-bold leading-snug tracking-tight mt-4 mb-2">Ahorra</h4>
-            <p className="text-center">Ahorra dinero en tus trayectos diarios al trabajo.</p>
-            <p className="text-teal-950 text-center italic mt-4">"SharetoGo es la herramienta que necesitas para empezar a ahorrar."</p>
+    <section className="relative bg-white py-20 md:py32 lg:py40 min-h-screen">
+      <div className="max-w-screen-2xl mx-auto sm:px-6">
+        <div className="flex">
+          <div className="w-1/3 flex justify-center items-center">
+            <Image src={AppImage} priority={true} width={300} height={220} alt="App preview 1" data-aos="zoom-y-out" data-aos-delay="180" className="rounded-xl" />
           </div>
-
-          {/* 2nd item */}
-          <div className="flex flex-col items-center p-6 bg-white bg-opacity-20 rounded-3xl shadow-xl transition-transform transform hover:-translate-y-2 hover:scale-105">
-            <Image src={Plant} width={120} height={120} alt="Plant Icon" />
-            <h4 className="text-xl font-bold leading-snug tracking-tight mt-4 mb-2">Medioambiente</h4>
-            <p className="text-center">Cuida el medioambiente y reduce tu huella de carbono.</p>
-            <p className="text-teal-950 text-center italic mt-4 mb-6">"La vida sostenible es para gente valiente."</p>
-          </div>
-
-          {/* 3rd item */}
-          <div className="flex flex-col items-center p-6 bg-white bg-opacity-20 rounded-3xl shadow-xl transition-transform transform hover:-translate-y-2 hover:scale-105">
-            <Image src={People} width={120} height={120} alt="People Icon" />
-            <h4 className="text-xl font-bold leading-snug tracking-tight mt-4 mb-2">Comparte</h4>
-            <p className="text-center">Comparte los asientos libres de tu vehículo. Comparte y vive.</p>
-            <p className="text-teal-950 text-center italic mt-4 mb-6">"El acto de compartir, te hace más feliz."</p>
+          <div className="w-2/3 flex flex-col justify-center">
+            <span className="md:text-4xl text-5xl text-center font-bold tracking-tighter text-[#2a2c38]" data-aos="zoom-y-out">¿Por qué empezar a usar ShareToGo?</span>
+            <div className="flex flex-col space-y-6 mt-8 items-start">
+              <div className="h-20 rounded-lg flex items-center space-x-4">
+                <div className="w-12 h-12 bg-[#9dd187] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MdOutlineEco className="text-white text-2xl" />
+                </div>
+                <div className="text-lg font-medium text-gray-800">
+                  <span className="font-bold">Reducción de emisiones de CO₂:</span> El coche privado es la principal fuente de emisiones. Reducir su uso disminuye la huella de carbono además de la congestión en los alrededores de la empresa.
+                </div>
+              </div>
+              <div className="h-20 rounded-lg flex items-center space-x-4">
+                <div className="w-12 h-12 bg-[#9dd187] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <IoIosPeople className="text-white text-2xl" />
+                </div>
+                <div className="text-lg font-medium text-gray-800">
+                  <span className="font-bold">Beneficios sociales y laborales:</span> El coche compartido favorece el bienestar y la cohesión del equipo, mejora la experiencia diaria de los trabajadores y permite deducir fiscalmente los gastos vinculados a la movilidad.
+                </div>
+              </div>
+              <div className="h-20 rounded-lg flex items-center space-x-4">
+                <div className="w-12 h-12 bg-[#9dd187] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MdOutlineEuroSymbol className="text-white text-2xl" />
+                </div>
+                <div className="text-lg font-medium text-gray-800">
+                  <span className="font-bold">Ahorro económico:</span> Ahorro en infraestructuras, menos demanda de aparcamiento y mayor eficiencia para los desplazamientos diarios de los trabajadores.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
