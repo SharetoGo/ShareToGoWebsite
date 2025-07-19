@@ -30,6 +30,15 @@ export default function Footer() {
                   <a href="/about" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Quiénes somos</a>
                 </li>
                 <li className="mb-2">
+                  <a href="/contratar" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Contratar</a>
+                </li>
+                <li className="mb-2">
+                  <a href="/espacioEmpresas" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Espacio Empresas</a>
+                </li>
+                <li className="mb-2">
+                  <a href="/funcionamiento" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Funcionamiento de la App</a>
+                </li>
+                <li className="mb-2">
                   <a href="/contact" className="text-white hover:text-teal-700 transition duration-150 ease-in-out">Contacto</a>
                 </li>
                 <li className="mb-2">

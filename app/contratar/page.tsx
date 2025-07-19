@@ -12,5 +12,3 @@ export default function Contratar() {
     </div>
   )
 }
-
-//cambiar, esto no es una página

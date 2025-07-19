@@ -13,4 +13,3 @@ export default function EspacioEmpresas() {
   )
 }
 
-//cambiar, esto no es una página
