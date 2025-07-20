@@ -10,17 +10,17 @@ export default function Faqs() {
     return(
          <section className="relative bg-white py-20">
             <div className="max-w-screen-2xl mx-auto sm:px-6">
-                <h2 className="text-4xl font-bold text-[#2a2c38] mb-4">
+                <h2 className="text-4xl font-bold text-[#2a2c38] mb-4 pl-6">
                     Preguntas frecuentes                
                 </h2>
             </div>
             {/* FAQ 1 */}
-            <div className={`w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-16 transition-all duration-300 ${open[0] ? 'h-[18rem]' : 'h-48'} justify-center`}> 
-                <div className="w-full flex items-center relative h-full">
-                    <span className="text-4xl font-bold text-[#2a2c38] mb-4 text-center">¿De quién es el coche?</span>
+            <div className={`w-full sm:w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-4 sm:px-16 transition-all duration-300 ${open[0] ? 'sm:h-[18rem]' : 'sm:h-48'} ${open[0] ? 'h-auto' : 'h-auto'} justify-center`}>
+                <div className="w-full flex flex-col sm:flex-row items-center relative h-full">
+                    <span className="text-4xl font-bold text-[#2a2c38] mb-4 text-center sm:text-left flex-1">¿De quién es el coche?</span>
                     <button
                         type="button"
-                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors absolute right-0 top-1/2 -translate-y-1/2"
+                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                         aria-label={open[0] ? "Collapse FAQ" : "Expand FAQ"}
                         onClick={() => handleToggle(0)}
                     >
@@ -38,12 +38,12 @@ export default function Faqs() {
                 )}
             </div>
             {/* FAQ 2 */}
-            <div className={`w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-16 transition-all duration-300 ${open[1] ? 'h-[18rem]' : 'h-48'} justify-center`}> 
-                <div className="w-full flex items-center relative h-full">
-                    <span className="inline-block text-4xl font-bold text-[#2a2c38] mb-4 text-left">¿Si actúo como conductor, cuáles son los<br></br>beneficios económicos? </span>
+            <div className={`w-full sm:w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-4 sm:px-16 transition-all duration-300 ${open[1] ? 'sm:h-[18rem]' : 'sm:h-48'} ${open[1] ? 'h-auto' : 'h-auto'} justify-center`}>
+                <div className="w-full flex flex-col sm:flex-row items-center relative h-full">
+                    <span className="inline-block text-4xl font-bold text-[#2a2c38] mb-4 text-left flex-1">¿Si actúo como conductor, cuáles son los<br></br>beneficios económicos? </span>
                     <button
                         type="button"
-                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors absolute right-0 top-1/2 -translate-y-1/2"
+                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                         aria-label={open[1] ? "Collapse FAQ" : "Expand FAQ"}
                         onClick={() => handleToggle(1)}
                     >
@@ -61,12 +61,12 @@ export default function Faqs() {
                 )}
             </div>
             {/* FAQ 3 */}
-            <div className={`w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-16 transition-all duration-300 ${open[2] ? 'h-[18rem]' : 'h-48'} justify-center`}> 
-                <div className="w-full flex items-center relative h-full">
-                    <span className="text-4xl font-bold text-[#2a2c38] mb-4 text-center">¿Los pasajeros pagan? ¿Cuánto?</span>
+            <div className={`w-full sm:w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-4 sm:px-16 transition-all duration-300 ${open[2] ? 'sm:h-[18rem]' : 'sm:h-48'} ${open[2] ? 'h-auto' : 'h-auto'} justify-center`}>
+                <div className="w-full flex flex-col sm:flex-row items-center relative h-full">
+                    <span className="text-4xl font-bold text-[#2a2c38] mb-4 text-center sm:text-left flex-1">¿Los pasajeros pagan? ¿Cuánto?</span>
                     <button
                         type="button"
-                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors absolute right-0 top-1/2 -translate-y-1/2"
+                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                         aria-label={open[2] ? "Collapse FAQ" : "Expand FAQ"}
                         onClick={() => handleToggle(2)}
                     >
@@ -85,12 +85,12 @@ Intentamos siempre que el pago del pasajero sea lo más bajo posible para ser co
                 )}
             </div>
             {/* FAQ 4 */}
-            <div className={`w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-16 transition-all duration-300 ${open[3] ? 'h-[18rem]' : 'h-48'} justify-center`}> 
-                <div className="w-full flex items-center relative h-full">
-                    <span className="text-4xl font-bold text-[#2a2c38] mb-4 text-center">¿Cuáles son los gastos asociados para la empresa? </span>
+            <div className={`w-full sm:w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-4 sm:px-16 transition-all duration-300 ${open[3] ? 'sm:h-[18rem]' : 'sm:h-48'} ${open[3] ? 'h-auto' : 'h-auto'} justify-center`}>
+                <div className="w-full flex flex-col sm:flex-row items-center relative h-full">
+                    <span className="text-4xl font-bold text-[#2a2c38] mb-4 text-center sm:text-left flex-1">¿Cuáles son los gastos asociados para la empresa? </span>
                     <button
                         type="button"
-                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors absolute right-0 top-1/2 -translate-y-1/2"
+                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                         aria-label={open[3] ? "Collapse FAQ" : "Expand FAQ"}
                         onClick={() => handleToggle(3)}
                     >
@@ -108,12 +108,12 @@ Intentamos siempre que el pago del pasajero sea lo más bajo posible para ser co
                 )}
             </div>
             {/* FAQ 5 */}
-            <div className={`w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-16 transition-all duration-300 ${open[4] ? 'h-[22rem]' : 'h-48'} justify-center`}> 
-                <div className="w-full flex items-center relative h-full">
-                    <span className="inline-block text-4xl font-bold text-[#2a2c38] mb-4 text-left">¿A parte de le gestión de la movilidad, la empresa<br></br>puede beneficiarse de otros servicios? </span>
+            <div className={`w-full sm:w-[80rem] bg-[#9dd187] rounded-2xl mt-6 mx-auto flex flex-col px-4 sm:px-16 transition-all duration-300 ${open[4] ? 'sm:h-[22rem]' : 'sm:h-48'} ${open[4] ? 'h-auto' : 'h-auto'} justify-center`}>
+                <div className="w-full flex flex-col sm:flex-row items-center relative h-full">
+                    <span className="inline-block text-4xl font-bold text-[#2a2c38] mb-4 text-left flex-1">¿A parte de le gestión de la movilidad, la empresa<br></br>puede beneficiarse de otros servicios? </span>
                     <button
                         type="button"
-                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors absolute right-0 top-1/2 -translate-y-1/2"
+                        className="focus:outline-none p-2 rounded-full hover:bg-[#b6e2b8] transition-colors sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2"
                         aria-label={open[4] ? "Collapse FAQ" : "Expand FAQ"}
                         onClick={() => handleToggle(4)}
                     >
