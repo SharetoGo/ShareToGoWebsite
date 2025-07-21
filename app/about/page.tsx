@@ -13,8 +13,8 @@ import QuienesSomos from '@/public/images/logo.png';
 export default function About() {
   return (
     <>
-      <section className="bg-white pt-24 pb-8 px-4 md:pt-32 md:pb-16 md:px-8 flex flex-col md:flex-row items-stretch min-h-[300px] gap-6 md:gap-0">
-        <div className="bg-[#9dd187] w-full md:w-3/5 rounded-lg shadow-md p-6 md:p-10 flex items-start justify-center mb-6 md:mb-0">
+      <section className="bg-white pt-24 pb-8 px-4 md:pt-32 md:pb-16 md:px-8 flex flex-col md:flex-row items-stretch min-h-[300px] gap-6">
+        <div className="bg-[#9dd187] w-full md:w-7/12 rounded-lg shadow-md p-6 md:p-10 flex items-start justify-center mb-6 md:mb-0">
           <div className="flex flex-col gap-6 md:gap-8 w-full">
             <span className="text-center text-3xl md:text-5xl font-bold text-[#2a2c38]">Nuestra misión</span>
             <p className="text-base md:text-lg font-medium text-[#2a2c38]">
@@ -22,14 +22,23 @@ export default function About() {
             </p>
           </div>
         </div>
-        <div className="w-full md:w-2/5 flex items-center justify-center">
-          <div className="w-full max-w-xs md:max-w-[540px]">
+        <div className="w-full md:w-5/12 flex items-center justify-center">
+          <div className="block md:hidden w-full max-w-xs">
             <Image
               src={NuestraMision}
               alt="Nuestra misión SharetoGo"
               className="rounded-lg shadow-lg object-cover w-full h-auto"
-              width={540}
-              height={540}
+              width={400}
+              height={400}
+              priority
+            />
+          </div>
+          <div className="hidden md:flex w-full h-full relative p-4">
+            <Image
+              src={NuestraMision}
+              alt="Nuestra misión SharetoGo"
+              className="rounded-lg shadow-lg object-cover"
+              fill
               priority
             />
           </div>
@@ -51,11 +60,11 @@ export default function About() {
       </section>
       <section className="bg-white pb-8 md:pb-16 px-4 md:px-8 flex flex-col md:flex-row items-stretch min-h-[300px] gap-6 md:gap-0">
         <div className="w-full md:w-2/5 flex items-center justify-center order-1 md:order-none mb-6 md:mb-0">
-          <div className="w-full max-w-xs md:max-w-[400px]">
+          <div className="w-full max-w-xs md:max-w-[400px] bg-white rounded-lg">
             <Image
               src={QuienesSomos}
               alt="Quienes Somos SharetoGo"
-              className="rounded-lg shadow-lg object-cover w-full h-auto"
+              className="rounded-lg object-cover w-full h-auto"
               width={400}
               height={400}
               priority
@@ -64,7 +73,7 @@ export default function About() {
         </div>
         <div className="bg-[#9dd187] w-full md:w-3/5 rounded-lg shadow-md p-6 md:p-10 flex items-center justify-center">
           <div className="flex flex-col gap-6 md:gap-8 w-full">
-            <span className="text-center text-3xl md:text-5xl font-bold text-[#2a2c38]">Quiénos Somos</span>
+            <span className="text-center text-3xl md:text-5xl font-bold text-[#2a2c38]">Quiénes Somos</span>
             <p className="text-base md:text-lg font-medium text-[#2a2c38]">
             Somos un grupo de personas que trabajamos ambiciosamente día tras día para poder conseguir un cambio de hábitos en la movilidad de la ciudadanía. Para nosotros, mantener al equipo unido y conectado ha sido siempre una pieza angular y prioritaria para que “la idea” inicial se materialice en un proyecto de aplicación móvil sólido. Esto sólo es la parrilla de salida. Entre todos, lo conseguiremos.
             </p>
