@@ -1,16 +1,47 @@
-export const metadata = {
-  title: 'SharetoGo',
-  description: 'Quien es SharetoGo?',
-};
+'use client';
 
 import Image from 'next/image';
-import AboutPic from '@/public/images/about.png';
-import Traffic from '@/public/images/traffic.png';
-import Logo from '@/public/images/logos/logocoche.png';
 import NuestraMision from '@/public/images/about.png';
 import QuienesSomos from '@/public/images/logo.png';
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase"; 
 
 export default function About() {
+
+const [trayectos, setTrayectos] = useState<number>(0);
+const [personas, setPersonas] = useState<number>(0);
+
+  const fetchTravels = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "travels"));
+      setTrayectos(querySnapshot.size);
+    } catch (error) {
+      console.error("Error fetching travels:", error);
+    }
+  };
+const fetchPeople = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "travels"));
+    let totalPeople = 0;
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      totalPeople += Array.isArray(data.reservedBy) ? data.reservedBy.length : 0;
+    });
+    setPersonas(totalPeople); 
+
+  } catch (error) {
+    console.error("Error fetching travels:", error);
+  }
+};
+
+
+  useEffect(() => {
+    fetchTravels();
+    fetchPeople();
+  }, []);
+
   return (
     <>
       <section className="bg-white pt-24 pb-8 px-4 md:pt-32 md:pb-16 md:px-8 flex flex-col md:flex-row items-stretch min-h-[300px] gap-6">
@@ -46,16 +77,26 @@ export default function About() {
       </section>
       <section className="bg-white pb-8 md:pb-16 px-4 md:px-8 flex flex-col md:flex-row items-stretch min-h-[200px] gap-6 md:gap-0">
         <div className="flex-1 flex flex-col items-center justify-center gap-1 md:gap-2 py-4">
-          <span className="text-4xl md:text-6xl font-extrabold text-[#2a2c38]">XX</span> 
-          <span className="text-center text-base md:text-lg font-semibold text-[#2a2c38]">TOTAL DE TRAYECTOS COMPLETADOS</span>
+          <span className="text-4xl md:text-6xl font-extrabold text-[#2a2c38]">
+              {trayectos}
+            </span> 
+          <span className="text-center text-base md:text-lg font-semibold text-[#2a2c38]">TRAYECTOS COMPLETADOS</span>
         </div>
+        {/* 
         <div className="flex-1 flex flex-col items-center justify-center gap-1 md:gap-2 py-4">
           <span className="text-4xl md:text-6xl font-extrabold text-[#2a2c38]">XX</span>
           <span className="text-center text-base md:text-lg font-semibold text-[#2a2c38]">TOTAL DE EMPRESAS USANDO SHARETOGO</span>
         </div>
+        */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-1 md:gap-2 py-4">
+          <span className="text-4xl md:text-6xl font-extrabold text-[#2a2c38]">
+            {personas}
+          </span>
+          <span className="text-center text-base md:text-lg font-semibold text-[#2a2c38]">PERSONAS TRANSPORTADAS</span>
+        </div>
         <div className="flex-1 flex flex-col items-center justify-center gap-1 md:gap-2 py-4">
           <span className="text-4xl md:text-6xl font-extrabold text-[#2a2c38]">XX</span>
-          <span className="text-center text-base md:text-lg font-semibold text-[#2a2c38]">TOTAL DE TONELADAS CO2 AHORRADAS</span>
+          <span className="text-center text-base md:text-lg font-semibold text-[#2a2c38]">TONELADAS CO2 AHORRADAS</span>
         </div>
       </section>
       <section className="bg-white pb-8 md:pb-16 px-4 md:px-8 flex flex-col md:flex-row items-stretch min-h-[300px] gap-6 md:gap-0">
