@@ -6,6 +6,7 @@ import QuienesSomos from '@/public/images/logo.png';
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase"; 
+import Reviews from '@/components/ui/reviews';
 
 export default function About() {
 
@@ -116,11 +117,12 @@ const fetchPeople = async () => {
           <div className="flex flex-col gap-6 md:gap-8 w-full">
             <span className="text-center text-3xl md:text-5xl font-bold text-[#2a2c38]">Quiénes Somos</span>
             <p className="text-base md:text-lg font-medium text-[#2a2c38]">
-            Somos un grupo de personas que trabajamos ambiciosamente día tras día para poder conseguir un cambio de hábitos en la movilidad de la ciudadanía. Para nosotros, mantener al equipo unido y conectado ha sido siempre una pieza angular y prioritaria para que “la idea” inicial se materialice en un proyecto de aplicación móvil sólido. Esto sólo es la parrilla de salida. Entre todos, lo conseguiremos.
+            Somos un grupo de personas que trabajamos ambiciosamente día tras día para poder conseguir un cambio de hábitos en la movilidad de la ciudadanía. Para nosotros, mantener al equipo unido y conectado ha sido siempre una pieza angular y prioritaria para que "la idea" inicial se materialice en un proyecto de aplicación móvil sólido. Esto sólo es la parrilla de salida. Entre todos, lo conseguiremos.
             </p>
           </div>
         </div>
       </section>
+      <Reviews />
     </>
   );
 }
