@@ -18,7 +18,7 @@ export default function Funcionamiento() {
           Actua como conductor y/o pasajero
         </h1>
         <div className="flex flex-col gap-4 text-left">
-          <h2 className="text-2xl font-bold text-[#2a2c38] mb-4 px-4 md:px-8"> Si eres conductor: </h2>
+          <h2 className="text-2xl font-bold text-[#2a2c38] mb-4 pl-4 md:pl-20"> Si eres conductor: </h2>
           <span className="block text-center font-semibold text-xl text-[#2a2c38] italic">
             "Gana dinero sin cambiar tu rutina"
           </span>
@@ -44,7 +44,7 @@ export default function Funcionamiento() {
             </p>
           </div>
 
-          <h2 className="text-2xl font-bold text-[#2a2c38] mb-4 px-4 md:px-8"> Si eres pasajero: </h2>
+          <h2 className="text-2xl font-bold text-[#2a2c38] mb-4 pl-4 md:pl-20"> Si eres pasajero: </h2>
         </div>
         {/* Section: text left, image right (responsive) */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 px-4 md:px-32">
@@ -53,13 +53,13 @@ export default function Funcionamiento() {
             <p className="text-base text-[#2a2c38] text-center md:text-left">Gracias a SharetoGo, según tus preferencias podrás encontrar las mejores opciones para realizar tus trayectos diarios. </p>
           </div>
           <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
-            <Image src={require('@/public/images/reserva_funcionamiento.PNG')} alt="Reservar" width={300} height={300} className="rounded-lg shadow-md w-full max-w-xs md:max-w-none" />
+            <Image src={require('@/public/images/movil2.PNG')} alt="Reservar" width={300} height={300} className="rounded-lg w-full max-w-xs md:max-w-none" />
           </div>
         </div>
         {/* Section: image left, text right (responsive) */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8 px-4 md:px-32">
           <div className="flex-shrink-0 flex justify-center w-full md:w-auto mb-4 md:mb-0">
-            <Image src={require('@/public/images/info_trayecto.PNG')} alt="info" width={300} height={300} className="rounded-lg shadow-md w-full max-w-xs md:max-w-none" />
+            <Image src={require('@/public/images/info_trayecto.PNG')} alt="info" width={300} height={300} className="rounded-lg w-full max-w-xs md:max-w-none" />
           </div>
           <div className="max-w-xl w-full">
             <h3 className="text-2xl font-bold text-[#2a2c38] mb-2 text-center md:text-left">¿Quieres ahorrar dinero y hacer tus trayectos diarios de manera mucho más cómoda?</h3>
@@ -73,7 +73,7 @@ export default function Funcionamiento() {
             <p className="text-base text-[#2a2c38] text-center md:text-left">Una vez confirmada la reserva, se abriría un chat interno entre los integrantes del trayecto, incluyendo al conductor, en el cual se puede acabar de resolver cualquier duda pediente.  </p>
           </div>
           <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
-            <Image src={require('@/public/images/chat1.PNG')} alt="chat" width={300} height={300} className="rounded-lg shadow-md w-full max-w-xs md:max-w-none" />
+            <Image src={require('@/public/images/chat1.PNG')} alt="chat" width={300} height={300} className="rounded-lg w-full max-w-xs md:max-w-none" />
           </div>
         </div>
       </div>
