@@ -36,7 +36,7 @@ export default function Reviews() {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6 text-center">Reseñas de usuarios</h1>
 
-      <form onSubmit={handleSubmit} className="bg-[#9dd187] shadow p-6 rounded mb-10 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-[#9dd187] shadow p-6 rounded mb-10 space-y-4 md: pb-4">
         <input
           type="text"
           placeholder="Tu nombre"

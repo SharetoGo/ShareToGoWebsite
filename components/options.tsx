@@ -25,7 +25,7 @@ export default function Options() {
               </Link>
               <span className="font-bold text-[#2a2c38] text-xl">¿Tienes alguna duda?</span>
               <span className="font-medium text-[#2a2c38] text-lg">Ponte en contacto con nuestro servicio de atención al cliente. </span>
-              <Link href="/contratar">
+              <Link href="/contact">
                 <button className="mt-4 px-8 py-4 bg-[#2a2c38] text-white font-bold rounded-lg hover:bg-[#1a1c28] transition-colors text-lg">
                   Contacta con nosotros
                 </button>

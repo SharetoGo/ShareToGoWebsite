@@ -1,4 +1,4 @@
-import AppImage from '@/public/images/captura_inicio.png';
+import AppImage from '@/public/images/captura_inicio.jpg';
 import { MdOutlineEco } from "react-icons/md";
 import { MdOutlineEuroSymbol } from "react-icons/md";
 import { IoIosPeople } from "react-icons/io";

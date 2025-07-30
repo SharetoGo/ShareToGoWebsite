@@ -50,12 +50,14 @@ export default function Header() {
               <li>
                 <Link href="/privacy" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Política de privacidad</Link>
               </li>
-              <li>
+              {/*                  <li>
                 <Link href="/idioma" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">
                 Idioma 
                 <MdLanguage className="text-xl text-teal-950" />
-                </Link> {/* CAMBIAR */}
-              </li>
+                </Link> 
+              </li>          
+              */}
+
             </ul>
 
           </nav>
