@@ -92,12 +92,6 @@ export default function MobileMenu() {
             <li>
               <Link href="/privacy" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Política de privacidad</Link>
             </li>
-            <li>
-              <Link href="/idioma" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center items-center gap-2" onClick={() => setMobileNavOpen(false)}>
-                Idioma
-                <MdLanguage className="text-xl text-gray-600 ml-2" />
-              </Link>
-            </li>
           </ul>          
         </Transition>
       </div>
