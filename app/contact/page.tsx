@@ -55,94 +55,97 @@ export default function Contact() {
           <div className="w-full md:w-1/2 md:pr-4 mb-8 md:mb-0">
             <form className="bg-[#9dd187] rounded-lg shadow-2xl p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4"
               onSubmit={handleSubmit}>
-                {isSuccess && (
+              {isSuccess ? (
+                <div className="col-span-2 text-center">
+                  <p className="text-[#2a2c38] text-xl font-bold">Hemos recibido tu mensaje con éxito. En breves te contactaremos.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="col-span-2">
+                    <div className="mb-2 pb-4 text-center mx-auto max-w-xs sm:max-w-md">
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-[#2a2c38]">¡Contáctanos!</h2>
+                      <p className="text-sm sm:text-base font-normal text-[#2a2c38] mt-1">¿Tienes alguna pregunta o feedback que darnos? Encantados de escucharte. Deja tu mensaje y te responderemos en un plazo máximo de 24 horas.</p>
+                    </div>
+                    <div className="h-1 bg-[#2a2c38] w-40 sm:w-72 rounded mx-auto mb-4"></div>
+                  </div>
+                  <div className="col-span-1">
+                    <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="nombre">
+                      Nombre
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 rounded-lg text-sm"
+                      type="text"
+                      placeholder="Tu nombre"
+                      id="nombre"
+                      name="nombre"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="apellido">
+                      Apellido/s
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg text-sm"
+                      type="text"
+                      placeholder="Tu apellido"
+                      id="apellido"
+                      name="apellido"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="email">
+                      Correo electrónico (obligatorio)
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg text-sm"
+                      type="text"
+                      placeholder="Tu correo electrónico"
+                      id="email"
+                      name="email"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="sujeto">
+                      Sujeto
+                    </label>
+                    <input
+                      className="w-full px-3 py-2 border rounded-lg text-sm"
+                      type="text"
+                      placeholder="Agregar un tema"
+                      id="sujeto"
+                      name="sujeto"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="mensaje">
+                      Mensaje
+                    </label>
+                    <textarea
+                      className="w-full px-3 py-2 border rounded-lg text-sm"
+                      id="mensaje"
+                      placeholder="Tu mensaje..."
+                      name="mensaje"
+                      onChange={handleChange}
+                      required
+                    ></textarea>
+                  </div>
                   <div className="col-span-2 text-center">
-                  <p className="text-green-600 bg-green-200 rounded-lg p-2 text-xl font-bold">Hemos recibido tu mensaje con éxito. En breves te contactaremos.</p>
-                </div>
+                    <button
+                      className="bg-[#2a2c38] text-white font-medium py-2 px-4 rounded-lg w-full sm:w-auto"
+                      type="submit">
+                      Enviar mensaje
+                    </button>
+                  </div>
+                </>
               )}
-              <div className="col-span-2">
-                <div className="mb-2 pb-4 text-center mx-auto max-w-xs sm:max-w-md">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-[#2a2c38]">¡Contáctanos!</h2>
-                  <p className="text-sm sm:text-base font-normal text-[#2a2c38] mt-1">¿Tienes alguna pregunta o feedback que darnos? Encantados de escucharte. Deja tu mensaje y te responderemos en un plazo máximo de 24 horas.</p>
-                </div>
-                <div className="h-1 bg-[#2a2c38] w-40 sm:w-72 rounded mx-auto mb-4"></div>
-              </div>
-              <div className="col-span-1">
-                <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="nombre">
-                  Nombre
-                </label>
-                <input
-                  className="w-full px-3 py-2 rounded-lg text-sm"
-                  type="text"
-                  placeholder="Tu nombre"
-                  id="nombre"
-                  name="nombre"
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="col-span-1">
-                <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="apellido">
-                  Apellido/s
-                </label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                  type="text"
-                  placeholder="Tu apellido"
-                  id="apellido"
-                  name="apellido"
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="col-span-2">
-                <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="email">
-                  Correo electrónico (obligatorio)
-                </label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                  type="text"
-                  placeholder="Tu correo electrónico"
-                  id="email"
-                  name="email"
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="col-span-2">
-                <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="sujeto">
-                  Sujeto
-                </label>
-                <input
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                  type="text"
-                  placeholder="Agregar un tema"
-                  id="sujeto"
-                  name="sujeto"
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="col-span-2">
-                <label className="block text-teal-950 text-xs sm:text-sm font-bold mb-2" htmlFor="mensaje">
-                  Mensaje
-                </label>
-                <textarea
-                  className="w-full px-3 py-2 border rounded-lg text-sm"
-                  id="mensaje"
-                  placeholder="Tu mensaje..."
-                  name="mensaje"
-                  onChange={handleChange}
-                  required
-                ></textarea>
-              </div>
-              <div className="col-span-2 text-center">
-                <button
-                  className="bg-[#2a2c38] text-white font-medium py-2 px-4 rounded-lg w-full sm:w-auto"
-                  type="submit">
-                  Enviar mensaje
-                </button>
-              </div>
             </form>
           </div>
           <div className="hidden md:block w-1 bg-white mx-2"></div>

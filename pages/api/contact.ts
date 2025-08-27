@@ -10,10 +10,10 @@ if (!myemail || !appPassword) {
 }
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: myemail,
-    pass: appPassword,
+    user: process.env.EMAIL,
+    pass: process.env.APP_PASSWORD,
   },
 });
 
@@ -25,8 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const acknowledgmentMailOptions = {
         from: myemail,
         to: email,
-        subject: '¡Gracias por contactar con nosotros!',
-        text: `Hola ${nombre} ${apellido},\n\nGracias por ponerte en contacto con nosotros. Hemos recibido tu mensaje y nos pondremos en contacto contigo en breve.\n\nSaludos cordiales,\n\nEquipo de SharetoGo`,
+        subject: '¡Gracias por contactar con nosotros! ✅',
+        text: `Hola ${nombre} ${apellido},\n\nHemos recibido tu mensaje. Estos son los datos que nos has enviado:\n\nNombre: ${nombre}\nApellido: ${apellido}\nCorreo electrónico: ${email}\nAsunto: ${sujeto}\nMensaje: ${mensaje}\n\nNos pondremos en contacto contigo en breve.\n\nEquipo de SharetoGo`,
       };
 
       await transporter.sendMail(acknowledgmentMailOptions);
