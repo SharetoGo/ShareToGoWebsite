@@ -1,8 +1,3 @@
-export const metadata = {
-  title: 'SharetoGo - Funcionamiento',
-  description: 'Página que explica como funciona SharetoGo',
-}
-
 import Header from '@/components/ui/header'
 import Image from 'next/image'
 
@@ -35,7 +30,7 @@ export default function Funcionamiento() {
             {[1, 2, 3].map((num) => (
               <div key={num} className="flex justify-center w-full md:w-auto">
                 <Image
-                  src={require(`@/public/images/conductor${num}.png`)}
+                  src={require(`@/public/images/conductor${num}.PNG`)}
                   alt={`Conductor ${num}`}
                   width={300}
                   height={300}

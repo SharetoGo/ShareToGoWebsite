@@ -1,6 +1,7 @@
 "use client";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Faqs() {
     const [open, setOpen] = useState([false, false, false, false, false]);
@@ -56,7 +57,7 @@ export default function Faqs() {
                 </div>
                 {open[1] && (
                     <div className="w-full mt-4 mb-8 text-2xl text-[#2a2c38] text-left">
-                        Los beneficios dependerán del acuerdo entre la empresa y SharetoGo, garantizando un mínimo de entre 100€- 200€ mensuales para cada conductor. 
+                        Los beneficios dependerán del uso que se haga de la plataforma y las plazas libres que se ofrezcan. Garantizamos que la mitad de los gastos están cubiertos en cada trayecto compartido. 
                     </div>
                 )}
             </div>
@@ -79,8 +80,7 @@ export default function Faqs() {
                 </div>
                 {open[2] && (
                     <div className="w-full mt-4 mb-8 text-2xl text-[#2a2c38] text-left">
-                        Sí. Los pasajeros aportan  una parte en un sistema de CoPago entre la empresa y ellos. 
-Intentamos siempre que el pago del pasajero sea lo más bajo posible para ser competitivos con otras alternativas. 
+                       Si, según la distancia del trayecto los pasajeros deberán pagar una cantidad u otra. Intentamos que el pago de los pasajeros sea lo más bajo posible para poder ser altamente  competitivos con otras alternativas.
                     </div>
                 )}
             </div>
@@ -101,10 +101,14 @@ Intentamos siempre que el pago del pasajero sea lo más bajo posible para ser co
                         )}
                     </button>
                 </div>
-                {open[3] && (
-                    <div className="w-full mt-4 mb-8 text-2xl text-[#2a2c38] text-left">
-                        La empresa deberá de pagar una suscripción por el uso de la plataforma y la gestión de la movilidad. Además, aportará una parte al copago de cada trayecto. Las cantidades exactas varían según la empresa. 
-                    </div>
+              {open[3] && (
+                <div className="w-full mt-4 mb-8 text-2xl text-[#2a2c38] text-left">
+                    La empresa y SharetoGo valorarán la situación conjuntamente y llegarán al mejor acuerdo posible.{" "}
+                    <Link href="/contratar" className="font-bold text-black hover:underline">
+                    Solicitar una prueba
+                    </Link>{" "}
+                    puede ser el primer paso
+                </div>
                 )}
             </div>
             {/* FAQ 5 */}

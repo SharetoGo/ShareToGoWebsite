@@ -1,8 +1,3 @@
-export const metadata = {
-  title: 'SharetoGo - Políticas de privacidad',
-  description: 'Políticas de privacidad de SharetoGo',
-}
-
 export default function Policy() {
   const pdf1Url = '/pdfs/politicas-de-privacidad-y-condiciones-de-uso-trabajo-laura-pdf.pdf';
   const pdf2Url = '/pdfs/politica-de-cookies-share-to-go-trabajo-laura.pdf';

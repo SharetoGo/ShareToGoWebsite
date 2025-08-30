@@ -1,8 +1,3 @@
-export const metadata = {
-  title: 'SharetoGo - Idioma',
-  description: 'Idioma page of SharetoGo',
-}
-
 import Header from '@/components/ui/header'
 
 export default function EspacioEmpresas() {

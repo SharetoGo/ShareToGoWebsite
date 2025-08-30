@@ -1,8 +1,3 @@
-export const metadata = {
-  title: 'SharetoGo',
-  description: 'Driver SharetoGo',
-};
-
 import Image from 'next/image'
 import Publicar from '@/public/images/Publicar.png'
    

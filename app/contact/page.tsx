@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react';
-import { metadata } from './metadata';
 import { MdOutlineMail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 
