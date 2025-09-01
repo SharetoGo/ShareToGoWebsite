@@ -214,23 +214,15 @@ export default function Policy() {
               condiciones descritas a continuación.
             </p>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.1 Costes Compartidos</h2>
-            <p className="text-justify px-14 mb-8 text-teal-950">
-              Los costes compartidos los determina la aplicación. Según el Municipio, las Empresas con
-              las que tengamos acuerdos(grandes corporaciones) y las Administración Pública, la
-              cantidad que recibirá el conductor por pasajero variará. Está estrictamente prohibido
-              obtener ningún tipo de beneficio mediante el uso de nuestra App.
-            </p>
-            <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.1 Costes Compartidos</h2>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">(
-              Importante: Los pagos se pueden realizar por la aplicación, ya que, tenemos contratado un acuerdo con un SaaS llamado Stripe. (Software as a Service)            
+              Los pagos se pueden realizar directamente a través de la aplicación, ya que SharetoGo tiene un acuerdo con un proveedor SaaS externo especializado en pagos online (STRIPE). SharetoGo no gestiona ni almacena datos bancarios, ni interviene en la transacción del dinero; es Stripe quien se encarga íntegramente de este proceso.
             </h2>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Puede reclamar mediante la aplicación los pagos del trayecto y SharetoGo le asegura el cobro de los trayectos máximo 48 horas más tarde.
-              SI pasadas 24 horas el conductor NO reclama, los pagos se dan por cobrados.
-              Está estrictamente prohibido obtener ningún tipo de beneficio mediante el uso de nuestra App.
+              Puede reclamar mediante la aplicación los pagos del trayecto y SharetoGo le asegura el cobro de los trayectos.
+              Está estrictamente prohibido obtener cualquier tipo de beneficio mediante el uso de nuestra App.
             </p>
             <p className="text-justify px-14 mb-8 text-teal-950">
-              Los costes recomendados son los siguientes: 0,10 CÉNTIMOS POR KM RECORRIDO, POR PASAJERO.
+              Nosotros nos encargaremos de recomendarle determinados €/km para cada trayecto.
             </p>
             <h2 className="font-bold text-xl text-base px-14 text-teal-700 text-left mb-2 max-w-full">5.3 Autorización de cobro</h2>
             <p className="text-justify px-14 mb-8 text-teal-950">
