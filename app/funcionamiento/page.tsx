@@ -70,7 +70,7 @@ export default function Funcionamiento() {
               </div>
               <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
                 <Image
-                  src={require('@/public/images/movil2.PNG')}
+                  src={require('@/public/images/movil2.png')}
                   alt="Reservar"
                   width={300}
                   height={300}
@@ -116,7 +116,7 @@ export default function Funcionamiento() {
               </div>
               <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
                 <Image
-                  src={require('@/public/images/chat1.PNG')}
+                  src={require('@/public/images/chat1.png')}
                   alt="chat"
                   width={300}
                   height={300}

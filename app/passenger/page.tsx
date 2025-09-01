@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import Reservar from '@/public/images/Reservar.png'
+import Reservar from '@/public/images/Publicar.png'
    
 export default function Passenger() {
   return (
