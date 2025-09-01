@@ -36,13 +36,13 @@ export default function Header() {
                 <Link href="/about" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Quiénes somos</Link>
               </li>
               <li>
+                <Link href="/funcionamiento" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Funcionamiento de la App</Link> 
+              </li>
+              <li>
                 <Link href="/contratar" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contratar</Link> 
               </li>
               <li>
                 <Link href="/espacioEmpresas" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Espacio Empresas</Link> 
-              </li>
-              <li>
-                <Link href="/funcionamiento" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Funcionamiento de la App</Link> 
               </li>
               <li>
                 <Link href="/contact" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
