@@ -36,7 +36,7 @@ export default function FeaturesBlocks() {
                   <MdOutlineEuroSymbol className="text-white text-2xl" />
                 </div>
                 <div className="text-lg font-medium text-gray-800 pr-4">
-                  <span className="font-bold">Ahorro económico:</span> Ahorro en infraestructuras, menos demanda de aparcamiento y mayor eficiencia para los desplazamientos diarios de los trabajadores.
+                  <span className="font-bold">Ahorro económico:</span> Ahorro en infraestructuras, menos demanda de aparcamiento y mayor eficiencia para los desplazamientos diarios de los trabajadores
                 </div>
               </div>
             </div>
