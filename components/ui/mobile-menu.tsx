@@ -78,13 +78,13 @@ export default function MobileMenu() {
               <Link href="/about" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Quiénes somos</Link>
             </li>
             <li>
+            <li>
+              <Link href="/funcionamiento" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Funcionamiento de la App</Link>
+            </li>
               <Link href="/contratar" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contratar</Link>
             </li>
             <li>
               <Link href="/espacioEmpresas" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Espacio Empresas</Link>
-            </li>
-            <li>
-              <Link href="/funcionamiento" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Funcionamiento de la App</Link>
             </li>
             <li>
               <Link href="/contact" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contacto</Link>
