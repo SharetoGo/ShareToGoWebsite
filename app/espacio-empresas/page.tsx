@@ -40,7 +40,9 @@ export default function EspacioEmpresas() {
           <div className="container mx-auto px-4 text-center">
             <div>
               <h2 className="text-2xl md:text-4xl font-semibold text-black mb-2">Tu empresa tiene...</h2>
-              <span className="text-gray-600 text-sm md:text-lg">Para  obtener toda la información sostenible de tu empresa, pide aquí tu usuario y contraseña</span>
+              <p className="text-gray-600 text-sm md:text-base mt-2">
+              Para obtener toda la información sostenible de tu empresa, pide <Link href="/contratar" className="text-green-700 hover:underline font-semibold">aquí</Link> tu usuario y contraseña
+            </p>
             </div>
             <Link href="/espacio-empresas/auth">
               <button className="bg-[#9dd187] text-white px-8 mt-8 md:px-12 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-[#8bc176] transition-colors">
