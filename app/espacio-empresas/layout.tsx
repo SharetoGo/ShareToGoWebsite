@@ -6,6 +6,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 
 import Footer from '@/components/ui/footer'
+import { AuthProvider } from './auth/AuthContext'
 
 export default function DefaultLayout({
   children,
@@ -24,11 +25,13 @@ export default function DefaultLayout({
 
   return (
     <>
-      <main className="grow">
+      <AuthProvider>
+        <main className="grow">
 
-        {children}
+          {children}
 
-      </main>
+        </main>
+      </AuthProvider>
 
       <Footer />
     </>

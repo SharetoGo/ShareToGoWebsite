@@ -1,13 +1,73 @@
+'use client'
+
 import Header from '@/components/ui/header'
+import { useAuth } from './auth/AuthContext'
+import Link from 'next/link'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+import { useRouter } from 'next/navigation'
 
 export default function EspacioEmpresas() {
+  const { user, companyData, loading } = useAuth()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await signOut(auth)
+    router.push('/espacio-empresas')
+  }
+
+  if (loading) {
+    return (
+      <div className="bg-white min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center pt-48">
+          <div className="text-2xl font-semibold">Cargando...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="bg-white">
+        <Header />
+        <div className="bg-transparent py-8 pt-24">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl md:text-5xl font-bold text-[#2a2c38]">¡Bienvenido!</h1>
+          </div>
+        </div>
+        <div className="py-8">
+          <div className="container mx-auto px-4 text-center">
+            <div>
+              <h2 className="text-2xl md:text-4xl font-semibold text-black mb-2">Tu empresa tiene...</h2>
+              <span className="text-gray-600 text-sm md:text-lg">Para  obtener toda la información sostenible de tu empresa, pide aquí tu usuario y contraseña</span>
+            </div>
+            <Link href="/espacio-empresas/auth">
+              <button className="bg-[#9dd187] text-white px-8 mt-8 md:px-12 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-[#8bc176] transition-colors">
+                Acceder a tu espacio
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="bg-white">
       <Header />
       
       <div className="bg-transparent py-8 pt-24">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl md:text-5xl font-bold text-center text-[#2a2c38]">¡Bienvenido!</h1>
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <div className="flex justify-between items-center w-full">
+            <h1 className="text-3xl md:text-5xl font-bold text-[#2a2c38]">¡Bienvenida, {companyData?.name}!</h1>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-600 transition-colors"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       </div>
       
@@ -119,4 +179,3 @@ export default function EspacioEmpresas() {
     </div>
   )
 }
-
