@@ -10,10 +10,13 @@ export default function PromoPopup() {
   const [showConfetti, setShowConfetti] = useState(false)
   
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsOpen(true)
-    }, 1500)
-    return () => clearTimeout(timer)
+    // Check if the user has already submitted their email
+    if (localStorage.getItem('promoEmailSubmitted') !== 'true') {
+      const timer = setTimeout(() => {
+        setIsOpen(true)
+      }, 1500)
+      return () => clearTimeout(timer)
+    }
   }, [])
 
   const handleClose = () => {
@@ -34,6 +37,8 @@ export default function PromoPopup() {
       if (response.ok) {
         console.log('Email submitted and notification sent!');
         setShowConfetti(true);
+        // Remember that the user has submitted their email
+        localStorage.setItem('promoEmailSubmitted', 'true');
         // Close the popup after the confetti animation
         setTimeout(() => {
           handleClose();
