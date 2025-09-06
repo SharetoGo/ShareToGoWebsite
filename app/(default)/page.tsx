@@ -2,6 +2,7 @@ import Hero from '@/components/hero'
 import FeaturesBlocks from '@/components/features-blocks'
 import Options from '@/components/options'
 import Faqs from '@/components/faqs'
+import PromoPopup from './promo-popup'
 
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
       <FeaturesBlocks />
       <Options />
       <Faqs />
+      <PromoPopup />
     </>
   )
 }
