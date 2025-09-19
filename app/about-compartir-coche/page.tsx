@@ -58,7 +58,7 @@ const fetchPeople = async () => {
           <div className="block md:hidden w-full max-w-xs">
             <Image
               src={NuestraMision}
-              alt="Nuestra misión SharetoGo"
+              alt="Transporte eventos"
               className="rounded-lg shadow-lg object-cover w-full h-auto"
               width={400}
               height={400}
@@ -68,7 +68,7 @@ const fetchPeople = async () => {
           <div className="hidden md:flex w-full h-full relative p-4">
             <Image
               src={NuestraMision}
-              alt="Nuestra misión SharetoGo"
+              alt="app carpooling eventos"
               className="rounded-lg shadow-lg object-cover"
               fill
               priority
@@ -105,7 +105,7 @@ const fetchPeople = async () => {
           <div className="w-full max-w-xs md:max-w-[400px] bg-white rounded-lg">
             <Image
               src={QuienesSomos}
-              alt="Quienes Somos SharetoGo"
+              alt="software compartir coche trabajo"
               className="rounded-lg object-cover w-full h-auto"
               width={400}
               height={400}

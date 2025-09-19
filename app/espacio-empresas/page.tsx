@@ -41,7 +41,7 @@ export default function EspacioEmpresas() {
             <div>
               <h2 className="text-2xl md:text-4xl font-semibold text-black mb-2">Tu empresa tiene...</h2>
               <p className="text-gray-600 text-sm md:text-base mt-2">
-              Para obtener toda la información sostenible de tu empresa, pide <Link href="/contratar" className="text-green-700 hover:underline font-semibold">aquí</Link> tu usuario y contraseña
+              Para obtener toda la información sostenible de tu empresa, pide <Link href="/contratar-sharetogo" className="text-green-700 hover:underline font-semibold">aquí</Link> tu usuario y contraseña
             </p>
             </div>
             <Link href="/espacio-empresas/auth">

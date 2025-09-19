@@ -36,7 +36,7 @@ export default function AuthPage() {
               Iniciar Sesión
             </h1>
             <p className="text-gray-600 text-sm md:text-base mt-2">
-              Para obtener toda la información sostenible de tu empresa, pide <Link href="/contratar" className="text-green-700 hover:underline font-semibold">aquí</Link> tu usuario y contraseña
+              Para obtener toda la información sostenible de tu empresa, pide <Link href="/contratar-sharetogo" className="text-green-700 hover:underline font-semibold">aquí</Link> tu usuario y contraseña
             </p>
           </div>
           <form onSubmit={handleAuthAction} className="space-y-6">

@@ -10,7 +10,7 @@ export default function FeaturesBlocks() {
       <div className="max-w-screen-2xl mx-auto sm:px-6">
         <div className="flex flex-col md:flex-row">
           <div className="w-full md:w-1/3 flex justify-center items-center mb-8 md:mb-0">
-            <Image src={AppImage} priority={true} width={300} height={220} alt="App preview 1" data-aos="zoom-y-out" data-aos-delay="180" className="rounded-xl" />
+            <Image src={AppImage} priority={true} width={300} height={220} alt="app carpooling empresa" data-aos="zoom-y-out" data-aos-delay="180" className="rounded-xl" />
           </div>
           <div className="w-full md:w-2/3 flex flex-col justify-center">
             <span className="md:text-4xl text-5xl text-center font-bold tracking-tighter text-[#2a2c38] px-4 md:px-0" data-aos="zoom-y-out">¿Por qué empezar a usar SharetoGo?</span>

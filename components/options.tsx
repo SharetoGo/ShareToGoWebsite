@@ -20,7 +20,7 @@ export default function Options() {
                   priority={true}
                   width={600}
                   height={400}
-                  alt="App preview 1"
+                  alt="employee carpooling app"
                   data-aos="zoom-y-out"
                   data-aos-delay="180"
                   className="rounded-2xl w-48 h-auto md:w-[600px] md:h-[400px]"
@@ -31,7 +31,7 @@ export default function Options() {
                   <span className="font-bold text-[#2a2c38] text-xl">
                     Integra SharetoGo en tu negocio. Empieza desde hoy mismo.
                   </span>
-                  <Link href="/contratar">
+                  <Link href="/contratar-sharetogo">
                     <button className="mt-4 px-8 py-4 bg-[#2a2c38] text-white font-bold rounded-lg hover:bg-[#1a1c28] transition-colors mb-8 text-lg">
                       Prueba ya
                     </button>
@@ -42,7 +42,7 @@ export default function Options() {
                   <span className="font-medium text-[#2a2c38] text-lg">
                     Ponte en contacto con nuestro servicio de atención al cliente.
                   </span>
-                  <Link href="/contact">
+                  <Link href="/contacto-sharetogo">
                     <button className="mt-4 px-8 py-4 bg-[#2a2c38] text-white font-bold rounded-lg hover:bg-[#1a1c28] transition-colors text-lg">
                       Contacta con nosotros
                     </button>

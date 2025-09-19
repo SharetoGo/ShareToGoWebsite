@@ -22,7 +22,7 @@ const faqData: { question: string; answer: ReactNode }[] = [
             <>
               La empresa y SharetoGo valorarán la situación conjuntamente y llegarán al mejor acuerdo posible.{" "}
               <Link
-                href="/contratar"
+                href="/contratar-sharetogo"
                 className="font-bold text-black underline hover:text-gray-700"
               >
                 Solicitar una prueba

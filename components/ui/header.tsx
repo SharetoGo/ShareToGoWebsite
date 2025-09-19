@@ -33,19 +33,19 @@ export default function Header() {
                 <Link href="/" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Inicio</Link>
               </li>
               <li>
-                <Link href="/about" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Quiénes somos</Link>
+                <Link href="/about-compartir-coche" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Quiénes somos</Link>
               </li>
               <li>
-                <Link href="/funcionamiento" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Funcionamiento de la App</Link> 
+                <Link href="/funcionamiento-carpooling-empresas" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Funcionamiento de la App</Link> 
               </li>
               <li>
-                <Link href="/contratar" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contratar</Link> 
+                <Link href="/contratar-sharetogo" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contratar</Link> 
               </li>
               <li>
                 <Link href="/espacio-empresas" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Espacio Empresas</Link> 
               </li>
               <li>
-                <Link href="/contact" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
+                <Link href="/contacto-sharetogo" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Contacto</Link>
               </li>
               <li>
                 <Link href="/privacy" className="font-medium text-teal-950 hover:underline hover:text-teal-700 px-5 py-3 flex items-center transition duration-150 ease-in-out">Política de privacidad</Link>

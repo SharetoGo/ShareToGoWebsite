@@ -26,10 +26,10 @@ export default function WFooter() {
                 <a href="/" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Home</a>
               </li>
               <li className="mb-2">
-                <a href="/about" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Quiénes somos</a>
+                <a href="/about-compartir-coche" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Quiénes somos</a>
               </li>
               <li className="mb-2">
-                <a href="/contact" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Contacto</a>
+                <a href="/contacto-sharetogo" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Contacto</a>
               </li>
               <li className="mb-2">
                 <a href="/privacy" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Políticas de privacidad</a>

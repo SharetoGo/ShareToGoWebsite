@@ -1,7 +1,15 @@
 import Header from '@/components/ui/header'
 import Image from 'next/image'
+import Conductor1 from '@/public/images/conductor1.PNG'
+import Conductor2 from '@/public/images/conductor2.PNG'
+import Conductor3 from '@/public/images/conductor3.png'
+import Movil2 from '@/public/images/movil2.png'
+import InfoTrayecto from '@/public/images/info_trayecto.png'
+import Chat1 from '@/public/images/chat1.png'
 
 export default function Funcionamiento() {
+  const conductorImages = [Conductor1, Conductor2, Conductor3]
+
   return (
     <div className="bg-white min-h-screen">
       <Header />
@@ -27,11 +35,11 @@ export default function Funcionamiento() {
 
           {/* Images Row */}
           <div className="flex flex-col md:flex-row justify-center items-center gap-6">
-            {[1, 2, 3].map((num) => (
-              <div key={num} className="flex justify-center w-full md:w-auto">
+            {conductorImages.map((src, index) => (
+              <div key={index} className="flex justify-center w-full md:w-auto">
                 <Image
-                  src={require(`@/public/images/conductor${num}.PNG`)}
-                  alt={`Conductor ${num}`}
+                  src={src}
+                  alt={`movilidad sostenible eventos ${index + 1}`}
                   width={300}
                   height={300}
                   className="rounded-lg w-full max-w-xs md:max-w-sm"
@@ -70,8 +78,8 @@ export default function Funcionamiento() {
               </div>
               <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
                 <Image
-                  src={require('@/public/images/movil2.png')}
-                  alt="Reservar"
+                  src={Movil2}
+                  alt="conference carpooling software"
                   width={300}
                   height={300}
                   className="w-full max-w-xs md:max-w-sm"
@@ -85,8 +93,8 @@ export default function Funcionamiento() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 max-w-4xl mx-auto">
               <div className="flex-shrink-0 flex justify-center w-full md:w-auto order-1 md:order-none">
                 <Image
-                  src={require('@/public/images/info_trayecto.PNG')}
-                  alt="info"
+                  src={InfoTrayecto}
+                  alt="corporate carpooling software"
                   width={300}
                   height={300}
                   className="w-full max-w-xs md:max-w-sm"
@@ -116,7 +124,7 @@ export default function Funcionamiento() {
               </div>
               <div className="flex-shrink-0 flex justify-center w-full md:w-auto">
                 <Image
-                  src={require('@/public/images/chat1.png')}
+                  src={Chat1}
                   alt="chat"
                   width={300}
                   height={300}
