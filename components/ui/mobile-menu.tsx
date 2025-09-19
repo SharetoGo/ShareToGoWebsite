@@ -75,19 +75,19 @@ export default function MobileMenu() {
               <Link href="/" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Inicio</Link>
             </li>
             <li>
-              <Link href="/about" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Quiénes somos</Link>
+              <Link href="/about-compartir-coche" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Quiénes somos</Link>
             </li>
             <li>
             <li>
-              <Link href="/funcionamiento" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Funcionamiento de la App</Link>
+              <Link href="/funcionamiento-carpooling-empresas" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Funcionamiento de la App</Link>
             </li>
-              <Link href="/contratar" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contratar</Link>
+              <Link href="/contratar-sharetogo" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contratar</Link>
             </li>
             <li>
               <Link href="/espacio-empresas" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Espacio Empresas</Link>
             </li>
             <li>
-              <Link href="/contact" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contacto</Link>
+              <Link href="/contacto-sharetogo" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contacto</Link>
             </li>
             <li>
               <Link href="/privacy" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Política de privacidad</Link>
