@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Logo from '@/components/ui/logo'
-import Confetti from 'react-confetti'
+import dynamic from 'next/dynamic'
+
+const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
 
 export default function PromoPopup() {
   const [isOpen, setIsOpen] = useState(false)

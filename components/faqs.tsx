@@ -20,13 +20,17 @@ const faqData: { question: string; answer: ReactNode }[] = [
         question: "¿Cuáles son los gastos asociados para la empresa?",
         answer: (
             <>
-                La empresa y SharetoGo valorarán la situación conjuntamente y llegarán al mejor acuerdo posible.{" "}
-                <Link href="/contratar" className="font-bold text-black hover:underline">
-                    Solicitar una prueba
-                </Link>{" "}
-                puede ser el primer paso
+              La empresa y SharetoGo valorarán la situación conjuntamente y llegarán al mejor acuerdo posible.{" "}
+              <Link
+                href="/contratar"
+                className="font-bold text-black underline hover:text-gray-700"
+              >
+                Solicitar una prueba
+              </Link>{" "}
+              puede ser el primer paso
             </>
-        )
+          )
+          
     },
     {
         question: "¿A parte de le gestión de la movilidad, la empresa puede beneficiarse de otros servicios?",
@@ -76,7 +80,7 @@ export default function Faqs() {
     };
 
     return(
-         <section className="relative bg-white py-16 sm:py-20">
+         <section className="relative bg-white py-8 md:py-12">
             <div className="max-w-4xl mx-auto px-4 sm:px-6">
                 <h2 className="text-3xl sm:text-4xl font-bold text-[#2a2c38] mb-8 text-center sm:text-left">
                     Preguntas frecuentes                

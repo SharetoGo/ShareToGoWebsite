@@ -5,10 +5,10 @@ import Image from 'next/image';
 export default function Hero() {
 
   return (
-    <section className="relative bg-white py-20 md:py-32 lg:py-40 min-h-screen">
+    <section className="relative bg-white pt-28 md:pt-32 pb-8 md:pb-12">
       <div className="max-w-screen-2xl mx-auto sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="text-center md:text-center pt-20">
+          <div className="text-center md:text-center pt-4 md:pt-8">
             <span className="md:text-9xl text-5xl text-center font-extrabold tracking-tighter text-[#2a2c38]" data-aos="zoom-y-out">SharetoGo</span>
             <h1 className="text-4xl md:text-3xl font-bold text-[#2a2c38] text-center pt-10" data-aos="zoom-y-out">
               La aplicación de carpooling corporativo
