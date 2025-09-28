@@ -90,6 +90,9 @@ export default function MobileMenu() {
               <Link href="/contacto-sharetogo" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Contacto</Link>
             </li>
             <li>
+              <Link href="/espacio-eventos-sharetogo" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Espacio Eventos</Link>
+            </li>
+            <li>
               <Link href="/privacy" className="flex font-medium w-full text-gray-600 hover:text-gray-900 py-2 justify-center" onClick={() => setMobileNavOpen(false)}>Política de privacidad</Link>
             </li>
           </ul>          

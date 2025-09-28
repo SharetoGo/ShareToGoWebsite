@@ -35,6 +35,20 @@ const faqData: { question: string; answer: ReactNode }[] = [
     {
         question: "¿A parte de le gestión de la movilidad, la empresa puede beneficiarse de otros servicios?",
         answer: "Sí. Desde la página web, la empresa puede acceder a una Intranet en la cual puede encontrar todos los datos de su empresa generales, y por empleados, estrechamente ligados con la sostenibilidad y el cumplimiento de nuevas normativas."
+    },
+    {
+        question: "¿Eres un evento y quieres contratar SharetoGo a medida?",
+        answer: (
+            <>
+                Podemos añadirte como evento disponible cuando quieras.{" "}
+                <Link
+                    href="/contratar-sharetogo"
+                    className="font-bold text-black underline hover:text-gray-700"
+                >
+                    Más info aquí
+                </Link>
+            </>
+        )
     }
 ];
 

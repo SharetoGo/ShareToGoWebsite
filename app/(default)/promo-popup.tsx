@@ -10,6 +10,7 @@ export default function PromoPopup() {
   const [isOpen, setIsOpen] = useState(false)
   const [email, setEmail] = useState('')
   const [showConfetti, setShowConfetti] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   
   useEffect(() => {
     // Check if the user has already submitted their email
@@ -27,6 +28,8 @@ export default function PromoPopup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitted(true) // Immediately hide the form
+    
     try {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
@@ -41,13 +44,12 @@ export default function PromoPopup() {
         setShowConfetti(true);
         // Remember that the user has submitted their email
         localStorage.setItem('promoEmailSubmitted', 'true');
-        // Close the popup after the confetti animation
-        setTimeout(() => {
-          handleClose();
-        }, 5000); // Let confetti run for 5 seconds
+        // Popup will stay open until user manually closes it
       }
     } catch (error) {
       console.error('Failed to submit email:', error)
+      // Reset the submitted state if there was an error
+      setIsSubmitted(false)
     }
   }
 
@@ -75,38 +77,48 @@ export default function PromoPopup() {
 
         {/* Body */}
         <div className="p-6 md:p-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-black mb-4 animate-pulse-slow">
-            ¡Consigue 5€ de gasolina GRATIS!
-          </h2>
+          {!isSubmitted ? (
+            <>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-black mb-4 animate-pulse-slow">
+                ¡Consigue 5€ de gasolina GRATIS!
+              </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4 mt-6">
-            <input
-              type="email"
-              placeholder="Tu mejor email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full py-3 px-4 bg-green-800 text-white font-bold text-lg rounded-lg hover:bg-green-900 transform hover:scale-105 transition-all shadow-lg"
-            >
-              ¡LO QUIERO!
-            </button>
-          </form>
+              <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+                <input
+                  type="email"
+                  placeholder="Tu mejor email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 bg-green-800 text-white font-bold text-lg rounded-lg hover:bg-green-900 transform hover:scale-105 transition-all shadow-lg"
+                >
+                  ¡LO QUIERO!
+                </button>
+              </form>
 
-          <p className="text-gray-700 mt-4 text-sm">
-            Indica tu mail y te enviaremos un PDF al instante con todos los detalles del vale.
-          </p>
+              <p className="text-gray-700 mt-4 text-sm">
+                Indica tu mail y te enviaremos un PDF al instante con todos los detalles del vale.
+              </p>
 
-          <p className="font-semibold text-gray-800 mt-6">
-            SharetoGo
-          </p>
+              <p className="font-semibold text-gray-800 mt-6">
+                SharetoGo
+              </p>
 
-          <p className="text-xs text-gray-700 mt-4 italic">
-            *vale disponible únicamente para un número limitado de asistentes al evento, ¡no te lo pierdas!
-          </p>
+              <p className="text-xs text-gray-700 mt-4 italic">
+                *vale disponible únicamente para un número limitado de asistentes al evento, ¡no te lo pierdas!
+              </p>
+            </>
+          ) : (
+            <div className="py-8">
+              <p className="text-xl md:text-2xl font-bold text-gray-800 leading-relaxed">
+                ¡Hemos recibido tu email! Encontrarás los detalles del vale en tu bandeja de entrada del email proporcionado
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
