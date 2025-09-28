@@ -83,7 +83,7 @@ export default function EspacioEventos() {
               <p className="text-lg md:text-xl text-[#2a2c38] font-medium leading-relaxed mb-8 text-center">
                 Selecciona el evento al que te diriges y futuros asistentes se unirán a tu trayecto.
               </p>
-              {/* Feria Image – narrower crop */}
+              {/* Feria Image */}
               <div className="w-4/5 h-80 mx-auto rounded-lg overflow-hidden">
                 <Image
                   src={FeriaImage}
@@ -150,8 +150,12 @@ export default function EspacioEventos() {
                 priority
               />
             </div>
-            <p className="text-lg md:text-xl font-bold text-center text-[#2a2c38]">
-              Busca entre todos nuestros eventos disponibles para poder seleccionar y ver en <span className="italic font-bold">RESERVAR</span> los trayectos disponibles desde o hacia ese evento
+            <p className="text-lg md:text-xl font-medium text-center text-[#2a2c38]">
+              Busca entre todos nuestros eventos disponibles para poder seleccionar y ver en{" "}
+              <a href="#reservar-section" className="font-bold text-[#2a2c38] underline">
+                RESERVAR
+              </a>{" "}
+              los trayectos disponibles desde o hacia ese evento
             </p>
           </div>
 
@@ -167,14 +171,21 @@ export default function EspacioEventos() {
                 priority
               />
             </div>
-            <p className="text-lg md:text-xl font-bold text-center text-[#2a2c38]">
-              Guarda tus eventos favoritos para poder ver y filtrar en <span className="italic font-bold">RESERVAR</span> todos los trayectos desde o hacia ese evento
+            <p className="text-lg md:text-xl font-medium text-center text-[#2a2c38]">
+              Guarda tus eventos favoritos para poder ver y filtrar en{" "}
+              <a href="#reservar-section" className="font-bold text-[#2a2c38] underline">
+                RESERVAR
+              </a>{" "}
+              todos los trayectos desde o hacia ese evento
             </p>
           </div>
         </div>
 
         {/* New Section: Reservar */}
-        <div className="max-w-6xl mx-auto mt-20">
+        <div
+          id="reservar-section"
+          className="max-w-6xl mx-auto mt-20 scroll-mt-32"
+        >
           <h3 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-12 text-center">
             ¿Reservar para ir a un evento?
           </h3>
@@ -201,7 +212,7 @@ export default function EspacioEventos() {
           </div>
         </div>
 
-        {/* New Section: Universidad + Estadio (más pequeño) */}
+        {/* New Section: Universidad + Estadio */}
         <div className="flex justify-center mt-16">
           <div className="bg-[#9dd187] w-4/5 rounded-lg shadow-md p-8 md:p-10">
             <div className="flex flex-col gap-12">
