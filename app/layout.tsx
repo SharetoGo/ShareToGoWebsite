@@ -1,30 +1,35 @@
-// app/layout.tsx
-import "./css/style.css";
-import { Inter } from "next/font/google";
-import Header from "@/components/ui/header";
+import type React from "react"
+import type { Metadata } from "next"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { Analytics } from "@vercel/analytics/next"
+import "./globals.css"
+import Navigation from "@/components/navigation"
+import Footer from "@/components/footer"
+import { Suspense } from "react"
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
+export const metadata: Metadata = {
+  title: "SharetoGo - Carpooling Corporativo",
+  description:
+    "La aplicación de carpooling corporativo que conecta empleados para compartir viajes de manera eficiente y sostenible.",
+  generator: "v0.app",
+}
 
-export const metadata = {
-  title: "SharetoGo - Compartir coche para todos",
-  description: "Plataforma de carpooling sencilla, rápida y accesible para todos.",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
     <html lang="es">
-      <body
-        className={`${inter.variable} font-inter antialiased bg-white text-gray-900 tracking-tight`}
-      >
-        <div className="flex flex-col min-h-screen overflow-hidden supports-[overflow:clip]:overflow-clip">
-          <Header />
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Navigation />
           {children}
-        </div>
+          <Footer />
+        </Suspense>
+        <Analytics />
       </body>
     </html>
-  );
+  )
 }

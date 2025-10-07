@@ -1,58 +1,80 @@
-import Image from 'next/image';
-import StockImage from '@/public/images/chica_coche.jpg';
-import Link from 'next/link';
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { ArrowRight, MessageCircle, Rocket } from "lucide-react"
 
 export default function Options() {
   return (
-    <div className="py-8 md:py-12 bg-white flex items-center justify-center">
-      <section className="relative bg-[rgb(157,209,135)] py-8 px-6 rounded-2xl max-w-5xl w-full mx-2">
-        <div className="max-w-2xl mx-auto px-6 sm:px-8">
-          <div className="text-center mb-4">
-            <h2 className="text-4xl font-bold text-[#2a2c38] mb-0 px-4 sm:px-0">
-              Ponlo en marcha en tu empresa
-            </h2>
+    <section className="py-16 md:py-24 bg-gradient-to-br from-[#9dd187] to-[#8bc475]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Ponlo en marcha en tu empresa</h2>
+          <p className="text-lg text-[#2a2c38]/80 max-w-2xl mx-auto">
+            Integra SharetoGo en tu negocio y empieza a transformar la movilidad corporativa desde hoy mismo
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-xl">
+          {/* Image Section */}
+          <div className="flex justify-center lg:justify-start">
+            <Image
+              src="/images/woman-in-car-2.jpg"
+              width={500}
+              height={500}
+              alt="Profesional junto a coche corporativo"
+              className="w-full h-full object-fit rounded-3xl"
+            />
           </div>
-          <div className="flex justify-center items-center">
-            <div className="flex flex-col md:flex-row w-auto justify-center items-center gap-8">
-              <div className="md:w-auto flex justify-center items-center pl-0 md:pr-6">
-                <Image
-                  src={StockImage}
-                  priority={true}
-                  width={600}
-                  height={400}
-                  alt="employee carpooling app"
-                  data-aos="zoom-y-out"
-                  data-aos-delay="180"
-                  className="rounded-2xl w-48 h-auto md:w-[600px] md:h-[400px]"
-                />
-              </div>
-              <div className="md:w-auto flex flex-col justify-start items-start text-left relative md:pl-8 pr-0">
-                <div className="flex flex-col items-center text-center w-full">
-                  <span className="font-bold text-[#2a2c38] text-xl">
-                    Integra SharetoGo en tu negocio. Empieza desde hoy mismo.
-                  </span>
-                  <Link href="/contratar-sharetogo">
-                    <button className="mt-4 px-8 py-4 bg-[#2a2c38] text-white font-bold rounded-lg hover:bg-[#1a1c28] transition-colors mb-8 text-lg">
-                      Prueba ya
-                    </button>
-                  </Link>
+
+          {/* Content Section */}
+          <div className="space-y-8">
+            <Card className="bg-[#9dd187]/95 backdrop-blur-sm border-0 shadow-xl">
+              <CardContent className="px-4 py-2">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-[#2a2c38] rounded-full flex items-center justify-center flex-shrink-0">
+                    <Rocket className="text-white" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-[#2a2c38] mb-2">Integra SharetoGo en tu negocio</h3>
+                    <p className="text-gray-600 mb-4">
+                      Empieza desde hoy mismo y transforma la movilidad de tus empleados
+                    </p>
+                    <Link href="/contratar">
+                      <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white group">
+                        Prueba ya
+                        <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <div className="flex flex-col items-center text-center w-full">
-                  <span className="font-bold text-[#2a2c38] text-xl">¿Tienes alguna duda?</span>
-                  <span className="font-medium text-[#2a2c38] text-lg">
-                    Ponte en contacto con nuestro servicio de atención al cliente.
-                  </span>
-                  <Link href="/contacto-sharetogo">
-                    <button className="mt-4 px-8 py-4 bg-[#2a2c38] text-white font-bold rounded-lg hover:bg-[#1a1c28] transition-colors text-lg">
-                      Contacta con nosotros
-                    </button>
-                  </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-[#9dd187]/95 backdrop-blur-sm border-0 shadow-xl">
+              <CardContent className="px-4 py-2">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-[#2a2c38] rounded-full flex items-center justify-center flex-shrink-0">
+                    <MessageCircle className="text-white" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-[#2a2c38] mb-2">¿Tienes alguna duda?</h3>
+                    <p className="text-gray-600 mb-4">
+                      Ponte en contacto con nuestro servicio de atención al cliente especializado
+                    </p>
+                    <Link href="/contacto">
+                      <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white group">
+                        Contacta con nosotros
+                        <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </section>
-    </div>
-  );
+      </div>
+    </section>
+  )
 }

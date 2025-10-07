@@ -1,183 +1,345 @@
-'use client'
+"use client"
 
-import Header from '@/components/ui/header'
-import { useAuth } from './auth/AuthContext'
-import Link from 'next/link'
-import { signOut } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
-import { useRouter } from 'next/navigation'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
+import {
+  Building2,
+  TrendingUp,
+  Shield,
+  BarChart3,
+  Users,
+  Leaf,
+  Clock,
+  Award,
+  CheckCircle,
+  ArrowRight,
+  Target,
+  Zap,
+} from "lucide-react"
 
 export default function EspacioEmpresas() {
-  const { user, companyData, loading } = useAuth()
-  const router = useRouter()
-
-  const handleLogout = async () => {
-    await signOut(auth)
-    router.push('/espacio-empresas')
-  }
-
-  if (loading) {
-    return (
-      <div className="bg-white min-h-screen">
-        <Header />
-        <div className="flex items-center justify-center pt-48">
-          <div className="text-2xl font-semibold">Cargando...</div>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="bg-white">
-        <Header />
-        <div className="bg-transparent py-8 pt-24">
-          <div className="container mx-auto px-4 text-center">
-            <h1 className="text-3xl md:text-5xl font-bold text-[#2a2c38]">¡Bienvenido!</h1>
-          </div>
-        </div>
-        <div className="py-8">
-          <div className="container mx-auto px-4 text-center">
-            <div>
-              <h2 className="text-2xl md:text-4xl font-semibold text-black mb-2">Tu empresa tiene...</h2>
-              <p className="text-gray-600 text-sm md:text-base mt-2">
-              Para obtener toda la información sostenible de tu empresa, pide <Link href="/contratar-sharetogo" className="text-green-700 hover:underline font-semibold">aquí</Link> tu usuario y contraseña
-            </p>
-            </div>
-            <Link href="/espacio-empresas/auth">
-              <button className="bg-[#9dd187] text-white px-8 mt-8 md:px-12 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-[#8bc176] transition-colors">
-                Acceder a tu espacio
-              </button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="bg-white">
-      <Header />
-      
-      <div className="bg-transparent py-8 pt-24">
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex justify-between items-center w-full">
-            <h1 className="text-3xl md:text-5xl font-bold text-[#2a2c38]">¡Bienvenida, {companyData?.name}!</h1>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-600 transition-colors"
-            >
-              Cerrar Sesión
-            </button>
-          </div>
-        </div>
-      </div>
-      
-      <div className="flex justify-center">
-        <div className="w-4/5 h-1 bg-black"></div>
-      </div>
-      
-      <div className="py-8">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-4xl font-semibold text-center text-black">Tu empresa tiene...</h2>
-        </div>
-      </div>
-      
-      <div className="py-8 md:py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-            <div className="text-center">
-              <div className="text-4xl md:text-6xl font-bold text-black mb-2">XX</div>
-              <div className="text-gray-600 text-sm md:text-lg">Trayectos Completados</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-6xl font-bold text-black mb-2">XX</div>
-              <div className="text-gray-600 text-sm md:text-lg">Kg de CO2 ahorrados</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-6xl font-bold text-black mb-2">XX</div>
-              <div className="text-gray-600 text-sm md:text-lg">Km completados</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-6xl font-bold text-black mb-2">XX</div>
-              <div className="text-gray-600 text-sm md:text-lg">Personas Transportadas</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="py-8 md:py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-6 md:gap-8">
-            <div className="flex flex-col flex-shrink-0 text-center lg:text-left">
-              <h3 className="text-2xl md:text-3xl font-semibold text-black mb-4">Consulta la actividad de tus empleados:</h3>
-              <div className="flex justify-center lg:justify-start">
-                <button className="bg-[#9dd187] text-white px-8 md:px-12 py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-[#8bc176] transition-colors w-fit">
-                  Ir al panel de empleados
-                </button>
+    <main>
+      {/* Hero section */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] via-[#2a2c38] to-[#1a1c24]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="text-white">
+              <Badge className="bg-[#9dd187] text-white mb-4">Soluciones Empresariales</Badge>
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
+                Transforma la movilidad de tu empresa
+              </h1>
+              <p className="text-xl text-gray-300 mb-8 text-pretty">
+                Soluciones de carpooling corporativo diseñadas para empresas que buscan reducir costos, mejorar el
+                bienestar de sus empleados y alcanzar sus objetivos de sostenibilidad.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/contratar">
+                  <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-white px-8 py-4 text-lg">Solicitar demo</Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  className="border-white text-white hover:bg-white hover:text-[#2a2c38] px-8 py-4 text-lg bg-transparent"
+                  onClick={() => document.getElementById('casos-exito')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  Ver casos de éxito
+                </Button>
               </div>
             </div>
-            <div className="flex-1 flex justify-center w-full lg:w-auto">
-              <div className="w-full max-w-sm lg:w-96 h-24 md:h-32 bg-[#9dd187] rounded-lg shadow-md flex flex-col justify-start pt-4">
-                <h4 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-red-500 to-orange-400 bg-clip-text text-transparent text-center">
-                  Top Conductores del Mes:
-                </h4>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="p-6 bg-white/10 backdrop-blur border-white/20">
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-[#9dd187] mb-2">20</div>
+                  <p className="text-white text-sm">Empresas activas</p>
+                </CardContent>
+              </Card>
+              <Card className="p-6 bg-white/10 backdrop-blur border-white/20">
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-[#9dd187] mb-2">300T</div>
+                  <p className="text-white text-sm">De CO₂ ahorrado</p>
+                </CardContent>
+              </Card>
+              <Card className="p-6 bg-white/10 backdrop-blur border-white/20">
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-[#9dd187] mb-2">40%</div>
+                  <p className="text-white text-sm">Ahorro costos</p>
+                </CardContent>
+              </Card>
+              <Card className="p-6 bg-white/10 backdrop-blur border-white/20">
+                <CardContent className="pt-6 text-center">
+                  <div className="text-3xl font-bold text-[#9dd187] mb-2">95%</div>
+                  <p className="text-white text-sm">Satisfacción</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Solutions section */}
+      <section className="py-16 md:py-24 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Soluciones adaptadas a tu empresa</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Cada empresa es única. Por eso ofrecemos soluciones flexibles que se adaptan a tus necesidades
+              específicas.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="p-8 border-2 hover:border-[#9dd187] transition-colors">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-[#9dd187] rounded-xl flex items-center justify-center mb-6">
+                  <Building2 className="text-white text-2xl" />
+                </div>
+                <h3 className="text-xl font-semibold text-[#2a2c38] mb-4">Empresas Medianas</h3>
+                <p className="text-gray-600 mb-6">
+                  Solución completa para empresas de 50-250 empleados que buscan optimizar la movilidad corporativa.
+                </p>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Dashboard de sostenibilidad personalizado</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Implementación en 2 semanas</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Formación de equipo y profesionales dedicados</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Integración con herramientas existentes</span>
+                  </li>
+                </ul>
+                <Link href="/contratar">
+                <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">Más información</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="p-8 border-2 hover:border-[#9dd187] transition-colors">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-[#2a2c38] rounded-xl flex items-center justify-center mb-6">
+                  <TrendingUp className="text-white text-2xl" />
+                </div>
+                <Badge className="bg-[#9dd187] text-white mb-4">Más popular</Badge>
+                <h3 className="text-xl font-semibold text-[#2a2c38] mb-4">Grandes Empresas</h3>
+                <p className="text-gray-600 mb-6">
+                  Solución enterprise para organizaciones de 500+ empleados con múltiples ubicaciones.
+                </p>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Dashboard de sostenibilidad personalizado</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Integraciones e interfaces personalizadas</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Formación y soporte para equipos grandes</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Account Manager dedicado</span>
+                  </li>
+                </ul>
+                <Link href="/contratar">
+                  <Button className="w-full bg-[#2a2c38] hover:bg-[#1a1c24] text-white">Más información</Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            <Card className="p-8 border-2 hover:border-[#9dd187] transition-colors">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-[#9dd187] rounded-xl flex items-center justify-center mb-6">
+                  <Zap className="text-white text-2xl" />
+                </div>
+                <h3 className="text-xl font-semibold text-[#2a2c38] mb-4">Startups & Pymes</h3>
+                <p className="text-gray-600 mb-6">
+                  Solución ágil y económica para empresas en crecimiento de 10-50 empleados.
+                </p>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Dashboard de sostenibilidad personalizado</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Setup rápido: 1 semana</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Soporte dedicado</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <span>Sin costos de implementación</span>
+                  </li>
+                </ul>
+                <Link href="/contratar">
+                <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">Más información</Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits section */}
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
+              ¿Por qué las empresas eligen SharetoGo?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#9dd187] rounded-full flex items-center justify-center mx-auto mb-6">
+                <BarChart3 className="text-white text-3xl" />
               </div>
+              <h3 className="text-xl font-semibold text-[#2a2c38] mb-3">ROI Medible</h3>
+              <p className="text-gray-600">
+                Dashboard completo con métricas de ahorro, impacto ambiental y adopción en tiempo real.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#2a2c38] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Shield className="text-white text-3xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#2a2c38] mb-3">Máxima Seguridad</h3>
+              <p className="text-gray-600">
+                Verificación de identidad, seguimiento GPS y protocolos de seguridad empresarial.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#9dd187] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="text-white text-3xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#2a2c38] mb-3">Adopción Garantizada</h3>
+              <p className="text-gray-600">
+                Programa de onboarding y gamificación que asegura alta participación de empleados.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#2a2c38] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Leaf className="text-white text-3xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#2a2c38] mb-3">Impacto Sostenible</h3>
+              <p className="text-gray-600">
+                Contribuye a los objetivos ESG de tu empresa con métricas verificables de reducción de CO₂.
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#9dd187] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Clock className="text-white text-3xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#2a2c38] mb-3">Implementación Rápida</h3>
+              <p className="text-gray-600">De la firma del contrato a la primera semana de uso en menos de 14 días.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-20 h-20 bg-[#2a2c38] rounded-full flex items-center justify-center mx-auto mb-6">
+                <Award className="text-white text-3xl" />
+              </div>
+              <h3 className="text-xl font-semibold text-[#2a2c38] mb-3">Soporte Premium</h3>
+              <p className="text-gray-600">
+                Account manager dedicado, soporte 24/7 y actualizaciones continuas incluidas.
+              </p>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="py-8">
-        <div className="container mx-auto px-4">
-          <h3 className="text-2xl md:text-4xl font-bold text-center text-black mb-6 md:mb-8">Report de Sostenibilidad</h3>
-          
-          <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
-            <div className="w-full lg:w-2/3">
-              <h4 className="text-xl md:text-2xl font-semibold text-[#2a2c38] mb-4 pl-2 md:pl-4">Trayectos Compartidos</h4>
-              <div className="bg-[#9dd187] rounded-lg shadow-md h-32 md:h-48"></div>
-            </div>
-            
-            <div className="w-full lg:w-1/3">
-              <h4 className="text-xl md:text-2xl font-semibold text-[#2a2c38] mb-4 pl-2 md:pl-4">Kilómetros Recorridos</h4>
-              <div className="bg-[#9dd187] rounded-lg shadow-md h-32 md:h-48"></div>
-            </div>
+      </section>
+
+      {/* Case studies section */}
+      <section id="casos-exito" className="py-16 md:py-24 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Casos de éxito</h2>
+            <p className="text-lg text-gray-600">Empresas que ya están transformando su movilidad</p>
           </div>
-          
-          <div className="flex flex-col lg:flex-row gap-4 md:gap-6 mt-6 md:mt-8">
-            <div className="w-full lg:w-2/5">
-              <h4 className="text-xl md:text-2xl font-semibold text-[#2a2c38] mb-4 pl-2 md:pl-4">CO2 Ahorrado</h4>
-              <div className="bg-[#9dd187] rounded-lg shadow-md h-32 md:h-48"></div>
-            </div>
-            
-            <div className="w-full lg:w-3/5">
-              <h4 className="text-xl md:text-2xl font-semibold text-[#2a2c38] mb-4 pl-2 md:pl-4">Coches Eliminados de la Vía</h4>
-              <div className="bg-[#9dd187] rounded-lg shadow-md h-32 md:h-48"></div>
-            </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="p-8">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-[#9dd187] rounded-lg flex items-center justify-center">
+                    <Building2 className="text-white" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-[#2a2c38]">TechCorp España</h3>
+                    <p className="text-gray-600 text-sm">1,200 empleados • Tecnología</p>
+                  </div>
+                </div>
+                <blockquote className="text-gray-600 mb-6 italic">
+                  "SharetoGo nos ayudó a reducir un 60% los costos de parking y mejorar significativamente la
+                  satisfacción de nuestros empleados. La implementación fue sorprendentemente rápida."
+                </blockquote>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-[#9dd187]">60%</div>
+                    <div className="text-xs text-gray-600">Ahorro parking</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-[#9dd187]">78%</div>
+                    <div className="text-xs text-gray-600">Adopción</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-[#9dd187]">92%</div>
+                    <div className="text-xs text-gray-600">Satisfacción</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="p-8">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 bg-[#2a2c38] rounded-lg flex items-center justify-center">
+                    <Target className="text-white" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-[#2a2c38]">Consultoría Global</h3>
+                    <p className="text-gray-600 text-sm">800 empleados • Consultoría</p>
+                  </div>
+                </div>
+                <blockquote className="text-gray-600 mb-6 italic">
+                  "La plataforma se integró perfectamente con nuestros sistemas existentes. Nuestros empleados la
+                  adoptaron inmediatamente y los resultados superaron expectativas."
+                </blockquote>
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-[#9dd187]">45%</div>
+                    <div className="text-xs text-gray-600">Reducción CO₂</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-[#9dd187]">85%</div>
+                    <div className="text-xs text-gray-600">Adopción</div>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold text-[#9dd187]">€180k</div>
+                    <div className="text-xs text-gray-600">Ahorro anual</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
-      </div>
-      
-      {/* Total a Subvencionar Header */}
-      <div className="py-8">
-        <div className="container mx-auto px-4">
-          <h3 className="text-2xl md:text-4xl font-bold text-center text-black">Total a Subvencionar</h3>
-        </div>
-      </div>
-      
-      {/* Thank You and Invoice Section */}
-      <div className="py-8 md:py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-24">
-            <div className="text-lg md:text-xl font-bold text-black text-center">
-              ¡Gracias por contar con<br />SharetoGo!
-            </div>
-            <button className="bg-[#2a2c38] text-white px-8 md:px-12 py-3 md:py-4 rounded-lg font-bold text-lg md:text-xl hover:bg-[#1a1c28] transition-colors">
-              Ver Factura
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
