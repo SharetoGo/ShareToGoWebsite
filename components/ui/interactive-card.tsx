@@ -78,8 +78,9 @@ export function InteractiveCard({ title, subtitle, slides, isDriver = false }: I
                 <Image
                   src={slides[currentIndex].image}
                   alt={slides[currentIndex].title}
-                  layout="fill"
-                  objectFit="contain"
+                  fill 
+                  className="object-contain"
+                  priority
                 />
               </motion.div>
             </AnimatePresence>

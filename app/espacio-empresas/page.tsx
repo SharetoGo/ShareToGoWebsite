@@ -132,7 +132,7 @@ export default function EspacioEmpresas() {
                 <Badge className="bg-[#9dd187] text-white mb-4">Más popular</Badge>
                 <h3 className="text-xl font-semibold text-[#2a2c38] mb-4">Grandes Empresas</h3>
                 <p className="text-gray-600 mb-6">
-                  Solución enterprise para organizaciones de 500+ empleados con múltiples ubicaciones.
+                  Solución enterprise para organizaciones de 250+ empleados con múltiples ubicaciones.
                 </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-center gap-2 text-sm">
