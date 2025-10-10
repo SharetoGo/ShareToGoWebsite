@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import Link from 'next/link';
 
@@ -19,23 +19,103 @@ import SavingImage from '@/public/images/eventos/saving.png';
 
 export default function EspacioEventos() {
   const [faqOpen, setFaqOpen] = useState(false);
-
   const handleToggleFaq = () => setFaqOpen(prev => !prev);
+  // --- HERO slideshow horizontal ---
+  const BASE_IMAGES = [EventoImage.src, FeriaImage.src, EstadioImage.src, UniversidadImage.src]
+  // clonamos extremos para bucle infinito: [última, ...originales, primera]
+  const SLIDES = useMemo(() => [BASE_IMAGES.at(-1)!, ...BASE_IMAGES, BASE_IMAGES[0]], [])
+  const prefersReducedMotion = useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches,
+    []
+  )
+  // empezamos en 1 (primer real)
+  const [current, setCurrent] = useState(1)
+  const [enableTransition, setEnableTransition] = useState(true)
+
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    const id = setInterval(() => setCurrent((c) => c + 1), 4500)
+    return () => clearInterval(id)
+  }, [prefersReducedMotion])
+
+  // al terminar la animación: si estamos en el clon del final, saltamos al real sin transición
+  const handleTransitionEnd = () => {
+    if (current === SLIDES.length - 1) {
+      // estábamos en el clon de la primera (índice n+1) → saltamos al 1
+      setEnableTransition(false)
+      setCurrent(1)
+      // reactivamos transición en el siguiente tick
+      requestAnimationFrame(() => requestAnimationFrame(() => setEnableTransition(true)))
+    }
+  }
+
 
   return (
     <>
-      <section className="bg-white pt-24 pb-20 px-4 md:pt-32 md:pb-24 md:px-8">
-        {/* Top Section */}
-        <div className="text-center max-w-4xl mx-auto mb-12">
-          <h2 className="text-5xl md:text-4xl font-bold text-[#2a2c38] mb-6 drop-shadow-lg">
-            Espacio Eventos
-          </h2>
-          <div className="w-24 h-1 bg-[rgb(42,44,56)] mx-auto rounded-full mb-8"></div>
-          <p className="text-lg md:text-xl text-[#2a2c38] font-medium max-w-2xl mx-auto leading-relaxed">
-            ¿Vas a algún evento, festival, congreso, feria, escapada, discoteca, concierto, esquiada, evento deportivo...?
-          </p>
-        </div>
+      {/* HERO con slideshow juvenil */}
+<section className="relative isolate h-[52vh] min-h-[420px] md:h-[64vh] lg:h-[72vh] overflow-hidden">
+  {/* Carrusel horizontal */}
+  <div
+    className={`absolute inset-0 flex h-full`}
+    style={{
+      width: `${SLIDES.length * 100}%`,
+      transform: `translateX(-${current * (100 / SLIDES.length)}%)`,
+      transition: enableTransition ? 'transform 700ms ease-out' : 'none',
+    }}
+    onTransitionEnd={handleTransitionEnd}
+    aria-hidden
+  >
+    {SLIDES.map((src, i) => (
+      <div
+        key={`${src}-${i}`}
+        className="relative h-full w-full flex-shrink-0 bg-center bg-cover"
+        style={{
+          backgroundImage: `url(${src})`,
+          width: `${100 / SLIDES.length}%`,
+        }}
+      >
+        {/* Oscurecido + blur suave por slide */}
+        <div className="absolute inset-0 bg-black/55 md:bg-black/60" />
+      </div>
+    ))}
+  </div>
 
+  {/* Degradé para legibilidad */}
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+
+  {/* Contenido encima */}
+    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full grid items-center">
+      <div className="max-w-2xl text-white">
+        <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-white/10 text-white/90 ring-1 ring-white/20 backdrop-blur">
+          🚗💨 Comparte coche · ahorra · cuida el planeta
+        </span>
+        <h1 className="mt-4 text-4xl md:text-5xl font-bold tracking-tight">
+          Espacio <span className="text-[#9dd187]">Eventos</span>
+        </h1>
+        <p className="mt-4 md:mt-6 text-lg md:text-xl text-white/90 text-balance">
+          ¿Vas a un <strong>festival</strong>, <strong>concierto</strong>, <strong>congreso</strong>, <strong>feria</strong>, escapada a la nieve, partido…?
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a
+            href="#reservar-section"
+            className="rounded-full bg-[#9dd187] px-5 py-3 text-sm font-semibold text-[#1a1c24] hover:brightness-110 transition"
+          >
+            Empieza a buscar
+          </a>
+          <Link
+            href="/funcionamiento"
+            className="rounded-full px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/50 hover:bg-white/10 transition"
+          >
+            Cómo funciona
+          </Link>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+      {/* CONTENIDO ya existente */}
+      <section className="bg-white pt-24 pb-20 px-4 md:pt-32 md:pb-24 md:px-8">
         {/* Main Event Info */}
         <div className="flex justify-center">
           <div className="bg-[#9dd187] w-5/6 rounded-lg shadow-md p-12 md:p-16 min-h-[400px]">
@@ -260,39 +340,44 @@ export default function EspacioEventos() {
           </div>
         </div>
 
-        {/* New Section: Environment, SocialPeople, Saving */}
-        <div className="max-w-6xl mx-auto mt-20 flex flex-col md:flex-row justify-center items-center gap-8">
-          <div className="w-1/3 flex justify-center">
-            <Image
-              src={EnvironmentImage}
-              alt="Beneficio medioambiental"
-              className="max-w-[500px] object-contain"
-              width={500}
-              height={500}
-              priority
-            />
+       {/* Banda final de beneficios compactos */}
+       <section className="max-w-7xl mx-auto mt-20 px-4">
+          <div className="grid sm:grid-cols-3 gap-6">
+            {[
+              {
+                img: EnvironmentImage,
+                title: 'Medioambiente',
+                desc: 'Reduce CO₂ por viaje y descongestiona la ciudad.'
+              },
+              {
+                img: SocialPeopleImage,
+                title: 'Social',
+                desc: 'Conecta con gente que va a tu mismo evento.'
+              },
+              {
+                img: SavingImage,
+                title: 'Ahorro',
+                desc: 'Comparte gastos de combustible, peajes y parking.'
+              },
+            ].map((b, i) => (
+              <div
+                key={i}
+                className="rounded-2xl bg-white ring-1 ring-gray-100 shadow-sm p-6 flex items-start gap-5"
+              >
+                <Image
+                  src={b.img}
+                  alt={b.title}
+                  className="h-20 w-20 md:h-24 md:w-24 object-contain"
+                  priority
+                />
+                <div>
+                  <p className="font-semibold text-[#1f202a] text-lg">{b.title}</p>
+                  <p className="text-sm md:text-base text-[#2a2c38]/70">{b.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="w-1/3 flex justify-center">
-            <Image
-              src={SocialPeopleImage}
-              alt="Beneficio social"
-              className="max-w-[500px] object-contain"
-              width={500}
-              height={500}
-              priority
-            />
-          </div>
-          <div className="w-1/3 flex justify-center">
-            <Image
-              src={SavingImage}
-              alt="Ahorro económico"
-              className="max-w-[500px] object-contain"
-              width={500}
-              height={500}
-              priority
-            />
-          </div>
-        </div>
+        </section>
       </section>
     </>
   );
