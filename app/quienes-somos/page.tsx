@@ -8,6 +8,7 @@ import Reviews from "@/components/ui/reviews";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Leaf } from "lucide-react";
+import { ODSSection } from "@/components/ODSSection" // ajusta la ruta si la guardaste en otro sitio
 
 export default function QuienesSomos() {
   const [trayectos, setTrayectos] = useState<number>(0);
@@ -193,6 +194,7 @@ export default function QuienesSomos() {
           </div>
         </div>
       </section>
+      <ODSSection dark />
       {/* Reviews Section */}
       <Reviews />
     </main>
