@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
+import { motion, AnimatePresence } from "framer-motion"
+import { QRCodeCanvas } from "qrcode.react"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -19,10 +21,23 @@ export default function Navigation() {
   const [mobileAyudaOpen, setMobileAyudaOpen] = useState(false)
   const [openEspacios, setOpenEspacios] = useState(false)
   const [openAyuda, setOpenAyuda] = useState(false)
+  const [showQR, setShowQR] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
   const hideEspaciosTO = useRef<NodeJS.Timeout | null>(null)
   const hideAyudaTO = useRef<NodeJS.Timeout | null>(null)
 
   const pathname = usePathname()
+
+  const qrLink = "https://sharetogo.es/downloads" 
+
+  // --- Detect mobile screen size ---
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   const navItems = [
     { href: "/", label: "Inicio" },
@@ -35,7 +50,6 @@ export default function Navigation() {
     { href: "/contratar", label: "Contratar" },
   ]
 
-  // Ahora excluimos Contacto (va dentro de Ayuda) en lugar de Quiénes somos
   const itemsSinEspaciosNiAyuda = navItems.filter(
     (i) =>
       i.href !== "/espacio-empresas" &&
@@ -53,16 +67,20 @@ export default function Navigation() {
 
   const espaciosIsActive =
     pathname.startsWith("/espacio-empresas") || pathname.startsWith("/espacio-eventos")
-  // Ayuda activo: FAQs o Contacto
   const ayudaIsActive =
     pathname.startsWith("/faqs") || pathname.startsWith("/contacto")
 
-  // helpers hover
-  const openWithHover = (setter: (b: boolean) => void, toRef: React.MutableRefObject<NodeJS.Timeout | null>) => {
+  const openWithHover = (
+    setter: (b: boolean) => void,
+    toRef: React.MutableRefObject<NodeJS.Timeout | null>
+  ) => {
     if (toRef.current) clearTimeout(toRef.current)
     setter(true)
   }
-  const closeWithDelay = (setter: (b: boolean) => void, toRef: React.MutableRefObject<NodeJS.Timeout | null>) => {
+  const closeWithDelay = (
+    setter: (b: boolean) => void,
+    toRef: React.MutableRefObject<NodeJS.Timeout | null>
+  ) => {
     if (toRef.current) clearTimeout(toRef.current)
     toRef.current = setTimeout(() => setter(false), 120)
   }
@@ -85,7 +103,6 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {/* Enlaces directos (Contacto ya no aparece aquí; ahora Quiénes somos sí) */}
             {itemsSinEspaciosNiAyuda.map((item) => (
               <Link
                 key={item.href}
@@ -96,7 +113,7 @@ export default function Navigation() {
               </Link>
             ))}
 
-            {/* Espacios (hover) */}
+            {/* Espacios dropdown */}
             <div
               className="relative"
               onMouseEnter={() => openWithHover(setOpenEspacios, hideEspaciosTO)}
@@ -104,7 +121,7 @@ export default function Navigation() {
             >
               <DropdownMenu open={openEspacios} onOpenChange={setOpenEspacios} modal={false}>
                 <DropdownMenuTrigger
-                  className={`${linkBase} inline-flex items-center gap-1 ${espaciosIsActive ? linkActive : ""} focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0`}
+                  className={`${linkBase} inline-flex items-center gap-1 ${espaciosIsActive ? linkActive : ""} focus-visible:outline-none`}
                 >
                   Espacios <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
@@ -113,23 +130,21 @@ export default function Navigation() {
                   onMouseEnter={() => openWithHover(setOpenEspacios, hideEspaciosTO)}
                   onMouseLeave={() => closeWithDelay(setOpenEspacios, hideEspaciosTO)}
                 >
-                  <DropdownMenuItem
-                    asChild
-                    className="focus:bg-green-50 data-[highlighted]:bg-green-50 data-[highlighted]:text-green-700 focus-visible:outline-none"
-                  >
-                    <Link href="/espacio-empresas" className="w-full">Empresas</Link>
+                  <DropdownMenuItem asChild>
+                    <Link href="/espacio-empresas" className="w-full">
+                      Empresas
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    asChild
-                    className="focus:bg-green-50 data-[highlighted]:bg-green-50 data-[highlighted]:text-green-700 focus-visible:outline-none"
-                  >
-                    <Link href="/espacio-eventos" className="w-full">Eventos</Link>
+                  <DropdownMenuItem asChild>
+                    <Link href="/espacio-eventos" className="w-full">
+                      Eventos
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
-            {/* Ayuda (hover) → FAQs + Contacto */}
+            {/* Ayuda dropdown */}
             <div
               className="relative"
               onMouseEnter={() => openWithHover(setOpenAyuda, hideAyudaTO)}
@@ -137,7 +152,7 @@ export default function Navigation() {
             >
               <DropdownMenu open={openAyuda} onOpenChange={setOpenAyuda} modal={false}>
                 <DropdownMenuTrigger
-                  className={`${linkBase} inline-flex items-center gap-1 ${ayudaIsActive ? linkActive : ""} focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0`}
+                  className={`${linkBase} inline-flex items-center gap-1 ${ayudaIsActive ? linkActive : ""} focus-visible:outline-none`}
                 >
                   Ayuda <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
@@ -146,31 +161,49 @@ export default function Navigation() {
                   onMouseEnter={() => openWithHover(setOpenAyuda, hideAyudaTO)}
                   onMouseLeave={() => closeWithDelay(setOpenAyuda, hideAyudaTO)}
                 >
-                  <DropdownMenuItem
-                    asChild
-                    className="focus:bg-green-50 data-[highlighted]:bg-green-50 data-[highlighted]:text-green-700 focus-visible:outline-none"
-                  >
-                    <Link href="/faqs" className="w-full">FAQs</Link>
+                  <DropdownMenuItem asChild>
+                    <Link href="/faqs" className="w-full">
+                      FAQs
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    asChild
-                    className="focus:bg-green-50 data-[highlighted]:bg-green-50 data-[highlighted]:text-green-700 focus-visible:outline-none"
-                  >
-                    <Link href="/contacto" className="w-full">Contacto</Link>
+                  <DropdownMenuItem asChild>
+                    <Link href="/contacto" className="w-full">
+                      Contacto
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
-            {/* CTA */}
-            <Link
-              href="https://apps.apple.com/us/app/sharetogo-carpooling/id6746420222"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#2a2c38] hover:text-[#9dd187] transition-colors duration-200 font-medium"
+            {/* CTA with QR code */}
+            <div
+              className="relative"
+              onMouseEnter={() => !isMobile && setShowQR(true)}
+              onMouseLeave={() => !isMobile && setShowQR(false)}
             >
-              <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-white">Descarga la app</Button>
-            </Link>
+              <Link href={"/descargar"} className="w-full">
+                <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-white">
+                  Descarga la app
+                </Button>
+              </Link>
+
+              <AnimatePresence>
+                {showQR && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute left-1/2 -translate-x-1/2 mt-3 bg-white border rounded-2xl shadow-lg p-3 z-50"
+                  >
+                    <QRCodeCanvas value={qrLink} size={120} />
+                    <p className="text-xs text-center mt-2 text-[#2a2c38]">
+                      Escanea para descargar
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -191,27 +224,21 @@ export default function Navigation() {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
-              <Link
-                href="/"
-                className={`block px-3 py-2 ${linkBase} ${isActive("/") ? linkActive : ""}`}
-                onClick={() => setIsOpen(false)}
-              >
-                Inicio
-              </Link>
+              {itemsSinEspaciosNiAyuda.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`block px-3 py-2 ${linkBase}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
 
-              <Link
-                href="/funcionamiento"
-                className={`block px-3 py-2 ${linkBase} ${isActive("/funcionamiento") ? linkActive : ""}`}
-                onClick={() => setIsOpen(false)}
-              >
-                Cómo funciona
-              </Link>
-
-              {/* Espacios (acordeón móvil) */}
+              {/* Espacios accordion */}
               <button
-                className="flex w-full items-center justify-between px-3 py-2 text-left font-medium text-[#2a2c38] focus-visible:outline-none"
+                className="flex w-full items-center justify-between px-3 py-2 text-left font-medium text-[#2a2c38]"
                 onClick={() => setMobileEspaciosOpen((v) => !v)}
-                aria-expanded={mobileEspaciosOpen}
               >
                 Espacios
                 <ChevronDown className={`h-4 w-4 transition-transform ${mobileEspaciosOpen ? "rotate-180" : ""}`} />
@@ -220,26 +247,31 @@ export default function Navigation() {
                 <div className="ml-4">
                   <Link
                     href="/espacio-empresas"
-                    className={`block px-3 py-2 ${linkBase} ${isActive("/espacio-empresas") ? linkActive : ""}`}
-                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 ${linkBase}`}
+                    onClick={() => {
+                      setIsOpen(false)
+                      setMobileEspaciosOpen(false)
+                    }}
                   >
                     Empresas
                   </Link>
                   <Link
                     href="/espacio-eventos"
-                    className={`block px-3 py-2 ${linkBase} ${isActive("/espacio-eventos") ? linkActive : ""}`}
-                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 ${linkBase}`}
+                    onClick={() => {
+                      setIsOpen(false)
+                      setMobileEspaciosOpen(false)
+                    }}
                   >
                     Eventos
                   </Link>
                 </div>
               )}
 
-              {/* Ayuda (acordeón móvil) → FAQs + Contacto */}
+              {/* Ayuda accordion */}
               <button
-                className="flex w-full items-center justify-between px-3 py-2 text-left font-medium text-[#2a2c38] focus-visible:outline-none"
+                className="flex w-full items-center justify-between px-3 py-2 text-left font-medium text-[#2a2c38]"
                 onClick={() => setMobileAyudaOpen((v) => !v)}
-                aria-expanded={mobileAyudaOpen}
               >
                 Ayuda
                 <ChevronDown className={`h-4 w-4 transition-transform ${mobileAyudaOpen ? "rotate-180" : ""}`} />
@@ -248,25 +280,30 @@ export default function Navigation() {
                 <div className="ml-4">
                   <Link
                     href="/faqs"
-                    className={`block px-3 py-2 ${linkBase} ${isActive("/faqs") ? linkActive : ""}`}
-                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 ${linkBase}`}
+                    onClick={() => {
+                      setIsOpen(false)
+                      setMobileAyudaOpen(false)
+                    }}
                   >
                     FAQs
                   </Link>
                   <Link
                     href="/contacto"
-                    className={`block px-3 py-2 ${linkBase} ${isActive("/contacto") ? linkActive : ""}`}
-                    onClick={() => setIsOpen(false)}
+                    className={`block px-3 py-2 ${linkBase}`}
+                    onClick={() => {
+                      setIsOpen(false)
+                      setMobileAyudaOpen(false)
+                    }}
                   >
                     Contacto
                   </Link>
                 </div>
               )}
 
-              {/* Donde antes estaba Contacto, ahora va Quiénes somos */}
               <Link
                 href="/quienes-somos"
-                className={`block px-3 py-2 ${linkBase} ${isActive("/quienes-somos") ? linkActive : ""}`}
+                className={`block px-3 py-2 ${linkBase}`}
                 onClick={() => setIsOpen(false)}
               >
                 Quiénes somos
@@ -274,16 +311,25 @@ export default function Navigation() {
 
               <Link
                 href="/contratar"
-                className={`block px-3 py-2 ${linkBase} ${isActive("/contratar") ? linkActive : ""}`}
+                className={`block px-3 py-2 ${linkBase}`}
                 onClick={() => setIsOpen(false)}
               >
                 Contratar
               </Link>
 
               <div className="px-3 py-2">
-                <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
-                  Descarga la app
-                </Button>
+                <Link
+                  href={"/descargar"}
+                  className="w-full"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
+                    Descarga la app
+                  </Button>
+                </Link>
+                <div className="flex justify-center mt-3">
+                  <QRCodeCanvas value={qrLink} size={120} />
+                </div>
               </div>
             </div>
           </div>
