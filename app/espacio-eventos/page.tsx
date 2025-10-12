@@ -268,13 +268,14 @@ export default function EspacioEventos() {
               <div className="overflow-hidden">
                 <div className="border-t border-white/10 px-5 py-5 md:px-6 md:py-6">
                   <p className="text-base sm:text-lg text-[#E0ECD5]/90">
-                    Podemos añadirte como evento disponible cuando quieras{' '}
+                    Podemos incluir tu evento como una opción disponible en cualquier momento. Descubre {' '}
                     <Link
                       href="/quienes-somos"
                       className="font-semibold text-[#9dd187] underline underline-offset-4 hover:opacity-90"
                     >
                       Más info aquí
                     </Link>.
+                     sobre todos los beneficios de convertirte en un evento seleccionable, incluyendo la posibilidad de acceder a completos reportes de sostenibilidad personalizados para tu evento.
                   </p>
 
                   {/* Mini acciones (opcional) */}
@@ -302,7 +303,7 @@ export default function EspacioEventos() {
             title="Explora & Guarda"
             subtitle="Encuentra el evento perfecto y tenlo a mano"
             dark={false}
-            intervalMs={6000}
+            intervalMs={9000}
             slides={[
               {
                 image: Movil2EventosImage.src,

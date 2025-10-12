@@ -7,6 +7,7 @@ import "./globals.css"
 import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
 import { Suspense } from "react"
+import PromoPopup from '@/components/PromoPopup'
 
 export const metadata: Metadata = {
   title: "SharetoGo - Carpooling Corporativo",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     "La aplicación de carpooling corporativo que conecta empleados para compartir viajes de manera eficiente y sostenible.",
   generator: "v0.app",
 }
+
 
 export default function RootLayout({
   children,
@@ -26,6 +28,7 @@ export default function RootLayout({
         <Suspense fallback={<div>Loading...</div>}>
           <Navigation />
           {children}
+          <PromoPopup />
           <Footer />
         </Suspense>
         <Analytics />
