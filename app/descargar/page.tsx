@@ -84,83 +84,75 @@ export default function DownloadSection() {
       </section>
 
       {/* Empresa y Evento Section */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row gap-8">
-          {/* Left Division - Empresa */}
-          <div
-            className="relative md:w-1/2 h-64 rounded-xl overflow-hidden flex flex-col items-center justify-center text-center group cursor-pointer"
-            style={{
-              backgroundImage: "url('/images/descargar/empresa.jpg')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <div className="absolute inset-0 bg-black opacity-40 transition-opacity group-hover:opacity-60"></div>
+      <section className="py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row gap-8">
+          
+          {/* Card component reusable */}
+          {[
+            {
+              title: "¿Eres una empresa?",
+              text: "Empieza ya con tu solución para movilidad corporativa",
+              image: "/images/descargar/empresa.jpg",
+              link: "/contratar",
+            },
+            {
+              title: "¿Eres un evento?",
+              text: "Contacta para añadirte como evento elegible",
+              image: "/images/descargar/evento.jpg",
+              link: "/contratar",
+            },
+          ].map((card, i) => (
+            <div
+              key={i}
+              className="relative md:w-1/2 h-72 sm:h-80 rounded-xl overflow-hidden flex flex-col items-center justify-center text-center group cursor-pointer"
+              style={{
+                backgroundImage: `url(${card.image})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="absolute inset-0 bg-black opacity-40 md:group-hover:opacity-60 transition-opacity"></div>
 
-            {/* Default content */}
-            <div className="relative z-10 flex flex-col items-center justify-center transition-all duration-500">
-              <h3 className="text-white text-3xl font-bold transition-transform duration-500 group-hover:-translate-y-12">
-                ¿Eres una empresa?
-              </h3>
-              <ArrowRight
-                className="mt-4 text-white w-8 h-8 opacity-100 translate-y-0 transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-6"
-                strokeWidth={2.5}
-              />
+              {/* --- Mobile (no hover) --- */}
+              <div className="relative z-10 flex flex-col items-center justify-center text-white px-4 md:hidden">
+                <h3 className="text-2xl sm:text-3xl font-bold mb-3">{card.title}</h3>
+                <p className="text-base mb-4 max-w-xs">{card.text}</p>
+                <Button
+                  variant="secondary"
+                  className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475]"
+                  asChild
+                >
+                  <a href={card.link}>Agenda reunión</a>
+                </Button>
+              </div>
+
+              {/* --- Desktop (hover effect) --- */}
+              <div className="relative z-10 hidden md:flex flex-col items-center justify-center transition-all duration-500">
+                <h3 className="text-white text-3xl font-bold transition-transform duration-500 group-hover:-translate-y-12">
+                  {card.title}
+                </h3>
+                <ArrowRight
+                  className="mt-4 text-white w-8 h-8 opacity-100 translate-y-0 transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-6"
+                  strokeWidth={2.5}
+                />
+              </div>
+
+              {/* Hover content (solo desktop) */}
+              <div className="absolute inset-0 hidden md:flex flex-col items-center justify-center text-center text-white opacity-0 translate-y-6 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 z-10 px-4">
+                <p className="text-lg mb-4 max-w-sm text-center">{card.text}</p>
+                <Button
+                  variant="secondary"
+                  className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475] mx-auto"
+                  asChild
+                >
+                  <a href={card.link}>Agenda reunión</a>
+                </Button>
+              </div>
             </div>
-
-             {/* Hover content */}
-             <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white opacity-0 translate-y-6 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 z-10 px-4">
-               <p className="text-lg mb-4 max-w-sm text-center">
-                 Empieza ya con tu solución para movilidad corporativa
-               </p>
-               <Button
-                 variant="secondary"
-                 className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475] mx-auto"
-                 asChild
-               >
-                 <a href="/contratar">Agenda reunión</a>
-               </Button>
-             </div>
-          </div>
-
-          {/* Right Division - Evento */}
-          <div
-            className="relative md:w-1/2 h-64 rounded-xl overflow-hidden flex flex-col items-center justify-center text-center group cursor-pointer"
-            style={{
-              backgroundImage: "url('/images/descargar/evento.jpg')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
-            <div className="absolute inset-0 bg-black opacity-40 transition-opacity group-hover:opacity-60"></div>
-
-            {/* Default content */}
-            <div className="relative z-10 flex flex-col items-center justify-center transition-all duration-500">
-              <h3 className="text-white text-3xl font-bold transition-transform duration-500 group-hover:-translate-y-12">
-                ¿Eres un evento?
-              </h3>
-              <ArrowRight
-                className="mt-4 text-white w-8 h-8 opacity-100 translate-y-0 transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-6"
-                strokeWidth={2.5}
-              />
-            </div>
-
-             {/* Hover content */}
-             <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white opacity-0 translate-y-6 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 z-10 px-4">
-               <p className="text-lg mb-4 max-w-sm text-center">
-                 Contacta para añadirte como evento elegible
-               </p>
-               <Button
-                 variant="secondary"
-                 className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475] mx-auto"
-                 asChild
-               >
-                 <a href="/contratar">Agenda reunión</a>
-               </Button>
-             </div>
-          </div>
+          ))}
         </div>
       </section>
+
     </main>
   )
 }
