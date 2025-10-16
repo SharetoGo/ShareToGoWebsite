@@ -61,7 +61,7 @@ export default function Reviews() {
         </div>
 
         {isFormOpen && (
-          <Card className="mb-12 bg-white shadow-lg">
+          <Card className="mb-12 bg-white shadow-lg py-10 min-h-[350px] flex flex-col justify-center">
             <CardHeader>
               <CardTitle className="text-xl text-[#2a2c38]">Comparte tu experiencia</CardTitle>
             </CardHeader>
