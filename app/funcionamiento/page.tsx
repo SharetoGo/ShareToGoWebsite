@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InteractiveCard } from "@/components/ui/interactive-card";
@@ -20,6 +23,11 @@ import {
 } from "lucide-react";
 
 export default function Funcionamiento() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   const driverSlides = [
     {
       image: "/images/conductor1.PNG",
@@ -63,61 +71,95 @@ export default function Funcionamiento() {
   ];
 
   return (
-    <main>
+    <main className="scroll-smooth">
       {/* Hero section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] to-[#1a1c24] text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Badge variant="secondary" className="bg-white/10 text-white mb-6">
-            Funcionamiento de la App
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Compartir trayectos nunca fue tan fácil
-          </h1>
-          <h2 className="text-2xl md:text-3xl font-medium text-gray-300 italic mb-8">
-            Actúa como conductor y/o pasajero
-          </h2>
-          <p className="text-xl text-gray-300 mb-8 text-balance">
-            Descubre cómo SharetoGo conecta a tus empleados de forma
-            inteligente, segura y eficiente para crear una experiencia de
-            carpooling excepcional.
-          </p>
-          <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-[#2a2c38] font-semibold px-8 py-4 text-lg">
-            <Play className="mr-2" size={20} />
-            Ver demo en vivo
-          </Button>
-        </div>
-      </section>
-
-      {/* Conductor Section */}
-      <section className="py-16 md:py-24 bg-gray-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
-              Para conductores y pasajeros
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="space-y-16"
+      >
+        <section className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] to-[#1a1c24] text-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <Badge variant="secondary" className="bg-white/10 text-white mb-6">
+              Funcionamiento de la App
+            </Badge>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Compartir trayectos nunca fue tan fácil
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-medium text-gray-300 italic mb-8">
+              Actúa como conductor y/o pasajero
             </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Tanto si ofreces tu coche como si buscas un trayecto, el proceso es sencillo, intuitivo y gratificante.
+            <p className="text-xl text-gray-300 mb-8 text-balance">
+              Descubre cómo SharetoGo conecta a tus empleados de forma
+              inteligente, segura y eficiente para crear una experiencia de
+              carpooling excepcional.
             </p>
+            <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-[#2a2c38] font-semibold px-8 py-4 text-lg">
+              <Play className="mr-2" size={20} />
+              Ver demo en vivo
+            </Button>
           </div>
+        </section>
 
-          <div className="flex flex-col items-center gap-12 lg:gap-16">
-            <InteractiveCard
-              title="Si eres conductor"
-              subtitle="Gana dinero sin cambiar tu rutina"
-              slides={driverSlides}
-              isDriver
-            />
-            <InteractiveCard
-              title="Si eres pasajero"
-              subtitle="Viaja cómodo, ahorra y conecta"
-              slides={passengerSlides}
-            />
+        <section className="py-16 md:py-24 bg-gray-50/50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
+                Para conductores y pasajeros
+              </h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Tanto si ofreces tu coche como si buscas un trayecto, el proceso es sencillo, intuitivo y gratificante.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center gap-12 lg:gap-16">
+              <motion.section
+                initial="hidden"
+                whileInView="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
+                className="w-full"
+              >
+                <InteractiveCard
+                  title="Si eres conductor"
+                  subtitle="Gana dinero sin cambiar tu rutina"
+                  slides={driverSlides}
+                  isDriver
+                />
+              </motion.section>
+
+              <motion.section
+                initial="hidden"
+                whileInView="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                viewport={{ once: true, amount: 0.2 }}
+                className="w-full"
+              >
+                <InteractiveCard
+                  title="Si eres pasajero"
+                  subtitle="Viaja cómodo, ahorra y conecta"
+                  slides={passengerSlides}
+                />
+              </motion.section>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </motion.section>
 
       {/* Step by step process */}
-      <section className="py-16 md:py-24 bg-white">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
@@ -284,7 +326,7 @@ export default function Funcionamiento() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   );
 }

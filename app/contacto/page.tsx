@@ -1,5 +1,6 @@
-"use client"
+﻿"use client"
 
+import { motion } from "framer-motion"
 import type React from "react"
 
 import { useState } from "react"
@@ -13,6 +14,11 @@ import { MapPin, Phone, Mail, Clock, MessageSquare, Users, Building } from "luci
 
 import { useToast } from "@/components/ui/use-toast"
 export default function Contacto() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  }
+
 const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -70,9 +76,16 @@ const [formData, setFormData] = useState({
   };
 
   return (
-    <main>
+    <main className="scroll-smooth">
       {/* Hero section */}
-      <section className="py-16 md:py-24 bg-background">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#2a2c38] mb-6">Contacta con nosotros</h1>
           <p className="text-xl text-gray-600 mb-8 text-balance">
@@ -80,11 +93,18 @@ const [formData, setFormData] = useState({
             empresa.
           </p>
         </div>
-      </section>
+      </motion.section>
       
 
       {/* Contact content */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-gray-50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Contact info */}
@@ -218,10 +238,17 @@ const [formData, setFormData] = useState({
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* FAQ section */}
-      <section className="py-16 md:py-24 bg-background">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[#2a2c38] text-center mb-12">Preguntas frecuentes</h2>
           <div className="space-y-6">
@@ -270,7 +297,7 @@ const [formData, setFormData] = useState({
             </Card>
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   )
 }

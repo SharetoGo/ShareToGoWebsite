@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
@@ -26,6 +27,11 @@ import { Search, Heart, MapPin, Calendar, Filter, ListChecks } from "lucide-reac
 import { TwoSlideCard } from '@/components/TwoSlideCard';
 
 export default function EspacioEventos() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   const [faqOpen, setFaqOpen] = useState(false);
   const handleToggleFaq = () => setFaqOpen(prev => !prev);
 
@@ -70,91 +76,106 @@ export default function EspacioEventos() {
   };
 
   return (
-    <main className="space-y-10 md:space-y-16">
+    <main className="scroll-smooth space-y-10 md:space-y-16">
       {/* HERO */}
-      <section className="relative isolate h-[50vh] min-h-[380px] md:h-[60vh] lg:h-[68vh] overflow-hidden">
-        <div
-          className="absolute inset-0 flex h-full will-change-transform"
-          style={{
-            width: `${SLIDES.length * 100}%`,
-            transform: `translate3d(-${current * (100 / SLIDES.length)}%,0,0)`, // GPU
-            transition: enableTransition ? 'transform 700ms ease-out' : 'none',
-          }}
-          onTransitionEnd={handleTransitionEnd}
-          aria-hidden
-        >
-          {SLIDES.map((src, i) => (
-            <div
-              key={`${src}-${i}`}
-              className="relative h-full w-full flex-shrink-0 bg-[#1a1c24] bg-center bg-cover" // fallback sólido oscuro
-              style={{
-                backgroundImage: `url(${src})`,
-                width: `${100 / SLIDES.length}%`,
-                transform: 'translateZ(0)', // ayuda a evitar flicker en Safari/iOS
-              }}
-            >
-              <div className="absolute inset-0 bg-black/55 md:bg-black/60" />
-            </div>
-          ))}
-        </div>
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full grid items-center">
-          <div className="max-w-2xl text-white">
-            <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-white/10 text-white/90 ring-1 ring-white/20 backdrop-blur">
-              🚗💨 Comparte coche · ahorra · cuida el planeta
-            </span>
-            <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">
-              Espacio <span className="text-[#9dd187]">Eventos</span>
-            </h1>
-            <p className="mt-3 md:mt-4 text-lg md:text-xl text-white/90 text-balance">
-              ¿Vas a un <strong>festival</strong>, <strong>concierto</strong>, <strong>congreso</strong>, <strong>feria</strong>, escapada a la nieve, partido…?
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a href="#reservar-section" className="rounded-full bg-[#9dd187] px-5 py-3 text-sm font-semibold text-[#1a1c24] hover:brightness-110 transition">
-                Empieza a buscar
-              </a>
-              <Link href="/funcionamiento" className="rounded-full px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/50 hover:bg-white/10 transition">
-                Cómo funciona
-              </Link>
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="space-y-16"
+      >
+        <section className="relative isolate h-[50vh] min-h-[380px] md:h-[60vh] lg:h-[68vh] overflow-hidden">
+          <div
+            className="absolute inset-0 flex h-full will-change-transform"
+            style={{
+              width: `${SLIDES.length * 100}%`,
+              transform: `translate3d(-${current * (100 / SLIDES.length)}%,0,0)`, // GPU
+              transition: enableTransition ? 'transform 700ms ease-out' : 'none',
+            }}
+            onTransitionEnd={handleTransitionEnd}
+            aria-hidden
+          >
+            {SLIDES.map((src, i) => (
+              <div
+                key={`${src}-${i}`}
+                className="relative h-full w-full flex-shrink-0 bg-[#1a1c24] bg-center bg-cover" // fallback sólido oscuro
+                style={{
+                  backgroundImage: `url(${src})`,
+                  width: `${100 / SLIDES.length}%`,
+                  transform: 'translateZ(0)', // ayuda a evitar flicker en Safari/iOS
+                }}
+              >
+                <div className="absolute inset-0 bg-black/55 md:bg-black/60" />
+              </div>
+            ))}
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+          <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full grid items-center">
+            <div className="max-w-2xl text-white">
+              <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-white/10 text-white/90 ring-1 ring-white/20 backdrop-blur">
+                🚗💨 Comparte coche · ahorra · cuida el planeta
+              </span>
+              <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">
+                Espacio <span className="text-[#9dd187]">Eventos</span>
+              </h1>
+              <p className="mt-3 md:mt-4 text-lg md:text-xl text-white/90 text-balance">
+                ¿Vas a un <strong>festival</strong>, <strong>concierto</strong>, <strong>congreso</strong>, <strong>feria</strong>, escapada a la nieve, partido…?
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a href="#reservar-section" className="rounded-full bg-[#9dd187] px-5 py-3 text-sm font-semibold text-[#1a1c24] hover:brightness-110 transition">
+                  Empieza a buscar
+                </a>
+                <Link href="/funcionamiento" className="rounded-full px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/50 hover:bg-white/10 transition">
+                  Cómo funciona
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* SharetoGo intro */}
-      <section className="relative overflow-hidden py-12 md:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center">
-            <div className="flex flex-col gap-4">
-              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#9dd187]">
-                <span className="inline-block border-b-4 border-[#9dd187] pb-1">SharetoGo</span>
-              </h1>
-              <p className="text-lg md:text-xl font-medium leading-relaxed text-left text-[#2a2c38]">
-                <span className="font-bold text-[#9dd187]">SharetoGo</span> está presente donde haya desplazamientos.
-                El objetivo es <span className="text-[#9dd187] font-semibold">reducir las congestiones</span> en las aglomeraciones,
-                <span className="text-[#9dd187] font-semibold"> poniendo en contacto</span> a los asistentes para
-                <span className="text-[#9dd187] font-semibold"> compartir coche</span>.
-              </p>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm text-[#2a2c38]">
-                <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Menos tráfico y emisiones</li>
-                <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Conexiones entre asistentes</li>
-                <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Ahorro de costes</li>
-                <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Fácil y seguro</li>
-              </ul>
-            </div>
-            <div className="flex justify-center">
-              <div className="w-full max-w-xl rounded-sm shadow-[0_0_24px_rgba(157,209,135,0.14)]">
-                <div className="rounded-2xl overflow-hidden">
-                  <Image src={GenteFiestaImage} alt="Evento con multitud y luces de escenario" className="w-full h-[20rem] object-cover" width={800} height={500} priority />
+        <section className="relative overflow-hidden py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center">
+              <div className="flex flex-col gap-4">
+                <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#9dd187]">
+                  <span className="inline-block border-b-4 border-[#9dd187] pb-1">SharetoGo</span>
+                </h1>
+                <p className="text-lg md:text-xl font-medium leading-relaxed text-left text-[#2a2c38]">
+                  <span className="font-bold text-[#9dd187]">SharetoGo</span> está presente donde haya desplazamientos.
+                  El objetivo es <span className="text-[#9dd187] font-semibold">reducir las congestiones</span> en las aglomeraciones,
+                  <span className="text-[#9dd187] font-semibold"> poniendo en contacto</span> a los asistentes para
+                  <span className="text-[#9dd187] font-semibold"> compartir coche</span>.
+                </p>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm text-[#2a2c38]">
+                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Menos tráfico y emisiones</li>
+                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Conexiones entre asistentes</li>
+                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Ahorro de costes</li>
+                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Fácil y seguro</li>
+                </ul>
+              </div>
+              <div className="flex justify-center">
+                <div className="w-full max-w-xl rounded-sm shadow-[0_0_24px_rgba(157,209,135,0.14)]">
+                  <div className="rounded-2xl overflow-hidden">
+                    <Image src={GenteFiestaImage} alt="Evento con multitud y luces de escenario" className="w-full h-[20rem] object-cover" width={800} height={500} priority />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </motion.section>
 
       {/* ¿Conduces? (mejorada, light) */}
-      <section className="bg-white py-2 md:py-2 px-4 md:px-8">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="bg-white py-2 md:py-2 px-4 md:px-8"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8 md:gap-10">
             {/* Mockup móvil */}
@@ -234,10 +255,17 @@ export default function EspacioEventos() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* FAQ (dark, paleta SharetoGo) */}
-      <section className="bg-[#1a1c24] py-12 md:py-16 px-4 md:px-8">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="bg-[#1a1c24] py-12 md:py-16 px-4 md:px-8"
+      >
         <div className="max-w-4xl mx-auto">
           <div className="w-full rounded-2xl ring-1 ring-white/10 bg-white/5 backdrop-blur">
             {/* Header */}
@@ -294,10 +322,17 @@ export default function EspacioEventos() {
 
           {/* Nota: compacta el espacio respecto a otras secciones */}
         </div>
-      </section>
+      </motion.section>
 
       {/* Sección: Eventos (TwoSlideCard con 2 slides) */}
-      <section className="py-12 md:py-16 bg-white">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-12 md:py-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TwoSlideCard
             title="Explora & Guarda"
@@ -320,10 +355,17 @@ export default function EspacioEventos() {
             ]}
           />
         </div>
-      </section>
+      </motion.section>
 
       {/* Universidad + Estadio */}
-      <section className="py-12 md:py-16 bg-white">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-12 md:py-16 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
             <Badge className="bg-[#9dd187] text-white">Eventos & Recintos</Badge>
@@ -376,10 +418,17 @@ export default function EspacioEventos() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Banda final */}
-      <section className="px-4 mb-12 md:mb-16 md:px-8">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.4 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="px-4 mb-12 md:mb-16 md:px-8"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid sm:grid-cols-3 gap-5">
             {[
@@ -397,7 +446,7 @@ export default function EspacioEventos() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   );
 }
