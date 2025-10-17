@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState, ReactNode } from "react";
@@ -134,23 +135,37 @@ export default function Faqs() {
         setOpen(prev => prev.map((v, i) => i === idx ? !v : v));
     };
 
+    const fadeInUp = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0 },
+    };
+
     return(
-         <section className="relative bg-white py-16 sm:py-20">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6">
-                <h2 className="text-3xl sm:text-4xl font-bold text-[#2a2c38] mb-8 text-center sm:text-left">
-                    Preguntas frecuentes                
-                </h2>
-                <div className="w-full">
-                    {faqData.map((faq, idx) => (
-                        <FaqItem 
-                            key={idx}
-                            faq={faq}
-                            isOpen={open[idx]}
-                            onToggle={() => handleToggle(idx)}
-                        />
-                    ))}
+         <main className="scroll-smooth">
+            <motion.section
+                initial="hidden"
+                whileInView="visible"
+                variants={fadeInUp}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true, amount: 0.2 }}
+                className="relative bg-white py-16 sm:py-20"
+            >
+                <div className="max-w-4xl mx-auto px-4 sm:px-6">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-[#2a2c38] mb-8 text-center sm:text-left">
+                        Preguntas frecuentes                
+                    </h2>
+                    <div className="w-full">
+                        {faqData.map((faq, idx) => (
+                            <FaqItem 
+                                key={idx}
+                                faq={faq}
+                                isOpen={open[idx]}
+                                onToggle={() => handleToggle(idx)}
+                            />
+                        ))}
+                    </div>
                 </div>
-            </div>
-        </section>
+            </motion.section>
+        </main>
     );
 }

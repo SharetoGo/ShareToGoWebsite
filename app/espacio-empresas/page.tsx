@@ -1,5 +1,6 @@
-"use client"
+﻿"use client"
 
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -20,10 +21,22 @@ import {
 } from "lucide-react"
 
 export default function EspacioEmpresas() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  }
+
   return (
-    <main>
+    <main className="scroll-smooth">
       {/* Hero section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] via-[#2a2c38] to-[#1a1c24]">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] via-[#2a2c38] to-[#1a1c24]"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
@@ -77,10 +90,17 @@ export default function EspacioEmpresas() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Solutions section */}
-      <section className="py-16 md:py-24 bg-background">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Soluciones adaptadas a tu empresa</h2>
@@ -192,10 +212,17 @@ export default function EspacioEmpresas() {
             </Card>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Benefits section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-gray-50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
@@ -263,10 +290,18 @@ export default function EspacioEmpresas() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Case studies section */}
-      <section id="casos-exito" className="py-16 md:py-24 bg-background">
+      <motion.section
+        id="casos-exito"
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.4 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Casos de éxito</h2>
@@ -339,7 +374,7 @@ export default function EspacioEmpresas() {
             </Card>
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   )
 }

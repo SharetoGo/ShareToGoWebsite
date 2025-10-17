@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
@@ -8,9 +9,14 @@ import Reviews from "@/components/ui/reviews";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Leaf } from "lucide-react";
-import { ODSSection } from "@/components/ODSSection" // ajusta la ruta si la guardaste en otro sitio
+import { ODSSection } from "@/components/ODSSection"; // ajusta la ruta si la guardaste en otro sitio
 
 export default function QuienesSomos() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   const [trayectos, setTrayectos] = useState<number>(0);
   const [personas, setPersonas] = useState<number>(0);
   const [co2Saved] = useState<number>(3);
@@ -46,9 +52,16 @@ export default function QuienesSomos() {
   }, []);
 
   return (
-    <main>
+    <main className="scroll-smooth">
       {/* Mission Section */}
-      <section className="py-16 md:py-24 bg-[#2a2c38]">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-[#2a2c38]"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#9dd187] mb-6">Quiénes somos</h1>
           <p className="text-xl text-gray-300 mb-8 text-balance">
@@ -56,8 +69,15 @@ export default function QuienesSomos() {
             sostenible y conectado para las empresas.
           </p>
         </div>
-      </section>
-      <section className="py-16 md:py-24 bg-background">
+      </motion.section>
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Mission Card */}
@@ -93,10 +113,17 @@ export default function QuienesSomos() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Statistics Section */}
-      <section className="py-16 md:py-20 bg-[#2a2c38]">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-20 bg-[#2a2c38]"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center">
             Nuestro impacto hasta la fecha
@@ -148,22 +175,29 @@ export default function QuienesSomos() {
             </Card>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Who We Are Section */}
-      <section className="py-16 md:py-24 bg-background">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.4 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
             {/* Logo Image */}
             <div className="lg:col-span-4 order-2 lg:order-1">
               <div className="h-full min-h-[400px] flex items-center justify-center">
                 <Image
-                src="/images/about-us-2.png"
-                width={500}
-                height={500}
-                alt="Nuestra misión SharetoGo"
-                className="rounded-xl shadow-xl object-cover w-full h-full"
-              />
+                  src="/images/about-us-2.png"
+                  width={500}
+                  height={500}
+                  alt="Nuestra misión SharetoGo"
+                  className="rounded-xl shadow-xl object-cover w-full h-full"
+                />
               </div>
             </div>
 
@@ -193,10 +227,26 @@ export default function QuienesSomos() {
             </div>
           </div>
         </div>
-      </section>
-      <ODSSection dark />
+      </motion.section>
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <ODSSection dark />
+      </motion.section>
       {/* Reviews Section */}
-      <Reviews />
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        <Reviews />
+      </motion.section>
     </main>
   );
 }

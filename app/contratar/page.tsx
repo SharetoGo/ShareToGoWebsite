@@ -1,5 +1,6 @@
-"use client"
+﻿"use client";
 
+import { motion } from "framer-motion";
 import type React from "react"
 
 import { useState } from "react"
@@ -12,6 +13,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckCircle, Users, Building, Calendar, Phone, Mail, MapPin } from "lucide-react"
 
 export default function Contratar() {
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
@@ -34,9 +40,16 @@ export default function Contratar() {
   }
 
   return (
-    <main>
+    <main className="scroll-smooth">
       {/* Hero section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] to-[#1a1c24]">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] to-[#1a1c24]"
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Solicita tu demo gratuita</h1>
           <p className="text-xl text-gray-300 mb-8 text-balance">
@@ -61,10 +74,17 @@ export default function Contratar() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Main content */}
-      <section className="py-16 md:py-24 bg-background">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-background"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Form */}
@@ -241,10 +261,17 @@ export default function Contratar() {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* FAQ section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-gray-50"
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[#2a2c38] text-center mb-12">Preguntas frecuentes</h2>
           <div className="space-y-6">
@@ -279,7 +306,7 @@ export default function Contratar() {
             </Card>
           </div>
         </div>
-      </section>
+      </motion.section>
     </main>
   )
 }
