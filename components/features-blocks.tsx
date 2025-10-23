@@ -9,12 +9,12 @@ export default function FeaturesBlocks() {
           {/* App preview */}
           <div className="relative order-2 lg:order-1">
               <Image
-                src="/images/captura_inicio.jpg"
+                src="/images/captura_inicio.png"
                 priority={true}
                 width={100}
                 height={100}
                 alt="SharetoGo dashboard preview"
-                className="w-xs h-xs rounded-4xl shadow-2xl mx-auto lg:mx-0 border-10 border-white object-cover"
+                className="w-xs h-xs border-10 border-white object-cover"
               />
           </div>
 

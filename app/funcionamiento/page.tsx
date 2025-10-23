@@ -57,7 +57,7 @@ export default function Funcionamiento() {
         "Introduce tu destino y encuentra trayectos compatibles publicados por tus compañeros.",
     },
     {
-      image: "/images/info_trayecto.PNG",
+      image: "/images/info_trayecto.png",
       title: "Reserva tu plaza",
       description:
         "Revisa los detalles del trayecto, el perfil del conductor y reserva tu asiento con un solo toque.",
