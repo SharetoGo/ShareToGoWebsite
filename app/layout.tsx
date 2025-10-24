@@ -1,38 +1,30 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
-import { Analytics } from "@vercel/analytics/next"
-import "./globals.css"
-import Navigation from "@/components/navigation"
-import Footer from "@/components/footer"
-import { Suspense } from "react"
-import PromoPopup from '@/components/PromoPopup'
+import type { Metadata } from "next";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
+import Navigation from "@/components/navigation";
+import Footer from "@/components/footer";
+import { Suspense } from "react";
+import PromoPopup from "@/components/PromoPopup";
+import ClientI18nProvider from "@/components/ClientI18nProvider";
 
-export const metadata: Metadata = {
-  title: "SharetoGo - Carpooling Corporativo",
-  description:
-    "La aplicación de carpooling corporativo que conecta empleados para compartir viajes de manera eficiente y sostenible.",
-  generator: "v0.app",
-}
+export const metadata: Metadata = { /* ... */ };
 
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
         <Suspense fallback={<div>Loading...</div>}>
-          <Navigation />
-          {children}
-          <PromoPopup />
-          <Footer />
+          <ClientI18nProvider>
+            <Navigation />
+            {children}
+            <PromoPopup />
+            <Footer />
+          </ClientI18nProvider>
         </Suspense>
         <Analytics />
       </body>
     </html>
-  )
+  );
 }
