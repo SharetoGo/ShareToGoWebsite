@@ -28,8 +28,7 @@ export default function Navigation() {
   const hideAyudaTO = useRef<NodeJS.Timeout | null>(null)
 
   const pathname = usePathname()
-
-  const qrLink = "https://sharetogo.es/downloads" 
+  const qrLink = "https://sharetogo.es/downloads"
 
   // --- Detect mobile screen size ---
   useEffect(() => {
@@ -175,6 +174,8 @@ export default function Navigation() {
               </DropdownMenu>
             </div>
 
+         
+
             {/* CTA with QR code */}
             <div
               className="relative"
@@ -204,6 +205,16 @@ export default function Navigation() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* 🔹 Nuevo botón: Intranet Empresas */}
+            <Link href="/intranet-empresas" className="w-full">
+              <Button
+                variant="outline"
+                className="border-[#9dd187] text-[#9dd187] hover:bg-[#9dd187] hover:text-white transition-colors"
+              >
+                Iniciar sesión
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -315,6 +326,15 @@ export default function Navigation() {
                 onClick={() => setIsOpen(false)}
               >
                 Contratar
+              </Link>
+
+              {/* 🔹 Nuevo: Intranet Empresas (versión móvil) */}
+              <Link
+                href="/intranet"
+                className={`block px-3 py-2 ${linkBase}`}
+                onClick={() => setIsOpen(false)}
+              >
+                Intranet Empresas
               </Link>
 
               <div className="px-3 py-2">

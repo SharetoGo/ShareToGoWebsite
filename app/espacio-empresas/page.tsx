@@ -316,7 +316,7 @@ export default function EspacioEmpresas() {
                     <Building2 className="text-white" size={24} />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-[#2a2c38]">TechCorp España</h3>
+                    <h3 className="font-semibold text-[#2a2c38]">Parque Industrial España</h3>
                     <p className="text-gray-600 text-sm">1,200 empleados • Tecnología</p>
                   </div>
                 </div>
