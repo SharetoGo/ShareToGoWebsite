@@ -299,8 +299,7 @@ export default function Contratar() {
               <CardContent className="pt-6">
                 <h3 className="font-semibold text-[#2a2c38] mb-2">¿Cómo garantizan la seguridad de los empleados?</h3>
                 <p className="text-gray-600">
-                  Incluimos verificación de identidad, seguimiento GPS en tiempo real, sistema de valoraciones y soporte
-                  24/7 para emergencias.
+                  Incluimos una verificación de los datos personales de los usuarios y un sistema de valoraciones y soporte 24/7 para emergencias.
                 </p>
               </CardContent>
             </Card>

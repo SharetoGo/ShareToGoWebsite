@@ -93,8 +93,11 @@ export default function QuienesSomos() {
                     </h1>
                   </div>
                   <p className="text-base md:text-lg font-medium text-[#2a2c38] leading-relaxed">
-                    Compartir nos mueve, por ello, en SharetoGo nos hemos propuesto ser la solución lógica y la herramienta real para llevar a cabo el carpooling corporativo en España. Durante muchos meses hemos pensado, diseñado, programado toda nuestra aplicación para conectar mediante ubicación, a personas que tienen plazas libres en sus coches con personas que se dirigen a un mismo destino o similar y el cómo podemos llegar a ser masivos a la par que disruptivos realizando esta conexión. SharetoGo es ilusión, compañerismo, sacrificio, trabajo y, sobre todo, ganas de solucionar un problema y hacerlo bien.
-                  </p>
+En SharetoGo creemos que compartir nos mueve. Hemos desarrollado una solución inteligente y sostenible para impulsar el carpooling corporativo en España, conectando a personas con plazas disponibles con quienes comparten un mismo origen o destino o similar. 
+
+Nuestro objetivo es fomentar la movilidad sostenible en empresas y zonas específicas, reduciendo el tráfico, los costes y las emisiones de CO₂. Además, ofrecemos métricas precisas de impacto ambiental, ayudando a las organizaciones a cumplir sus objetivos ESG y sus planes de movilidad sostenible.
+
+SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro más eficiente, responsable y conectado.                  </p>
                 </CardContent>
               </Card>
             </div>
