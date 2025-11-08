@@ -109,9 +109,9 @@ const FaqItem = ({ faq, isOpen, onToggle }: { faq: typeof faqData[0], isOpen: bo
                     {faq.question}
                 </h3>
                 {isOpen ? (
-                    <ChevronUp className="text-4xl text-[#2a2c38] flex-shrink-0" />
+                    <ChevronUp className="text-4xl text-[#2a2c38] shrink-0" />
                 ) : (
-                    <ChevronDown className="text-4xl text-[#2a2c38] flex-shrink-0" />
+                    <ChevronDown className="text-4xl text-[#2a2c38] shrink-0" />
                 )}
             </button>
             <div

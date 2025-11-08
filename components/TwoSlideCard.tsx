@@ -70,7 +70,7 @@ export function TwoSlideCard({
       <CardContent className="p-6 md:p-8 bg-white">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
           {/* Imagen */}
-          <div className="relative h-80 md:h-96 rounded-lg overflow-hidden">
+          <div className="relative h-[26rem] md:h-[30rem] rounded-lg overflow-hidden">
             <AnimatePresence initial={false} mode="popLayout">
               <motion.div
                 key={index}
