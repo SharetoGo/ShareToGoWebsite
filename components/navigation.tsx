@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Menu, X, ChevronDown } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -28,6 +29,7 @@ export default function Navigation() {
   const hideAyudaTO = useRef<NodeJS.Timeout | null>(null)
 
   const pathname = usePathname()
+  const { t } = useTranslation()
 
   const qrLink = "https://sharetogo.es/downloads" 
 
@@ -40,14 +42,14 @@ export default function Navigation() {
   }, [])
 
   const navItems = [
-    { href: "/", label: "Inicio" },
-    { href: "/funcionamiento", label: "Cómo funciona" },
-    { href: "/espacio-empresas", label: "Espacio Empresas" },
-    { href: "/espacio-eventos", label: "Espacio Eventos" },
-    { href: "/faqs", label: "FAQs" },
-    { href: "/quienes-somos", label: "Quiénes somos" },
-    { href: "/contacto", label: "Contacto" },
-    { href: "/contratar", label: "Contratar" },
+    { href: "/", labelKey: "nav_inicio" },
+    { href: "/funcionamiento", labelKey: "nav_funcionamiento" },
+    { href: "/espacio-empresas", labelKey: "nav_empresas" },
+    { href: "/espacio-eventos", labelKey: "nav_eventos" },
+    { href: "/faqs", labelKey: "nav_faqs" },
+    { href: "/quienes-somos", labelKey: "nav_quienes" },
+    { href: "/contacto", labelKey: "nav_contacto" },
+    { href: "/contratar", labelKey: "nav_contratar" },
   ]
 
   const itemsSinEspaciosNiAyuda = navItems.filter(
@@ -90,7 +92,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" aria-label="Ir al inicio" className="flex items-center gap-2">
+          <Link href="/" aria-label={t("nav_aria_home")} className="flex items-center gap-2">
             <Image
               src="/logos/side_logo.png"
               alt="SharetoGo"
@@ -109,7 +111,7 @@ export default function Navigation() {
                 href={item.href}
                 className={`${linkBase} ${isActive(item.href) ? linkActive : ""}`}
               >
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             ))}
 
@@ -123,7 +125,7 @@ export default function Navigation() {
                 <DropdownMenuTrigger
                   className={`${linkBase} inline-flex items-center gap-1 ${espaciosIsActive ? linkActive : ""} focus-visible:outline-none`}
                 >
-                  Espacios <ChevronDown className="h-4 w-4" />
+                  {t("nav_espacios")} <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
@@ -132,12 +134,12 @@ export default function Navigation() {
                 >
                   <DropdownMenuItem asChild>
                     <Link href="/espacio-empresas" className="w-full">
-                      Empresas
+                      {t("nav_empresas_simple")}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/espacio-eventos" className="w-full">
-                      Eventos
+                      {t("nav_eventos_simple")}
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -154,7 +156,7 @@ export default function Navigation() {
                 <DropdownMenuTrigger
                   className={`${linkBase} inline-flex items-center gap-1 ${ayudaIsActive ? linkActive : ""} focus-visible:outline-none`}
                 >
-                  Ayuda <ChevronDown className="h-4 w-4" />
+                  {t("nav_ayuda")} <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
@@ -163,12 +165,12 @@ export default function Navigation() {
                 >
                   <DropdownMenuItem asChild>
                     <Link href="/faqs" className="w-full">
-                      FAQs
+                      {t("nav_faqs")}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/contacto" className="w-full">
-                      Contacto
+                      {t("nav_contacto")}
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -183,7 +185,7 @@ export default function Navigation() {
             >
               <Link href={"/descargar"} className="w-full">
                 <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-white">
-                  Descarga la app
+                  {t("nav_descarga")}
                 </Button>
               </Link>
 
@@ -198,7 +200,7 @@ export default function Navigation() {
                   >
                     <QRCodeCanvas value={qrLink} size={120} />
                     <p className="text-xs text-center mt-2 text-[#2a2c38]">
-                      Escanea para descargar
+                      {t("nav_qr_texto")}
                     </p>
                   </motion.div>
                 )}
@@ -213,7 +215,7 @@ export default function Navigation() {
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
               className="text-[#2a2c38]"
-              aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
+              aria-label={isOpen ? t("nav_cerrar_menu") : t("nav_abrir_menu")}
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
@@ -231,16 +233,16 @@ export default function Navigation() {
                   className={`block px-3 py-2 ${linkBase}`}
                   onClick={() => setIsOpen(false)}
                 >
-                  {item.label}
-                </Link>
-              ))}
+                {t(item.labelKey)}
+              </Link>
+            ))}
 
               {/* Espacios accordion */}
               <button
                 className="flex w-full items-center justify-between px-3 py-2 text-left font-medium text-[#2a2c38]"
                 onClick={() => setMobileEspaciosOpen((v) => !v)}
               >
-                Espacios
+                {t("nav_espacios")}
                 <ChevronDown className={`h-4 w-4 transition-transform ${mobileEspaciosOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileEspaciosOpen && (
@@ -253,7 +255,7 @@ export default function Navigation() {
                       setMobileEspaciosOpen(false)
                     }}
                   >
-                    Empresas
+                    {t("nav_empresas_simple")}
                   </Link>
                   <Link
                     href="/espacio-eventos"
@@ -263,7 +265,7 @@ export default function Navigation() {
                       setMobileEspaciosOpen(false)
                     }}
                   >
-                    Eventos
+                    {t("nav_eventos_simple")}
                   </Link>
                 </div>
               )}
@@ -273,7 +275,7 @@ export default function Navigation() {
                 className="flex w-full items-center justify-between px-3 py-2 text-left font-medium text-[#2a2c38]"
                 onClick={() => setMobileAyudaOpen((v) => !v)}
               >
-                Ayuda
+                {t("nav_ayuda")}
                 <ChevronDown className={`h-4 w-4 transition-transform ${mobileAyudaOpen ? "rotate-180" : ""}`} />
               </button>
               {mobileAyudaOpen && (
@@ -286,7 +288,7 @@ export default function Navigation() {
                       setMobileAyudaOpen(false)
                     }}
                   >
-                    FAQs
+                    {t("nav_faqs")}
                   </Link>
                   <Link
                     href="/contacto"
@@ -296,7 +298,7 @@ export default function Navigation() {
                       setMobileAyudaOpen(false)
                     }}
                   >
-                    Contacto
+                    {t("nav_contacto")}
                   </Link>
                 </div>
               )}
@@ -306,7 +308,7 @@ export default function Navigation() {
                 className={`block px-3 py-2 ${linkBase}`}
                 onClick={() => setIsOpen(false)}
               >
-                Quiénes somos
+                {t("nav_quienes")}
               </Link>
 
               <Link
@@ -314,7 +316,7 @@ export default function Navigation() {
                 className={`block px-3 py-2 ${linkBase}`}
                 onClick={() => setIsOpen(false)}
               >
-                Contratar
+                {t("nav_contratar")}
               </Link>
 
               <div className="px-3 py-2">
@@ -324,7 +326,7 @@ export default function Navigation() {
                   onClick={() => setIsOpen(false)}
                 >
                   <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
-                    Descarga la app
+                    {t("nav_descarga")}
                   </Button>
                 </Link>
                 <div className="flex justify-center mt-3">

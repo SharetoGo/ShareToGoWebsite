@@ -1,8 +1,12 @@
+"use client"
+
 import Link from "next/link";
 import WhiteLogo from "./ui/whiteLogo";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useTranslation();
 
   return (
     <footer className="bg-gradient-to-br from-[#2a2c38] to-[#1a1c24] text-white rounded-t-[28px]">
@@ -15,7 +19,7 @@ export default function Footer() {
               <WhiteLogo />
             </div>
 
-            <p className="text-white/80 mb-4">Síguenos y únete a la comunidad</p>
+            <p className="text-white/80 mb-4">{t("footer_siguenos")}</p>
             <ul className="flex items-center gap-4">
               {/* Instagram */}
               <li>
@@ -78,31 +82,31 @@ export default function Footer() {
 
           {/* SharetoGo */}
           <nav className="lg:col-span-2" aria-label="SharetoGo">
-            <h6 className="text-[#9dd187] font-semibold mb-3">SharetoGo</h6>
+            <h6 className="text-[#9dd187] font-semibold mb-3">{t("nombre_sharetogo")}</h6>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-[#9dd187] transition">Inicio</Link></li>
-              <li><Link href="/quienes-somos" className="hover:text-[#9dd187] transition">Quiénes somos</Link></li>
-              <li><Link href="/funcionamiento" className="hover:text-[#9dd187] transition">Cómo funciona</Link></li>
-              <li><Link href="/contratar" className="hover:text-[#9dd187] transition">Contratar</Link></li>
+              <li><Link href="/" className="hover:text-[#9dd187] transition">{t("nav_inicio")}</Link></li>
+              <li><Link href="/quienes-somos" className="hover:text-[#9dd187] transition">{t("nav_quienes")}</Link></li>
+              <li><Link href="/funcionamiento" className="hover:text-[#9dd187] transition">{t("nav_funcionamiento")}</Link></li>
+              <li><Link href="/contratar" className="hover:text-[#9dd187] transition">{t("nav_contratar")}</Link></li>
             </ul>
           </nav>
 
           {/* Espacios */}
           <nav className="lg:col-span-2" aria-label="Espacios">
-            <h6 className="text-[#9dd187] font-semibold mb-3">Espacios</h6>
+            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_espacios")}</h6>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/espacio-empresas" className="hover:text-[#9dd187] transition">Empresas</Link></li>
-              <li><Link href="/espacio-eventos" className="hover:text-[#9dd187] transition">Eventos</Link></li>
+              <li><Link href="/espacio-empresas" className="hover:text-[#9dd187] transition">{t("nav_empresas_simple")}</Link></li>
+              <li><Link href="/espacio-eventos" className="hover:text-[#9dd187] transition">{t("nav_eventos_simple")}</Link></li>
             </ul>
           </nav>
 
           {/* Ayuda */}
           <nav className="lg:col-span-2" aria-label="Ayuda">
-            <h6 className="text-[#9dd187] font-semibold mb-3">Ayuda</h6>
+            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_ayuda")}</h6>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/faqs" className="hover:text-[#9dd187] transition">FAQs</Link></li>
-              <li><Link href="/contacto" className="hover:text-[#9dd187] transition">Contacto</Link></li>
-              <li><Link href="/privacidad" className="hover:text-[#9dd187] transition">Política de privacidad</Link></li>
+              <li><Link href="/faqs" className="hover:text-[#9dd187] transition">{t("nav_faqs")}</Link></li>
+              <li><Link href="/contacto" className="hover:text-[#9dd187] transition">{t("nav_contacto")}</Link></li>
+              <li><Link href="/privacidad" className="hover:text-[#9dd187] transition">{t("footer_privacidad")}</Link></li>
             </ul>
           </nav>
 
@@ -116,7 +120,7 @@ export default function Footer() {
             >
               {/* Apple icon */}
               <svg className="w-5 h-5" viewBox="0 0 384 512"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-              Descargar la app
+              {t("footer_descargar_app")}
             </a>
           </div>
         </div>
@@ -127,15 +131,15 @@ export default function Footer() {
         {/* Bottom */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between py-6 gap-6">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80 underline decoration-white/30 underline-offset-4">
-            <li><Link href="/privacidad#derechos" className="hover:text-[#9dd187]">Derechos de los usuarios</Link></li>
-            <li><Link href="/privacidad" className="hover:text-[#9dd187]">Política de privacidad</Link></li>
-            <li><Link href="/privacidad#términos" className="hover:text-[#9dd187]">Términos y condiciones</Link></li>
-            <li><Link href="/privacidad#cookies" className="hover:text-[#9dd187]">Cookies</Link></li>
+            <li><Link href="/privacidad#derechos" className="hover:text-[#9dd187]">{t("footer_derechos")}</Link></li>
+            <li><Link href="/privacidad" className="hover:text-[#9dd187]">{t("footer_privacidad")}</Link></li>
+            <li><Link href="/privacidad#términos" className="hover:text-[#9dd187]">{t("footer_terminos")}</Link></li>
+            <li><Link href="/privacidad#cookies" className="hover:text-[#9dd187]">{t("footer_cookies")}</Link></li>
 
           </ul>
 
           <div className="text-sm text-white/70">
-            © {year} sharetogo.es. Todos los derechos reservados.
+            {t("footer_copyright", { year })}
           </div>
         </div>
       </div>

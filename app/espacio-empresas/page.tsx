@@ -227,7 +227,7 @@ export default function EspacioEmpresas() {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">¿Perteneces a un parque industrial o quieres asociarte con otra empresa?</h2>
             <h3 className="text-xl font-medium text-[#2a2c38] max-w-2xl mx-auto mb-6">
-              Únete a nuestro plan de partnership intraempresarial.
+                Os unimos como partnership empresarial
             </h3>
             <div className="flex justify-center mb-6">
               <div className="bg-[#9dd187] w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg">
@@ -235,11 +235,10 @@ export default function EspacioEmpresas() {
               </div>
             </div>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto text-center mb-2">
-              En parques empresariales, polígonos o zonas industriales donde coexisten varias empresas, SharetoGo permite establecer acuerdos de colaboración entre compañías para que sus empleados compartan coche entre sí.
-            </p>
+                En parques empresariales, polígonos o zonas industriales donde coexisten varias empresas  SharetoGo permite establecer acuerdos de unión entre empresas para optimizar todos los desplazamientos desde esas zonas.            </p>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto text-center">
-              Cada empresa mantiene su propio panel de control y sus indicadores sostenibles personalizados.
-            </p>
+                Cada empresa mantiene su propio panel de control si lo desea, con sus respectivos reportes de sostenibilidad. 
+                Existe la posibilidad de que sea el mismo reporte para toda la zona.            </p>
           </div>
         </div>
       </motion.section>

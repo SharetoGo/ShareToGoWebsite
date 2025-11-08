@@ -3,15 +3,18 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight, MessageCircle, Rocket } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 export default function Options() {
+  const { t } = useTranslation()
+
   return (
     <section className="py-16 md:py-24 bg-gradient-to-br from-[#9dd187] to-[#8bc475]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Ponlo en marcha en tu empresa</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">{t("ponlo_marcha")}</h2>
           <p className="text-lg text-[#2a2c38]/80 max-w-2xl mx-auto">
-            Integra SharetoGo en tu negocio y empieza a transformar la movilidad corporativa desde hoy mismo
+            {t("integra_negocio")}
           </p>
         </div>
 
@@ -36,13 +39,13 @@ export default function Options() {
                     <Rocket className="text-white" size={24} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#2a2c38] mb-2">Integra SharetoGo en tu negocio</h3>
+                    <h3 className="text-xl font-bold text-[#2a2c38] mb-2">{t("integra_titulo")}</h3>
                     <p className="text-gray-600 mb-4">
-                      Empieza desde hoy mismo y transforma la movilidad de tus empleados
+                      {t("transforma_empleados")}
                     </p>
                     <Link href="/contratar">
                       <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white group">
-                        Prueba ya
+                        {t("prueba_ya")}
                         <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
                       </Button>
                     </Link>
@@ -58,13 +61,13 @@ export default function Options() {
                     <MessageCircle className="text-white" size={24} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#2a2c38] mb-2">¿Tienes alguna duda?</h3>
+                    <h3 className="text-xl font-bold text-[#2a2c38] mb-2">{t("duda_titulo")}</h3>
                     <p className="text-gray-600 mb-4">
-                      Ponte en contacto con nuestro servicio de atención al cliente especializado
+                      {t("contacto_servicio")}
                     </p>
                     <Link href="/contacto">
                       <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white group">
-                        Contacta con nosotros
+                        {t("contacta_nosotros")}
                         <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={16} />
                       </Button>
                     </Link>

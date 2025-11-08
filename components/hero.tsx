@@ -2,8 +2,11 @@ import Image from "next/image";
 import AppPreview1 from "@/public/images/movil1.png";
 import AppPreview2 from "@/public/images/movil2.png";
 import { Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section className="relative bg-background py-16 md:py-24 lg:py-32 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,20 +16,19 @@ export default function Hero() {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
               <Sparkles className="mr-2" />
-              Movilidad corporativa inteligente
+              {t("Movilidad")}
             </div>
 
             {/* Main heading */}
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground text-balance leading-tight">
-                <span className="text-primary">SharetoGo</span>
+                <span className="text-primary">{t("nombre_sharetogo")}</span>
               </h1>
               <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-foreground text-balance leading-tight">
-                La aplicación de carpooling corporativo
+                {t("Aplicacion")}
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-2xl">
-                Cada empresa es única, por ello, gestionamos la movilidad diaria
-                de los trabajadores según sus necesidades.
+                {t("empresa_unica")}
               </p>
             </div>
 
@@ -36,13 +38,13 @@ export default function Hero() {
                 href="/contratar"
                 className="inline-flex items-center justify-center px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
               >
-                Solicita una demo gratuita
+                {t("boton_demo")}
               </a>
               <a
                 href="/funcionamiento"
                 className="inline-flex items-center justify-center px-8 py-4 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-xl transition-colors"
               >
-                Ver cómo funciona
+                {t("boton_funciona")}
               </a>
             </div>
           </div>
