@@ -81,7 +81,7 @@ export default function Funcionamiento() {
         viewport={{ once: true, amount: 0.2 }}
         className="space-y-16"
       >
-        <section className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] to-[#1a1c24] text-white">
+        <section className="py-16 md:py-24 bg-linear-to-br from-[#2a2c38] to-[#1a1c24] text-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <Badge variant="secondary" className="bg-white/10 text-white mb-6">
               Funcionamiento de la App
@@ -190,7 +190,7 @@ export default function Funcionamiento() {
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
                     <CheckCircle
-                      className="text-[#9dd187] flex-shrink-0"
+                      className="text-[#9dd187] shrink-0"
                       size={20}
                     />
                     <span>
@@ -199,7 +199,7 @@ export default function Funcionamiento() {
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle
-                      className="text-[#9dd187] flex-shrink-0"
+                      className="text-[#9dd187] shrink-0"
                       size={20}
                     />
                     <span>
@@ -209,7 +209,7 @@ export default function Funcionamiento() {
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle
-                      className="text-[#9dd187] flex-shrink-0"
+                      className="text-[#9dd187] shrink-0"
                       size={20}
                     />
                     <span>
@@ -271,21 +271,21 @@ export default function Funcionamiento() {
                   <ul className="space-y-3 flex-1">
                     <li className="flex items-center gap-3">
                       <CheckCircle
-                        className="text-[#9dd187] flex-shrink-0"
+                        className="text-[#9dd187] shrink-0"
                         size={20}
                       />
                       <span>Ve a la página de reservas.</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <CheckCircle
-                        className="text-[#9dd187] flex-shrink-0"
+                        className="text-[#9dd187] shrink-0"
                         size={20}
                       />
                       <span>Busca tu punto de origen o destino.</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <CheckCircle
-                        className="text-[#9dd187] flex-shrink-0"
+                        className="text-[#9dd187] shrink-0"
                         size={20}
                       />
                       <span>Reserva tu trayecto coincidente.</span>
@@ -295,21 +295,21 @@ export default function Funcionamiento() {
                   <ul className="space-y-3 flex-1">
                     <li className="flex items-center gap-3">
                       <CheckCircle
-                        className="text-[#9dd187] flex-shrink-0"
+                        className="text-[#9dd187] shrink-0"
                         size={20}
                       />
                       <span>Ve al apartado de zonas favoritas en tu cuenta.</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <CheckCircle
-                        className="text-[#9dd187] flex-shrink-0"
+                        className="text-[#9dd187] shrink-0"
                         size={20}
                       />
                       <span>Añádete a la zona que prefieras.</span>
                     </li>
                     <li className="flex items-center gap-3">
                       <CheckCircle
-                        className="text-[#9dd187] flex-shrink-0"
+                        className="text-[#9dd187] shrink-0"
                         size={20}
                       />
                       <span>
@@ -340,21 +340,21 @@ export default function Funcionamiento() {
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
                     <CheckCircle
-                      className="text-[#9dd187] flex-shrink-0"
+                      className="text-[#9dd187] shrink-0"
                       size={20}
                     />
                     <span>Chat integrado para coordinación.</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle
-                      className="text-[#9dd187] flex-shrink-0"
+                      className="text-[#9dd187] shrink-0"
                       size={20}
                     />
                     <span>Confirmación automática de disponibilidad.</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <CheckCircle
-                      className="text-[#9dd187] flex-shrink-0"
+                      className="text-[#9dd187] shrink-0"
                       size={20}
                     />
                     <span>Notificaciones push en tiempo real.</span>

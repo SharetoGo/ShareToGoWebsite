@@ -48,7 +48,7 @@ export default function Contratar() {
         variants={fadeInUp}
         transition={{ duration: 0.6 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="py-16 md:py-24 bg-gradient-to-br from-[#2a2c38] to-[#1a1c24]"
+        className="py-16 md:py-24 bg-linear-to-br from-[#2a2c38] to-[#1a1c24]"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Solicita tu demo gratuita</h1>
@@ -194,7 +194,7 @@ export default function Contratar() {
                 <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">¿Qué incluye tu demo?</h2>
                 <div className="space-y-4">
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className="w-10 h-10 bg-[#9dd187] rounded-full flex items-center justify-center">
                         <Users className="text-white" size={20} />
                       </div>
@@ -208,7 +208,7 @@ export default function Contratar() {
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className="w-10 h-10 bg-[#2a2c38] rounded-full flex items-center justify-center">
                         <Building className="text-white" size={20} />
                       </div>
@@ -222,7 +222,7 @@ export default function Contratar() {
                   </div>
 
                   <div className="flex gap-4">
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className="w-10 h-10 bg-[#9dd187] rounded-full flex items-center justify-center">
                         <Calendar className="text-white" size={20} />
                       </div>

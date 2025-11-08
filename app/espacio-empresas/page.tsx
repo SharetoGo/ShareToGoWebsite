@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { FaHandshakeSimple } from "react-icons/fa6"
 import {
   Building2,
   TrendingUp,
@@ -210,6 +211,35 @@ export default function EspacioEmpresas() {
                 </Link>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </motion.section>
+
+        <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="py-16 md:py-24 bg-white"
+        >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">¿Perteneces a un parque industrial o quieres asociarte con otra empresa?</h2>
+            <h3 className="text-xl font-medium text-[#2a2c38] max-w-2xl mx-auto mb-6">
+              Únete a nuestro plan de partnership intraempresarial.
+            </h3>
+            <div className="flex justify-center mb-6">
+              <div className="bg-[#9dd187] w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg">
+                <FaHandshakeSimple className="text-white text-4xl" />
+              </div>
+            </div>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto text-center mb-2">
+              En parques empresariales, polígonos o zonas industriales donde coexisten varias empresas, SharetoGo permite establecer acuerdos de colaboración entre compañías para que sus empleados compartan coche entre sí.
+            </p>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto text-center">
+              Cada empresa mantiene su propio panel de control y sus indicadores sostenibles personalizados.
+            </p>
           </div>
         </div>
       </motion.section>
