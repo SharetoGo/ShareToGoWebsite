@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import en from '@/public/locales/en/common.json';
 import es from '@/public/locales/es/common.json';
+import fr from '@/public/locales/fr/common.json';
 
 const isServer = typeof window === 'undefined';
 
@@ -15,9 +16,10 @@ if (!i18n.isInitialized) {
       resources: {
         en: { translation: en },
         es: { translation: es },
+        fr: { translation: fr },
       },
-      fallbackLng: 'en',
-      lng: 'en',
+      fallbackLng: 'es',
+      lng: 'es',
       interpolation: {
         escapeValue: false,
       },
@@ -25,6 +27,7 @@ if (!i18n.isInitialized) {
         order: ['localStorage', 'navigator', 'htmlTag'],
         caches: ['localStorage'],
       },
+      supportedLngs: ['es', 'en', 'fr'],
     });
 }
 

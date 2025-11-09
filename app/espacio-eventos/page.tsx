@@ -1,54 +1,77 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
-import Link from 'next/link';
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from '@/components/ui/badge';
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Search,
+  Heart,
+  MapPin,
+  Calendar,
+  Filter,
+  ListChecks,
+} from "lucide-react";
+import { TwoSlideCard } from "@/components/TwoSlideCard";
+import { useTranslation } from "react-i18next";
 
-import EventoImage from '@/public/images/eventos/evento.jpg';
-import DJEventoImage from '@/public/images/eventos/dj-event.jpg';
-import TrabajoEventoImage from '@/public/images/eventos/work-event.jpg';
-import GenteFiestaImage from '@/public/images/eventos/GenteFiesta.jpg';
-import Movil1EventosImage from '@/public/images/eventos/favoritos.png';
-import Movil2EventosImage from '@/public/images/eventos/conduces.png';
-import Movil3EventosImage from '@/public/images/eventos/busca.png';
-import Movil4EventosImage from '@/public/images/eventos/movil4eventos.png';
-import UniversidadImage from '@/public/images/eventos/universidad.jpeg';
-import EstadioImage from '@/public/images/eventos/estadio.png';
-import FeriaImage from '@/public/images/eventos/feria.jpg';
-import EnvironmentImage from '@/public/images/eventos/environment.png';
-import SocialPeopleImage from '@/public/images/eventos/socialpeople.png';
-import SavingImage from '@/public/images/eventos/saving.png';
-import { Search, Heart, MapPin, Calendar, Filter, ListChecks } from "lucide-react"
-import { TwoSlideCard } from '@/components/TwoSlideCard';
+import EventoImage from "@/public/images/eventos/evento.jpg";
+import DJEventoImage from "@/public/images/eventos/dj-event.jpg";
+import TrabajoEventoImage from "@/public/images/eventos/work-event.jpg";
+import GenteFiestaImage from "@/public/images/eventos/GenteFiesta.jpg";
+import Movil1EventosImage from "@/public/images/eventos/favoritos.png";
+import Movil2EventosImage from "@/public/images/eventos/conduces.png";
+import Movil3EventosImage from "@/public/images/eventos/busca.png";
+import Movil4EventosImage from "@/public/images/eventos/movil4eventos.png";
+import UniversidadImage from "@/public/images/eventos/universidad.jpeg";
+import EstadioImage from "@/public/images/eventos/estadio.png";
+import FeriaImage from "@/public/images/eventos/feria.jpg";
+import EnvironmentImage from "@/public/images/eventos/environment.png";
+import SocialPeopleImage from "@/public/images/eventos/socialpeople.png";
+import SavingImage from "@/public/images/eventos/saving.png";
+import { FaHandshakeSimple } from "react-icons/fa6";
 
 export default function EspacioEventos() {
+  const { t } = useTranslation();
+
   const fadeInUp = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
   };
 
   const [faqOpen, setFaqOpen] = useState(false);
-  const handleToggleFaq = () => setFaqOpen(prev => !prev);
+  const handleToggleFaq = () => setFaqOpen((prev) => !prev);
 
-  // --- HERO slideshow horizontal ---
-  const BASE_IMAGES = [EventoImage.src, TrabajoEventoImage.src, EstadioImage.src, DJEventoImage.src];
-  // clonamos extremos para bucle infinito: [última, ...originales, primera]
-  const SLIDES = useMemo(() => [BASE_IMAGES.at(-1)!, ...BASE_IMAGES, BASE_IMAGES[0]], []);
-  const prefersReducedMotion = useMemo(
-    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches,
+  // HERO slideshow
+  const BASE_IMAGES = [
+    EventoImage.src,
+    TrabajoEventoImage.src,
+    EstadioImage.src,
+    DJEventoImage.src,
+  ];
+
+  const SLIDES = useMemo(
+    () => [BASE_IMAGES.at(-1)!, ...BASE_IMAGES, BASE_IMAGES[0]],
     []
   );
 
-  // empezamos en 1 (primer real)
+  const prefersReducedMotion = useMemo(
+    () =>
+      typeof window !== "undefined" &&
+      window
+        .matchMedia?.("(prefers-reduced-motion: reduce)")
+        ?.matches,
+    []
+  );
+
   const [current, setCurrent] = useState(1);
   const [enableTransition, setEnableTransition] = useState(true);
 
-  // ⬇️ PRELOAD para evitar gris mientras carga
+  // Preload slides
   useEffect(() => {
     SLIDES.forEach((src) => {
       const img = new window.Image();
@@ -56,22 +79,25 @@ export default function EspacioEventos() {
     });
   }, [SLIDES]);
 
+  // Auto-slide
   useEffect(() => {
     if (prefersReducedMotion) return;
-    const id = setInterval(() => setCurrent((c) => c + 1), 4500);
+    const id = setInterval(
+      () => setCurrent((c) => c + 1),
+      4500
+    );
     return () => clearInterval(id);
   }, [prefersReducedMotion]);
 
-  // al terminar la animación: si estamos en el clon del final, saltamos al real sin transición
+  // Loop edges
   const handleTransitionEnd = () => {
-    // ⬇️ guard: si ya desactivamos la transición, no hagas nada aquí
     if (!enableTransition) return;
     if (current === SLIDES.length - 1) {
-      // estábamos en el clon de la primera (índice n+1) → saltamos al 1
       setEnableTransition(false);
       setCurrent(1);
-      // reactivamos transición en el siguiente tick
-      requestAnimationFrame(() => requestAnimationFrame(() => setEnableTransition(true)));
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => setEnableTransition(true))
+      );
     }
   };
 
@@ -91,8 +117,12 @@ export default function EspacioEventos() {
             className="absolute inset-0 flex h-full will-change-transform"
             style={{
               width: `${SLIDES.length * 100}%`,
-              transform: `translate3d(-${current * (100 / SLIDES.length)}%,0,0)`, // GPU
-              transition: enableTransition ? 'transform 700ms ease-out' : 'none',
+              transform: `translate3d(-${
+                current * (100 / SLIDES.length)
+              }%,0,0)`,
+              transition: enableTransition
+                ? "transform 700ms ease-out"
+                : "none",
             }}
             onTransitionEnd={handleTransitionEnd}
             aria-hidden
@@ -100,11 +130,11 @@ export default function EspacioEventos() {
             {SLIDES.map((src, i) => (
               <div
                 key={`${src}-${i}`}
-                className="relative h-full w-full flex-shrink-0 bg-[#1a1c24] bg-center bg-cover" // fallback sólido oscuro
+                className="relative h-full w-full flex-shrink-0 bg-[#1a1c24] bg-center bg-cover"
                 style={{
                   backgroundImage: `url(${src})`,
                   width: `${100 / SLIDES.length}%`,
-                  transform: 'translateZ(0)', // ayuda a evitar flicker en Safari/iOS
+                  transform: "translateZ(0)",
                 }}
               >
                 <div className="absolute inset-0 bg-black/55 md:bg-black/60" />
@@ -115,50 +145,75 @@ export default function EspacioEventos() {
           <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full grid items-center">
             <div className="max-w-2xl text-white">
               <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-white/10 text-white/90 ring-1 ring-white/20 backdrop-blur">
-                🚗💨 Comparte coche · ahorra · cuida el planeta
+                {t("ev_hero_tag")}
               </span>
               <h1 className="mt-3 text-4xl md:text-5xl font-bold tracking-tight">
-                Espacio <span className="text-[#9dd187]">Eventos</span>
+                {t("ev_hero_title")}
               </h1>
               <p className="mt-3 md:mt-4 text-lg md:text-xl text-white/90 text-balance">
-                ¿Vas a un <strong>festival</strong>, <strong>concierto</strong>, <strong>congreso</strong>, <strong>feria</strong>, escapada a la nieve, partido…?
+                {t("ev_hero_sub")}
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
-                <a href="#reservar-section" className="rounded-full bg-[#9dd187] px-5 py-3 text-sm font-semibold text-[#1a1c24] hover:brightness-110 transition">
-                  Empieza a buscar
+                <a
+                  href="#reservar-section"
+                  className="rounded-full bg-[#9dd187] px-5 py-3 text-sm font-semibold text-[#1a1c24] hover:brightness-110 transition"
+                >
+                  {t("ev_hero_cta_search")}
                 </a>
-                <Link href="/funcionamiento" className="rounded-full px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/50 hover:bg-white/10 transition">
-                  Cómo funciona
+                <Link
+                  href="/funcionamiento"
+                  className="rounded-full px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/50 hover:bg-white/10 transition"
+                >
+                  {t("ev_hero_cta_how")}
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Intro SharetoGo */}
         <section className="relative overflow-hidden py-12 md:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center">
               <div className="flex flex-col gap-4">
                 <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-[#9dd187]">
-                  <span className="inline-block border-b-4 border-[#9dd187] pb-1">SharetoGo</span>
+                  <span className="inline-block border-b-4 border-[#9dd187] pb-1">
+                    {t("ev_intro_title")}
+                  </span>
                 </h1>
                 <p className="text-lg md:text-xl font-medium leading-relaxed text-left text-[#2a2c38]">
-                  <span className="font-bold text-[#9dd187]">SharetoGo</span> está presente donde haya desplazamientos.
-                  El objetivo es <span className="text-[#9dd187] font-semibold">reducir las congestiones</span> en las aglomeraciones,
-                  <span className="text-[#9dd187] font-semibold"> poniendo en contacto</span> a los asistentes para
-                  <span className="text-[#9dd187] font-semibold"> compartir coche</span>.
+                  {t("ev_intro_text")}
                 </p>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm text-[#2a2c38]">
-                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Menos tráfico y emisiones</li>
-                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Conexiones entre asistentes</li>
-                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Ahorro de costes</li>
-                  <li className="flex items-center gap-2"><span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />Fácil y seguro</li>
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />
+                    {t("ev_intro_b1")}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />
+                    {t("ev_intro_b2")}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />
+                    {t("ev_intro_b3")}
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#9dd187]" />
+                    {t("ev_intro_b4")}
+                  </li>
                 </ul>
               </div>
               <div className="flex justify-center">
                 <div className="w-full max-w-xl rounded-sm shadow-[0_0_24px_rgba(157,209,135,0.14)]">
                   <div className="rounded-2xl overflow-hidden">
-                    <Image src={GenteFiestaImage} alt="Evento con multitud y luces de escenario" className="w-full h-[20rem] object-cover" width={800} height={500} priority />
+                    <Image
+                      src={GenteFiestaImage}
+                      alt={t("ev_intro_img_alt")}
+                      className="w-full h-[20rem] object-cover"
+                      width={800}
+                      height={500}
+                      priority
+                    />
                   </div>
                 </div>
               </div>
@@ -167,7 +222,7 @@ export default function EspacioEventos() {
         </section>
       </motion.section>
 
-      {/* ¿Conduces? (mejorada, light) */}
+      {/* ¿Conduces? */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -183,7 +238,7 @@ export default function EspacioEventos() {
               <div className="w-full h-[520px] md:h-[560px]">
                 <Image
                   src={Movil1EventosImage}
-                  alt="Persona usando móvil en evento"
+                  alt={t("ev_drive_badge")}
                   className="w-full h-full object-contain"
                   width={600}
                   height={500}
@@ -195,56 +250,50 @@ export default function EspacioEventos() {
             {/* Contenido */}
             <div>
               <span className="inline-flex items-center rounded-full px-3 py-1 text-[11px] font-semibold bg-[#9dd187]/20 text-[#2a2c38]">
-                Conductores
+                {t("ev_drive_badge")}
               </span>
 
               <h3 className="mt-3 text-3xl md:text-4xl font-extrabold text-[#2a2c38] leading-tight">
                 <span className="inline-block border-b-4 border-[#9dd187] pb-1">
-                  ¿Conduces?
+                  {t("ev_drive_title")}
                 </span>
               </h3>
 
               <p className="mt-3 text-lg md:text-xl text-[#2a2c38] leading-relaxed">
-                Selecciona el evento al que te diriges y futuros asistentes se unirán a tu trayecto.
-                <span className="font-semibold text-[#9dd187]"> Rápido</span>,
-                <span className="font-semibold text-[#9dd187]"> sencillo</span> y
-                <span className="font-semibold text-[#9dd187]"> eficiente</span>.
+                {t("ev_drive_text")}
               </p>
 
-              {/* Píldoras de valor */}
               <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="flex items-center gap-2 text-sm text-[#2a2c38]">
                   <MapPin size={16} className="text-[#9dd187]" />
-                  <span>Elige punto y destino</span>
+                  <span>{t("ev_drive_p1")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-[#2a2c38]">
                   <Calendar size={16} className="text-[#9dd187]" />
-                  <span>Fecha y hora a tu medida</span>
+                  <span>{t("ev_drive_p2")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-[#2a2c38]">
                   <ListChecks size={16} className="text-[#9dd187]" />
-                  <span>Confirma pasajeros</span>
+                  <span>{t("ev_drive_p3")}</span>
                 </div>
               </div>
 
-              {/* CTAs */}
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/funcionamiento">
                   <Button
                     variant="outline"
                     className="border-gray-300 text-[#2a2c38] hover:bg-[#2a2c38] hover:text-white"
                   >
-                    Ver cómo funciona
+                    {t("ev_drive_cta_how")}
                   </Button>
                 </Link>
               </div>
 
-              {/* Imagen secundaria compacta */}
               <div className="mt-6 rounded-xl overflow-hidden ring-1 ring-gray-200 bg-white">
                 <div className="w-full h-56">
                   <Image
                     src={FeriaImage}
-                    alt="Feria comercial con stands y luces"
+                    alt={t("ev_drive_feria_alt")}
                     className="w-full h-full object-cover"
                     width={800}
                     height={320}
@@ -257,7 +306,7 @@ export default function EspacioEventos() {
         </div>
       </motion.section>
 
-      {/* FAQ (dark, paleta SharetoGo) */}
+      {/* FAQ evento */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -268,7 +317,6 @@ export default function EspacioEventos() {
       >
         <div className="max-w-4xl mx-auto">
           <div className="w-full rounded-2xl ring-1 ring-white/10 bg-white/5 backdrop-blur">
-            {/* Header */}
             <button
               type="button"
               aria-expanded={faqOpen}
@@ -278,7 +326,7 @@ export default function EspacioEventos() {
             >
               <div className="flex-1 pr-2">
                 <h3 className="mt-2 text-lg sm:text-2xl font-semibold text-[#E0ECD5]">
-                  ¿Eres un evento y quieres contratar <span className="text-[#9dd187]">SharetoGo</span> a medida?
+                  {t("ev_faq_title")}
                 </h3>
               </div>
               {faqOpen ? (
@@ -288,43 +336,43 @@ export default function EspacioEventos() {
               )}
             </button>
 
-            {/* Panel */}
             <div
               id="faq-panel"
-              className={`grid transition-all duration-500 ease-in-out ${faqOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+              className={`grid transition-all duration-500 ease-in-out ${
+                faqOpen
+                  ? "grid-rows-[1fr]"
+                  : "grid-rows-[0fr]"
+              }`}
             >
               <div className="overflow-hidden">
                 <div className="border-t border-white/10 px-5 py-5 md:px-6 md:py-6">
                   <p className="text-base sm:text-lg text-[#E0ECD5]/90">
-                    Podemos incluir tu evento como una opción disponible en cualquier momento. Descubre {' '}
+                    {t("ev_faq_text_pre")}{" "}
                     <Link
                       href="/quienes-somos"
                       className="font-semibold text-[#9dd187] underline underline-offset-4 hover:opacity-90"
                     >
-                      Más info aquí
-                    </Link>.
-                     sobre todos los beneficios de convertirte en un evento seleccionable, incluyendo la posibilidad de acceder a completos reportes de sostenibilidad personalizados para tu evento.
+                      {t("ev_faq_link_text")}
+                    </Link>{" "}
+                    {t("ev_faq_text_post")}
                   </p>
 
-                  {/* Mini acciones (opcional) */}
                   <div className="mt-4 flex flex-wrap gap-3">
                     <Link
                       href="/contratar"
                       className="inline-flex items-center rounded-lg bg-[#9dd187] px-4 py-2 text-sm font-semibold text-[#1a1c24] hover:brightness-110 transition"
                     >
-                      Solicitar demo
+                      {t("ev_faq_cta_demo")}
                     </Link>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Nota: compacta el espacio respecto a otras secciones */}
         </div>
       </motion.section>
 
-      {/* Sección: Eventos (TwoSlideCard con 2 slides) */}
+      {/* TwoSlideCard sección */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -335,23 +383,21 @@ export default function EspacioEventos() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TwoSlideCard
-            title="Explora & Guarda"
-            subtitle="Encuentra el evento perfecto y tenlo a mano"
+            title={t("ev_two_title")}
+            subtitle={t("ev_two_sub")}
             dark={false}
             intervalMs={9000}
             slides={[
               {
                 image: Movil2EventosImage.src,
-                title: "Busca eventos",
-                description:
-                  "Explora todos los eventos disponibles y visualiza los trayectos activos. Cuando lo tengas claro, entra en RESERVAR para elegir el que más te convenga. Filtra por ubicación, fecha y usa filtros rápidos."
+                title: t("ev_two_slide1_title"),
+                description: t("ev_two_slide1_text"),
               },
               {
                 image: Movil3EventosImage.src,
-                title: "Guarda favoritos",
-                description:
-                  "Añade tus eventos a favoritos y, en RESERVAR, verás todos los trayectos disponibles desde o hacia ese evento. Organiza listas rápidas, configura recordatorios y mira lo que tienes cerca de ti."
-              }
+                title: t("ev_two_slide2_title"),
+                description: t("ev_two_slide2_text"),
+              },
             ]}
           />
         </div>
@@ -368,50 +414,83 @@ export default function EspacioEventos() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
-            <Badge className="bg-[#9dd187] text-white">Eventos & Recintos</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mt-3">Comparte trayectos a universidades, estadios y grandes recintos</h2>
-            <p className="text-gray-600 mt-2 max-w-2xl">Conecta conductores y asistentes para reducir congestiones y llegar mejor a los eventos.</p>
+            <Badge className="bg-[#9dd187] text-white">
+              {t("ev_venues_badge")}
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mt-3">
+              {t("ev_venues_title")}
+            </h2>
+            <p className="text-gray-600 mt-2 max-w-2xl">
+              {t("ev_venues_sub")}
+            </p>
           </div>
 
-          {/* Fila 1 */}
+          {/* Universidades */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div className="order-2 md:order-1 space-y-4">
               <Card className="p-0 bg-white border border-gray-200 shadow-sm">
                 <CardContent className="p-6">
-                  <h3 className="text-2xl font-semibold text-[#2a2c38] mb-2">Universidades & Campus</h3>
+                  <h3 className="text-2xl font-semibold text-[#2a2c38] mb-2">
+                    {t("ev_uni_title")}
+                  </h3>
                   <p className="text-gray-600 text-pretty">
-                    En <span className="text-[#2a2c38] font-semibold">SharetoGo</span> cualquier persona puede ofrecer las plazas libres de su coche cuando va a un campus o acto concurrido. Optimiza afluencias y haz el trayecto más sencillo para todos.
+                    {t("ev_uni_text")}
                   </p>
                 </CardContent>
               </Card>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <Card className="p-0 bg-white border border-gray-200 shadow-sm"><CardContent className="pt-5 pb-4 px-5 text-center"><div className="text-xl font-bold text-[#9dd187] mb-1">Eco</div><p className="text-gray-600 text-sm">Menos CO₂ por trayecto</p></CardContent></Card>
-                <Card className="p-0 bg-white border border-gray-200 shadow-sm"><CardContent className="pt-5 pb-4 px-5 text-center"><div className="text-xl font-bold text-[#9dd187] mb-1">Ahorro</div><p className="text-gray-600 text-sm">Costes compartidos</p></CardContent></Card>
-                <Card className="p-0 bg-white border border-gray-200 shadow-sm"><CardContent className="pt-5 pb-4 px-5 text-center"><div className="text-xl font-bold text-[#9dd187] mb-1">Comunidad</div><p className="text-gray-600 text-sm">Conexión entre asistentes</p></CardContent></Card>
+                <StatCard
+                  title={t("ev_uni_stat1_title")}
+                  text={t("ev_uni_stat1_text")}
+                />
+                <StatCard
+                  title={t("ev_uni_stat2_title")}
+                  text={t("ev_uni_stat2_text")}
+                />
+                <StatCard
+                  title={t("ev_uni_stat3_title")}
+                  text={t("ev_uni_stat3_text")}
+                />
               </div>
             </div>
             <div className="order-1 md:order-2">
               <div className="w-full h-[16rem] md:h-[22rem] rounded-2xl overflow-hidden bg-gray-50">
-                <Image src={UniversidadImage} alt="Universidad" className="w-full h-full object-cover" width={500} height={300} priority />
+                <Image
+                  src={UniversidadImage}
+                  alt={t("ev_uni_img_alt")}
+                  className="w-full h-full object-cover"
+                  width={500}
+                  height={300}
+                  priority
+                />
               </div>
             </div>
           </div>
 
           <div className="h-8 md:h-10" />
 
-          {/* Fila 2 */}
+          {/* Estadio */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div className="order-1">
               <div className="w-full h-[16rem] md:h-[22rem] rounded-2xl overflow-hidden bg-gray-50">
-                <Image src={EstadioImage} alt="Estadio" className="w-full h-full object-cover" width={800} height={600} priority />
+                <Image
+                  src={EstadioImage}
+                  alt={t("ev_stadium_img_alt")}
+                  className="w-full h-full object-cover"
+                  width={800}
+                  height={600}
+                  priority
+                />
               </div>
             </div>
             <div className="order-2 space-y-4">
               <Card className="p-0 bg-white border border-gray-200 shadow-sm">
                 <CardContent className="p-6">
-                  <h3 className="text-2xl font-semibold text-[#2a2c38] mb-2">Conciertos & Estadios</h3>
+                  <h3 className="text-2xl font-semibold text-[#2a2c38] mb-2">
+                    {t("ev_stadium_title")}
+                  </h3>
                   <p className="text-gray-600 text-pretty">
-                    En lugar de ir solo o depender del transporte público, con <span className="text-[#2a2c38] font-semibold">SharetoGo</span> reservas el trayecto que más te convenga: ecológico, cómodo y económico.
+                    {t("ev_stadium_text")}
                   </p>
                 </CardContent>
               </Card>
@@ -431,22 +510,74 @@ export default function EspacioEventos() {
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid sm:grid-cols-3 gap-5">
-            {[
-              { img: EnvironmentImage, title: 'Medioambiente', desc: 'Reduce CO₂ por viaje y descongestiona la ciudad.' },
-              { img: SocialPeopleImage, title: 'Social', desc: 'Conecta con gente que va a tu mismo evento.' },
-              { img: SavingImage, title: 'Ahorro', desc: 'Comparte gastos de combustible, peajes y parking.' },
-            ].map((b, i) => (
-              <div key={i} className="rounded-2xl bg-white ring-1 ring-gray-100 shadow-sm p-5 flex items-start gap-4">
-                <Image src={b.img} alt={b.title} className="h-16 w-16 md:h-20 md:w-20 object-contain" priority />
-                <div>
-                  <p className="font-semibold text-[#1f202a] text-lg">{b.title}</p>
-                  <p className="text-sm md:text-base text-[#2a2c38]/70">{b.desc}</p>
-                </div>
-              </div>
-            ))}
+            <BandCard
+              img={EnvironmentImage}
+              title={t("ev_band_env_title")}
+              text={t("ev_band_env_text")}
+            />
+            <BandCard
+              img={SocialPeopleImage}
+              title={t("ev_band_soc_title")}
+              text={t("ev_band_soc_text")}
+            />
+            <BandCard
+              img={SavingImage}
+              title={t("ev_band_save_title")}
+              text={t("ev_band_save_text")}
+            />
           </div>
         </div>
       </motion.section>
     </main>
+  );
+}
+
+function StatCard({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
+  return (
+    <Card className="p-0 bg-white border border-gray-200 shadow-sm">
+      <CardContent className="pt-5 pb-4 px-5 text-center">
+        <div className="text-xl font-bold text-[#9dd187] mb-1">
+          {title}
+        </div>
+        <p className="text-gray-600 text-sm">
+          {text}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function BandCard({
+  img,
+  title,
+  text,
+}: {
+  img: any;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-2xl bg-white ring-1 ring-gray-100 shadow-sm p-5 flex items-start gap-4">
+      <Image
+        src={img}
+        alt={title}
+        className="h-16 w-16 md:h-20 md:w-20 object-contain"
+        priority
+      />
+      <div>
+        <p className="font-semibold text-[#1f202a] text-lg">
+          {title}
+        </p>
+        <p className="text-sm md:text-base text-[#2a2c38]/70">
+          {text}
+        </p>
+      </div>
+    </div>
   );
 }
