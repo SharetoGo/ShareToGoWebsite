@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Reviews from "@/components/ui/reviews";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Leaf } from "lucide-react";
-import { ODSSection } from "@/components/ODSSection"; // ajusta la ruta si la guardaste en otro sitio
+import { ODSSection } from "@/components/ODSSection";
+import { useTranslation } from "react-i18next";
 
 export default function QuienesSomos() {
+  const { t } = useTranslation();
   const fadeInUp = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -29,11 +30,11 @@ export default function QuienesSomos() {
       console.error("Error fetching travels:", error);
     }
   };
+
   const fetchPeople = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "travels"));
       let totalPeople = 0;
-
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         totalPeople += Array.isArray(data.reservedBy)
@@ -53,7 +54,7 @@ export default function QuienesSomos() {
 
   return (
     <main className="scroll-smooth">
-      {/* Mission Section */}
+      {/* Hero Section */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -63,13 +64,16 @@ export default function QuienesSomos() {
         className="py-16 md:py-24 bg-[#2a2c38]"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#9dd187] mb-6">Quiénes somos</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#9dd187] mb-6">
+            {t("qs_hero_titulo")}
+          </h1>
           <p className="text-xl text-gray-300 mb-8 text-balance">
-            Somos el equipo detrás de la revolución del carpooling corporativo, comprometidos con crear un futuro más
-            sostenible y conectado para las empresas.
+            {t("qs_hero_texto")}
           </p>
         </div>
       </motion.section>
+
+      {/* Mission Section */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -89,15 +93,12 @@ export default function QuienesSomos() {
                       <Target className="text-white text-2xl" />
                     </div>
                     <h1 className="text-3xl md:text-5xl font-bold text-[#2a2c38] mb-8 text-balance">
-                      Nuestra misión
+                      {t("qs_mision_titulo")}
                     </h1>
                   </div>
-                  <p className="text-base md:text-lg font-medium text-[#2a2c38] leading-relaxed">
-En SharetoGo creemos que compartir nos mueve. Hemos desarrollado una solución inteligente y sostenible para impulsar el carpooling corporativo en España, conectando a personas con plazas disponibles con quienes comparten un mismo origen o destino o similar. 
-
-Nuestro objetivo es fomentar la movilidad sostenible en empresas y zonas específicas, reduciendo el tráfico, los costes y las emisiones de CO₂. Además, ofrecemos métricas precisas de impacto ambiental, ayudando a las organizaciones a cumplir sus objetivos ESG y sus planes de movilidad sostenible.
-
-SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro más eficiente, responsable y conectado.                  </p>
+                  <p className="text-base md:text-lg font-medium text-[#2a2c38] leading-relaxed whitespace-pre-line">
+                    {t("qs_mision_texto")}
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -109,7 +110,7 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
                   src="/images/about-us.png"
                   width={500}
                   height={500}
-                  alt="Nuestra misión SharetoGo"
+                  alt={t("qs_mision_alt")}
                   className="rounded-xl shadow-xl object-cover w-full h-full"
                 />
               </div>
@@ -129,11 +130,12 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center">
-            Nuestro impacto hasta la fecha
+            {t("qs_impacto_titulo")}
           </h2>
           <p className="text-xl text-gray-300 mb-16 text-center">
-            Gracias a SharetoGo, estas son algunas de las cifras que reflejan nuestro compromiso con la movilidad sostenible.
+            {t("qs_impacto_texto")}
           </p>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center p-8 bg-white border-2 hover:border-[#9dd187] transition-all duration-300 hover:shadow-lg">
               <CardContent className="pt-6">
@@ -144,7 +146,7 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
                   {trayectos.toLocaleString()}
                 </div>
                 <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
-                  Trayectos Completados
+                  {t("qs_trayectos_label")}
                 </div>
               </CardContent>
             </Card>
@@ -158,7 +160,7 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
                   {personas.toLocaleString()}
                 </div>
                 <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
-                  Personas Transportadas
+                  {t("qs_personas_label")}
                 </div>
               </CardContent>
             </Card>
@@ -172,7 +174,7 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
                   {co2Saved}
                 </div>
                 <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
-                  Toneladas CO₂ Ahorradas
+                  {t("qs_co2_label")}
                 </div>
               </CardContent>
             </Card>
@@ -191,20 +193,20 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            {/* Logo Image */}
+            {/* Image */}
             <div className="lg:col-span-4 order-2 lg:order-1">
               <div className="h-full min-h-[400px] flex items-center justify-center">
                 <Image
                   src="/images/about-us-2.png"
                   width={500}
                   height={500}
-                  alt="Nuestra misión SharetoGo"
+                  alt={t("qs_equipo_alt")}
                   className="rounded-xl shadow-xl object-cover w-full h-full"
                 />
               </div>
             </div>
 
-            {/* Who We Are Card */}
+            {/* Text */}
             <div className="lg:col-span-8 order-1 lg:order-2">
               <Card className="h-full bg-[#9dd187] border-none shadow-xl">
                 <CardContent className="p-8 md:p-12 h-full flex flex-col justify-center">
@@ -213,17 +215,11 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
                       <Users className="text-white text-2xl" />
                     </div>
                     <h2 className="text-3xl md:text-5xl font-bold text-[#2a2c38] mb-8 text-balance">
-                      Quiénes Somos
+                      {t("qs_equipo_titulo")}
                     </h2>
                   </div>
                   <p className="text-base md:text-lg font-medium text-[#2a2c38] leading-relaxed">
-                    Somos un grupo de personas que trabajamos ambiciosamente día
-                    tras día para poder conseguir un cambio de hábitos en la
-                    movilidad de la ciudadanía. Para nosotros, mantener al
-                    equipo unido y conectado ha sido siempre una pieza angular y
-                    prioritaria para que "la idea" inicial se materialice en un
-                    proyecto de aplicación móvil sólido. Esto sólo es la
-                    parrilla de salida. Entre todos, lo conseguiremos.
+                    {t("qs_equipo_texto")}
                   </p>
                 </CardContent>
               </Card>
@@ -231,6 +227,8 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
           </div>
         </div>
       </motion.section>
+
+      {/* ODS + Reviews */}
       <motion.section
         initial="hidden"
         whileInView="visible"
@@ -240,7 +238,7 @@ SharetoGo es sinónimo de innovación, colaboración y compromiso con un futuro 
       >
         <ODSSection dark />
       </motion.section>
-      {/* Reviews Section */}
+
       <motion.section
         initial="hidden"
         whileInView="visible"

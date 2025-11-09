@@ -1,12 +1,14 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, Quote, Building2, MessageSquarePlus, Users } from "lucide-react";
-import { db } from "@/lib/firebase"; // Adjust this path if necessary
+import { db } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useTranslation } from "react-i18next";
 
 type Review = {
   user: string;
@@ -15,6 +17,7 @@ type Review = {
 };
 
 export default function Reviews() {
+  const { t } = useTranslation();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState({ user: "", review: "", stars: 5 });
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -22,7 +25,9 @@ export default function Reviews() {
   useEffect(() => {
     const fetchReviews = async () => {
       const querySnapshot = await getDocs(collection(db, "reviews"));
-      const data: Review[] = querySnapshot.docs.map((doc) => doc.data() as Review);
+      const data: Review[] = querySnapshot.docs.map(
+        (doc) => doc.data() as Review
+      );
       setReviews(data);
     };
 
@@ -42,55 +47,75 @@ export default function Reviews() {
   return (
     <section className="py-16 md:py-24 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-[#9dd187]/10 text-[#2a2c38] px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Users className="w-4 h-4" />
-            Testimonios de clientes
+            {t("rev_badge")}
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">Lo que dicen nuestros usuarios</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
+            {t("rev_title")}
+          </h2>
           <p className="text-lg text-gray-600">
-            Descubre por qué las empresas y los empleados eligen SharetoGo.
+            {t("rev_sub")}
           </p>
         </div>
 
+        {/* Toggle form button */}
         <div className="mb-10 text-center">
-          <Button onClick={() => setIsFormOpen(!isFormOpen)} className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white">
+          <Button
+            onClick={() => setIsFormOpen(!isFormOpen)}
+            className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white"
+          >
             <MessageSquarePlus className="mr-2 h-4 w-4" />
-            {isFormOpen ? "Cerrar formulario" : "Escribir una reseña"}
+            {isFormOpen ? t("rev_btn_close") : t("rev_btn_open")}
           </Button>
         </div>
 
+        {/* Form */}
         {isFormOpen && (
           <Card className="mb-12 bg-white shadow-lg py-10 min-h-[350px] flex flex-col justify-center">
             <CardHeader>
-              <CardTitle className="text-xl text-[#2a2c38]">Comparte tu experiencia</CardTitle>
+              <CardTitle className="text-xl text-[#2a2c38]">
+                {t("rev_form_title")}
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <Input
                   type="text"
-                  placeholder="Tu nombre"
+                  placeholder={t("rev_name_ph")}
                   value={newReview.user}
-                  onChange={(e) => setNewReview({ ...newReview, user: e.target.value })}
+                  onChange={(e) =>
+                    setNewReview({ ...newReview, user: e.target.value })
+                  }
                   required
                 />
                 <Textarea
-                  placeholder="Escribe tu reseña..."
+                  placeholder={t("rev_text_ph")}
                   value={newReview.review}
-                  onChange={(e) => setNewReview({ ...newReview, review: e.target.value })}
+                  onChange={(e) =>
+                    setNewReview({ ...newReview, review: e.target.value })
+                  }
                   rows={4}
                   required
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">Tu valoración:</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    {t("rev_rating_label")}
+                  </span>
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
                         className={`cursor-pointer transition-colors ${
-                          newReview.stars >= star ? "text-yellow-400 fill-yellow-400" : "text-gray-300"
+                          newReview.stars >= star
+                            ? "text-yellow-400 fill-yellow-400"
+                            : "text-gray-300"
                         }`}
-                        onClick={() => setNewReview({ ...newReview, stars: star })}
+                        onClick={() =>
+                          setNewReview({ ...newReview, stars: star })
+                        }
                       />
                     ))}
                   </div>
@@ -99,13 +124,14 @@ export default function Reviews() {
                   type="submit"
                   className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-[#2a2c38] font-semibold"
                 >
-                  Enviar reseña
+                  {t("rev_submit")}
                 </Button>
               </form>
             </CardContent>
           </Card>
         )}
 
+        {/* Reviews list */}
         <div className="space-y-8">
           {reviews.map((r, i) => (
             <UserReview key={i} user={r.user} stars={r.stars} review={r.review} />
@@ -119,7 +145,7 @@ export default function Reviews() {
 function UserReview({ user, stars, review }: Review) {
   return (
     <Card className="group bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#9dd187]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-[#9dd187]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <CardContent className="p-8 lg:p-10 relative">
         <div className="flex items-start justify-between mb-8">
           <div className="bg-[#9dd187]/10 p-3 rounded-2xl">
@@ -136,7 +162,6 @@ function UserReview({ user, stars, review }: Review) {
           </div>
         </div>
         <blockquote className="text-gray-700 mb-8 leading-relaxed text-lg font-medium relative">
-          <span className="text-[#9dd187] text-6xl absolute -top-4 -left-2 opacity-20 font-serif">"</span>
           {review}
         </blockquote>
         <div className="border-t border-gray-100 pt-6">
@@ -145,7 +170,9 @@ function UserReview({ user, stars, review }: Review) {
               <Building2 className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
-              <div className="font-bold text-[#2a2c38] text-lg mb-1">{user}</div>
+              <div className="font-bold text-[#2a2c38] text-lg mb-1">
+                {user}
+              </div>
             </div>
           </div>
         </div>
