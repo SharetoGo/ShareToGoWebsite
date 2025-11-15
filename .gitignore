@@ -11,6 +11,8 @@ lerna-debug.log*
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 .DS_Store
+public/.DS_Store
+public/images/.DS_Store
 
 # Runtime data
 pids
