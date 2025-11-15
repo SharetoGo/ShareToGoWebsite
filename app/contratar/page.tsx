@@ -1,18 +1,35 @@
 ﻿"use client";
 
 import { motion } from "framer-motion";
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CheckCircle, Users, Building, Calendar, Phone, Mail, MapPin } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  CheckCircle,
+  Users,
+  Building,
+  Calendar,
+  Phone,
+  Mail,
+  MapPin,
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Contratar() {
+  const { t } = useTranslation();
+
   const fadeInUp = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
@@ -25,19 +42,18 @@ export default function Contratar() {
     telefono: "",
     empleados: "",
     mensaje: "",
-  })
-  const [submitted, setSubmitted] = useState(false)
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
-    setSubmitted(true)
-  }
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    setSubmitted(true);
+  };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <main className="scroll-smooth">
@@ -51,26 +67,28 @@ export default function Contratar() {
         className="py-16 md:py-24 bg-linear-to-br from-[#2a2c38] to-[#1a1c24]"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Solicita tu demo gratuita</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            {t("ct_hero_title")}
+          </h1>
           <p className="text-xl text-gray-300 mb-8 text-balance">
-            Descubre cómo SharetoGo puede transformar la movilidad de tu empresa en solo 30 minutos
+            {t("ct_hero_sub")}
           </p>
           <div className="flex flex-wrap md:flex-nowrap justify-center gap-6 text-white">
             <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="text-[#9dd187]" size={20} />
-              <span>Demo personalizada</span>
+              <span>{t("ct_hero_b1")}</span>
             </div>
             <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="text-[#9dd187]" size={20} />
-              <span>Sin compromiso</span>
+              <span>{t("ct_hero_b2")}</span>
             </div>
             <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="text-[#9dd187]" size={20} />
-              <span>Implementación rápida</span>
+              <span>{t("ct_hero_b3")}</span>
             </div>
             <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="text-[#9dd187]" size={20} />
-              <span>Período de prueba de dos semanas</span>
+              <span>{t("ct_hero_b4")}</span>
             </div>
           </div>
         </div>
@@ -94,32 +112,42 @@ export default function Contratar() {
                   {submitted ? (
                     <div className="py-10 text-center">
                       <p className="text-lg text-gray-700">
-                        Hemos recibido tu petición, en breves te contactaremos, muchas gracias.
+                        {t("ct_form_done")}
                       </p>
                     </div>
                   ) : (
                     <>
-                      <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">Información de contacto</h2>
+                      <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">
+                        {t("ct_form_title")}
+                      </h2>
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <Label className="mb-2 pl-2" htmlFor="nombre">Nombre completo *</Label>
+                            <Label className="mb-2 pl-2" htmlFor="nombre">
+                              {t("ct_name_label")}
+                            </Label>
                             <Input
                               id="nombre"
                               value={formData.nombre}
-                              onChange={(e) => handleInputChange("nombre", e.target.value)}
-                              placeholder="Tu nombre"
+                              onChange={(e) =>
+                                handleInputChange("nombre", e.target.value)
+                              }
+                              placeholder={t("ct_name_ph")}
                               required
                             />
                           </div>
                           <div>
-                            <Label className="mb-2 pl-2" htmlFor="email">Email corporativo *</Label>
+                            <Label className="mb-2 pl-2" htmlFor="email">
+                              {t("ct_email_label")}
+                            </Label>
                             <Input
                               id="email"
                               type="email"
                               value={formData.email}
-                              onChange={(e) => handleInputChange("email", e.target.value)}
-                              placeholder="tu@empresa.com"
+                              onChange={(e) =>
+                                handleInputChange("email", e.target.value)
+                              }
+                              placeholder={t("ct_email_ph")}
                               required
                             />
                           </div>
@@ -127,59 +155,90 @@ export default function Contratar() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <Label className="mb-2 pl-2" htmlFor="empresa">Empresa *</Label>
+                            <Label className="mb-2 pl-2" htmlFor="empresa">
+                              {t("ct_company_label")}
+                            </Label>
                             <Input
                               id="empresa"
                               value={formData.empresa}
-                              onChange={(e) => handleInputChange("empresa", e.target.value)}
-                              placeholder="Nombre de tu empresa"
+                              onChange={(e) =>
+                                handleInputChange("empresa", e.target.value)
+                              }
+                              placeholder={t("ct_company_ph")}
                               required
                             />
                           </div>
                           <div>
-                            <Label className="mb-2 pl-2" htmlFor="telefono">Teléfono</Label>
+                            <Label className="mb-2 pl-2" htmlFor="telefono">
+                              {t("ct_phone_label")}
+                            </Label>
                             <Input
                               id="telefono"
                               type="tel"
                               value={formData.telefono}
-                              onChange={(e) => handleInputChange("telefono", e.target.value)}
-                              placeholder="+34 600 000 000"
+                              onChange={(e) =>
+                                handleInputChange("telefono", e.target.value)
+                              }
+                              placeholder={t("ct_phone_ph")}
                             />
                           </div>
                         </div>
 
                         <div>
-                          <Label className="mb-2 pl-2" htmlFor="empleados">Número de empleados *</Label>
-                          <Select onValueChange={(value) => handleInputChange("empleados", value)}>
+                          <Label className="mb-2 pl-2" htmlFor="empleados">
+                            {t("ct_emp_label")}
+                          </Label>
+                          <Select
+                            onValueChange={(value) =>
+                              handleInputChange("empleados", value)
+                            }
+                          >
                             <SelectTrigger>
-                              <SelectValue placeholder="Selecciona el tamaño de tu empresa" />
+                              <SelectValue
+                                placeholder={t("ct_emp_ph")}
+                              />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="50-100">10-50 empleados</SelectItem>
-                              <SelectItem value="50-100">51-100 empleados</SelectItem>
-                              <SelectItem value="100-500">101-250 empleados</SelectItem>
-                              <SelectItem value="500-1000">Más de 250 empleados</SelectItem>
+                              <SelectItem value="10-50">
+                                {t("ct_emp_opt1")}
+                              </SelectItem>
+                              <SelectItem value="51-100">
+                                {t("ct_emp_opt2")}
+                              </SelectItem>
+                              <SelectItem value="101-250">
+                                {t("ct_emp_opt3")}
+                              </SelectItem>
+                              <SelectItem value="250+">
+                                {t("ct_emp_opt4")}
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
 
                         <div>
-                          <Label className="mb-2 pl-2" htmlFor="mensaje">Mensaje adicional</Label>
+                          <Label className="mb-2 pl-2" htmlFor="mensaje">
+                            {t("ct_msg_label")}
+                          </Label>
                           <Textarea
                             id="mensaje"
                             value={formData.mensaje}
-                            onChange={(e) => handleInputChange("mensaje", e.target.value)}
-                            placeholder="Cuéntanos sobre tus necesidades específicas de movilidad..."
+                            onChange={(e) =>
+                              handleInputChange("mensaje", e.target.value)
+                            }
+                            placeholder={t("ct_msg_ph")}
                             rows={4}
                           />
                         </div>
 
-                        <Button type="submit" className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white py-3 text-lg">
-                          Solicitar demo gratuita
+                        <Button
+                          type="submit"
+                          className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white py-3 text-lg"
+                        >
+                          {t("ct_submit")}
                         </Button>
 
                         <p className="text-sm text-gray-500 text-center">
-                          Al enviar este formulario, aceptas que nos pongamos en contacto contigo para programar tu demo.
+                          {t("ct_consent")}
                         </p>
                       </form>
                     </>
@@ -191,7 +250,9 @@ export default function Contratar() {
             {/* Benefits */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">¿Qué incluye tu demo?</h2>
+                <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">
+                  {t("ct_demo_title")}
+                </h2>
                 <div className="space-y-4">
                   <div className="flex gap-4">
                     <div className="shrink-0">
@@ -200,9 +261,11 @@ export default function Contratar() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2a2c38] mb-1">Análisis personalizado</h3>
+                      <h3 className="font-semibold text-[#2a2c38] mb-1">
+                        {t("ct_demo_b1_title")}
+                      </h3>
                       <p className="text-gray-600">
-                        Evaluamos las necesidades específicas de movilidad de tu empresa y calculamos el ROI potencial.
+                        {t("ct_demo_b1_text")}
                       </p>
                     </div>
                   </div>
@@ -214,9 +277,11 @@ export default function Contratar() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2a2c38] mb-1">Demo en vivo</h3>
+                      <h3 className="font-semibold text-[#2a2c38] mb-1">
+                        {t("ct_demo_b2_title")}
+                      </h3>
                       <p className="text-gray-600">
-                        Te mostramos la plataforma en funcionamiento con datos simulados de tu empresa.
+                        {t("ct_demo_b2_text")}
                       </p>
                     </div>
                   </div>
@@ -228,9 +293,11 @@ export default function Contratar() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2a2c38] mb-1">Plan de implementación</h3>
+                      <h3 className="font-semibold text-[#2a2c38] mb-1">
+                        {t("ct_demo_b3_title")}
+                      </h3>
                       <p className="text-gray-600">
-                        Diseñamos un roadmap personalizado para la implementación en tu empresa. 
+                        {t("ct_demo_b3_text")}
                       </p>
                     </div>
                   </div>
@@ -240,22 +307,26 @@ export default function Contratar() {
               {/* Contact info */}
               <Card className="p-4 bg-[#2a2c38] text-white">
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">¿Prefieres hablar directamente?</h3>
+                  <h3 className="text-xl font-semibold mb-4">
+                    {t("ct_contact_title")}
+                  </h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <Phone size={20} className="text-[#9dd187]" />
-                      <span>+34 608 057 220</span>
+                      <span>{t("ct_contact_phone")}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <Mail size={20} className="text-[#9dd187]" />
-                      <span>contactosharetogo@gmail.com</span>
+                      <span>{t("ct_contact_email")}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <MapPin size={20} className="text-[#9dd187]" />
-                      <span>Castelldefels, Barcelona, España</span>
+                      <span>{t("ct_contact_location")}</span>
                     </div>
                   </div>
-                  <p className="text-gray-300 text-sm mt-4">Horario de atención: Lunes a Viernes, 9:00 - 18:00</p>
+                  <p className="text-gray-300 text-sm mt-4">
+                    {t("ct_contact_hours")}
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -273,33 +344,39 @@ export default function Contratar() {
         className="py-16 md:py-24 bg-gray-50"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[#2a2c38] text-center mb-12">Preguntas frecuentes</h2>
+          <h2 className="text-3xl font-bold text-[#2a2c38] text-center mb-12">
+            {t("ct_faq_title")}
+          </h2>
           <div className="space-y-6">
             <Card className="p-6">
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">¿Cuánto tiempo toma implementar SharetoGo?</h3>
+                <h3 className="font-semibold text-[#2a2c38] mb-2">
+                  {t("ct_faq1_q")}
+                </h3>
                 <p className="text-gray-600">
-                  La implementación típica toma hasta 2 semanas, incluyendo configuración, integración con sistemas
-                  existentes y formación del equipo.
+                  {t("ct_faq1_a")}
                 </p>
               </CardContent>
             </Card>
 
             <Card className="p-6">
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">¿Qué nivel de adopción puedo esperar?</h3>
+                <h3 className="font-semibold text-[#2a2c38] mb-2">
+                  {t("ct_faq2_q")}
+                </h3>
                 <p className="text-gray-600">
-                  Nuestros clientes ven típicamente una adopción del 60-80% en los primeros 3 meses, con tasas de
-                  satisfacción superiores al 95%.
+                  {t("ct_faq2_a")}
                 </p>
               </CardContent>
             </Card>
 
             <Card className="p-6">
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">¿Cómo garantizan la seguridad de los empleados?</h3>
+                <h3 className="font-semibold text-[#2a2c38] mb-2">
+                  {t("ct_faq3_q")}
+                </h3>
                 <p className="text-gray-600">
-                  Incluimos una verificación de los datos personales de los usuarios y un sistema de valoraciones y soporte 24/7 para emergencias.
+                  {t("ct_faq3_a")}
                 </p>
               </CardContent>
             </Card>
@@ -307,5 +384,5 @@ export default function Contratar() {
         </div>
       </motion.section>
     </main>
-  )
+  );
 }
