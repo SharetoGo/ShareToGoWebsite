@@ -91,13 +91,13 @@ export default function Contacto() {
   return (
     <main className="scroll-smooth">
       {/* Hero section */}
+     {/* Contact content */}
       <motion.section
         initial="hidden"
-        whileInView="visible"
+        animate="visible"
         variants={fadeInUp}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="py-16 md:py-24 bg-background"
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="py-16 md:py-24 bg-gray-50"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-[#2a2c38] mb-6">
@@ -105,6 +105,9 @@ export default function Contacto() {
           </h1>
           <p className="text-xl text-gray-600 mb-8 text-balance">
             {t("co_hero_sub")}
+          </p>
+           <p className="text-xl text-gray-600 mb-2 text-balance">
+            {t("co_hero_sub_payments")}
           </p>
         </div>
       </motion.section>
@@ -116,7 +119,7 @@ export default function Contacto() {
         variants={fadeInUp}
         transition={{ duration: 0.4, delay: 0.2 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="py-16 md:py-24 bg-gray-50"
+        className="py-8 md:py-8 bg-gray-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -231,10 +234,9 @@ export default function Contacto() {
                         </Label>
                         <Input
                           id="empresa"
+                          value={formData.empresa}
                           onChange={handleChange}
-                          placeholder={t(
-                            "co_form_company_placeholder"
-                          )}
+                          placeholder={t("co_form_company_placeholder")}
                         />
                       </div>
                       <div>
@@ -289,6 +291,9 @@ export default function Contacto() {
                           </SelectItem>
                           <SelectItem value="partnership">
                             {t("co_form_subject_partner")}
+                          </SelectItem>
+                          <SelectItem value="other">
+                            {t("co_form_subject_payments")}
                           </SelectItem>
                           <SelectItem value="other">
                             {t("co_form_subject_other")}

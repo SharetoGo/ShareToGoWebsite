@@ -53,6 +53,7 @@
   "nav_abrir_menu": "Ouvrir le menu",
   "nav_cerrar_menu": "Fermer le menu",
   "nav_aria_home": "Aller à l’accueil",
+  "nav_login": "Se connecter",
 
   "_footer": "pied de page",
   "footer_siguenos": "Suivez-nous et rejoignez la communauté",
@@ -352,6 +353,7 @@
   "_contacto": "Contact",
   "co_hero_title": "Contactez-nous",
   "co_hero_sub": "Des questions sur SharetoGo ? Notre équipe est là pour vous aider à transformer la mobilité de votre entreprise.",
+  "co_hero_sub_payments": "Réclamer des paiements ? Contactez-nous pour réclamer les paiements des passagers qui n'ont pas effectué le paiement après le trajet.",
   "co_info_title": "Informations de contact",
   "co_info_phone_label": "Téléphone",
   "co_info_phone_number": "+34 608 057 220",
@@ -375,6 +377,7 @@
   "co_form_subject_pricing": "Informations sur les tarifs",
   "co_form_subject_support": "Support technique",
   "co_form_subject_partner": "Partenariats",
+  "co_form_subject_payments": "Réclamation de paiements",
   "co_form_subject_other": "Autres",
   "co_form_message_label": "Message *",
   "co_form_message_placeholder": "Dites-nous comment nous pouvons vous aider...",

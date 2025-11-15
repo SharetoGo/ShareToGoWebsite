@@ -54,6 +54,7 @@
   "nav_abrir_menu": "Open menu",
   "nav_cerrar_menu": "Close menu",
   "nav_aria_home": "Go to home",
+  "nav_login": "Log in",
 
   "_footer": "footer starts here",
   "footer_siguenos": "Follow us and join the community",
@@ -353,6 +354,7 @@
     "_contacto": "Contact",
   "co_hero_title": "Get in touch with us",
   "co_hero_sub": "Got questions about SharetoGo? Our team is here to help you transform your company’s mobility.",
+  "co_hero_sub_payments": "Claim payments? Contact us to claim payments from passengers who have not completed their payment after the trip.",
   "co_info_title": "Contact information",
   "co_info_phone_label": "Phone",
   "co_info_phone_number": "+34 608 057 220",
@@ -376,6 +378,7 @@
   "co_form_subject_pricing": "Pricing information",
   "co_form_subject_support": "Technical support",
   "co_form_subject_partner": "Partnerships",
+  "co_form_subject_payments": "Payment claim",
   "co_form_subject_other": "Other",
   "co_form_message_label": "Message *",
   "co_form_message_placeholder": "Tell us how we can help you...",
