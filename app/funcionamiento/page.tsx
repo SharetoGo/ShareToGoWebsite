@@ -54,7 +54,7 @@ export default function Funcionamiento() {
       image: "/images/movil2.png",
       title: "Busca tu trayecto",
       description:
-        "Introduce tu destino y encuentra trayectos compatibles publicados por tus compañeros.",
+        "Introduce tu destino y encuentra trayectos compatibles publicados por otros usuarios.",
     },
     {
       image: "/images/info_trayecto.PNG",
@@ -184,29 +184,36 @@ export default function Funcionamiento() {
                 </div>
                 <p className="text-gray-600 mb-6 text-lg">
                   Los empleados se registran con su dirección de correo
-                  electrónico corporativa y añaden sus credenciales para
+                  electrónico personal o corporativo y añaden sus credenciales para
                   configurar su cuenta.
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
+                    <CheckCircle
+                      className="text-[#9dd187] flex-shrink-0"
+                      size={20}
+                    />
                     <span>
-                      Inicia sesión y regístrate añadiendo la empresa para la
-                      que trabajas.
+                      Inicia sesión y regístrate introduciendo tus datos básicos.
                     </span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
+                    <CheckCircle
+                      className="text-[#9dd187] flex-shrink-0"
+                      size={20}
+                    />
                     <span>
                       Asegúrate de que todo está configurado en la sección de tu
                       cuenta.
                     </span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
+                    <CheckCircle
+                      className="text-[#9dd187] flex-shrink-0"
+                      size={20}
+                    />
                     <span>
-                      Navega por la cartera para configurar tu información
-                      bancaria.
+                      Navega por la aplicación para publicar tus plazas libres o encontrar los mejores trayectos disponibles.
                     </span>
                   </li>
                 </ul>
@@ -260,20 +267,58 @@ export default function Funcionamiento() {
                   ¿Buscas un trayecto? Solo tienes que escribir tu destino en la
                   sección de reservas y encontrar tu coincidencia.
                 </p>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
-                    <span>Ve a la página de reservas.</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
-                    <span>Busca tu punto de origen o destino.</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
-                    <span>Reserva tu trayecto coincidente.</span>
-                  </li>
-                </ul>
+                <div className="flex flex-col md:flex-row md:items-center md:gap-8">
+                  <ul className="space-y-3 flex-1">
+                    <li className="flex items-center gap-3">
+                      <CheckCircle
+                        className="text-[#9dd187] flex-shrink-0"
+                        size={20}
+                      />
+                      <span>Ve a la página de reservas.</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <CheckCircle
+                        className="text-[#9dd187] flex-shrink-0"
+                        size={20}
+                      />
+                      <span>Busca tu punto de origen o destino.</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <CheckCircle
+                        className="text-[#9dd187] flex-shrink-0"
+                        size={20}
+                      />
+                      <span>Reserva tu trayecto coincidente.</span>
+                    </li>
+                  </ul>
+                  <div className="my-6 h-px bg-[#2a2c38] md:my-0 md:w-px md:h-full md:self-stretch" />
+                  <ul className="space-y-3 flex-1">
+                    <li className="flex items-center gap-3">
+                      <CheckCircle
+                        className="text-[#9dd187] flex-shrink-0"
+                        size={20}
+                      />
+                      <span>Ve al apartado de zonas favoritas en tu cuenta.</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <CheckCircle
+                        className="text-[#9dd187] flex-shrink-0"
+                        size={20}
+                      />
+                      <span>Añádete a la zona que prefieras.</span>
+                    </li>
+                    <li className="flex items-center gap-3">
+                      <CheckCircle
+                        className="text-[#9dd187] flex-shrink-0"
+                        size={20}
+                      />
+                      <span>
+                        Filtra en “Reservar” para ver los mejores trayectos y
+                        confirma tu plaza.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
 
@@ -294,15 +339,24 @@ export default function Funcionamiento() {
                 </p>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
+                    <CheckCircle
+                      className="text-[#9dd187] flex-shrink-0"
+                      size={20}
+                    />
                     <span>Chat integrado para coordinación.</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
+                    <CheckCircle
+                      className="text-[#9dd187] flex-shrink-0"
+                      size={20}
+                    />
                     <span>Confirmación automática de disponibilidad.</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle className="text-[#9dd187]" size={20} />
+                    <CheckCircle
+                      className="text-[#9dd187] flex-shrink-0"
+                      size={20}
+                    />
                     <span>Notificaciones push en tiempo real.</span>
                   </li>
                 </ul>

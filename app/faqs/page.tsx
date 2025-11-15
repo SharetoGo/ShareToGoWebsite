@@ -8,7 +8,7 @@ import Link from "next/link";
 const faqData: { question: string; answer: ReactNode }[] = [
     {
         question: "¿De quién es el coche?",
-        answer: "El coche es de uno de los empleados de la empresa. La idea es que los diferentes empleados de las empresas, se vayan organizando para que siempre haya una persona que ofrezca las plazas de su coche y otras que les cuadre para reservarlas."
+        answer: "En el caso de que la empresa solicite un servicio hermético para sus trabajadores, el coche es de uno de los empleados de la empresa. La idea es que los diferentes empleados de las empresas, se vayan organizando para que siempre haya una persona que ofrezca las plazas de su coche y otras que les cuadre para reservarlas. Si la empresa decide que sus empleados puedan compartir coche con cualquier usuario de la app, el coche puede ser de cualquiera de nuestros usuarios verificados."
     },
     {
         question: "¿Si actúo como conductor, cuáles son los beneficios económicos?",

@@ -6,7 +6,6 @@ import "./globals.css";
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Suspense } from "react";
-import PromoPopup from "@/components/PromoPopup";
 import ClientI18nProvider from "@/components/ClientI18nProvider";
 
 export const metadata: Metadata = { /* ... */ };
@@ -19,7 +18,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ClientI18nProvider>
             <Navigation />
             {children}
-            <PromoPopup />
             <Footer />
           </ClientI18nProvider>
         </Suspense>

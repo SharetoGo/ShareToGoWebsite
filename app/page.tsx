@@ -72,7 +72,7 @@ export default function Home() {
               {
                 icon: <Users className="text-white text-2xl" />,
                 title: "1. Registro",
-                text: "Los empleados se registran con su email corporativo y configuran sus preferencias de viaje",
+                text: "Los usuarios se registran con su email y configuran sus preferencias de viaje",
               },
               {
                 icon: <MapPin className="text-white text-2xl" />,
@@ -82,7 +82,7 @@ export default function Home() {
               {
                 icon: <CheckCircle className="text-white text-2xl" />,
                 title: "3. Trayecto",
-                text: "Comparten el trayecto de forma segura con seguimiento en tiempo real y sistema de valoraciones",
+                text: "Comparten el trayecto de forma segura con sistemas de valoracioness y opiniones de otros usuarios",
               },
             ].map((step, index) => (
               <motion.div
