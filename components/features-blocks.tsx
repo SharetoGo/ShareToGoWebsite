@@ -1,7 +1,11 @@
 import { Sprout, BadgeEuro, Users } from 'lucide-react';
 import Image from "next/image"
+import { useTranslation } from "react-i18next";
 
 export default function FeaturesBlocks() {
+  const { t } = useTranslation();
+  const headingParts = t("motivo_sharetogo").split("SharetoGo");
+
   return (
     <section className="relative bg-white py-16 md:py-24 lg:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +17,7 @@ export default function FeaturesBlocks() {
                 priority={true}
                 width={100}
                 height={100}
-                alt="SharetoGo dashboard preview"
+                alt={t("preview_alt")}
                 className="w-xs h-xs border-10 border-white object-cover"
               />
           </div>
@@ -22,10 +26,12 @@ export default function FeaturesBlocks() {
           <div className="space-y-8 order-1 lg:order-2">
             <div className="space-y-4">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground text-balance">
-                ¿Por qué empezar a usar <span className="text-primary">SharetoGo</span>?
+                {headingParts[0]}
+                <span className="text-primary">{t("nombre_sharetogo")}</span>
+                {headingParts[1] ?? ""}
               </h2>
               <p className="text-lg text-muted-foreground text-pretty">
-                Transforma la movilidad de tu empresa con nuestra plataforma inteligente de carpooling corporativo.
+                {t("transforma_movilidad")}
               </p>
             </div>
 
@@ -38,9 +44,9 @@ export default function FeaturesBlocks() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">Reducción de emisiones de CO₂</h3>
+                  <h3 className="font-semibold text-foreground">{t("reduccion_emisiones")}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
-                     El coche privado es la principal fuente de emisiones. Reducir su uso disminuye la huella de carbono además de la congestión en los alrededores de la empresa.
+                     {t("coche_privado")}
                   </p>
                 </div>
               </div>
@@ -52,9 +58,9 @@ export default function FeaturesBlocks() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">Beneficios sociales y laborales</h3>
+                  <h3 className="font-semibold text-foreground">{t("beneficios_sociales")}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
-                    El coche compartido favorece el bienestar y la cohesión del equipo, mejora la experiencia diaria de los trabajadores y permite deducir fiscalmente los gastos vinculados a la movilidad.
+                    {t("coche_compartido")}
                   </p>
                 </div>
               </div>
@@ -66,9 +72,9 @@ export default function FeaturesBlocks() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">Ahorro económico</h3>
+                  <h3 className="font-semibold text-foreground">{t("ahorro_economico")}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
-                    Ahorro en infraestructuras, menos demanda de aparcamiento y mayor eficiencia para los desplazamientos diarios de los trabajadores
+                    {t("ahorro_infraestructuras")}
                   </p>
                 </div>
               </div>
