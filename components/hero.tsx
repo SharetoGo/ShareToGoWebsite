@@ -1,6 +1,8 @@
 import Image from "next/image";
 import AppPreview1 from "@/public/images/movil1.png";
 import AppPreview2 from "@/public/images/movil2.png";
+import LogoApple from "@/public/images/logo-apple.png";
+import LogoGooglePlay from "@/public/images/logo-google-play.png";
 import { Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -35,16 +37,18 @@ export default function Hero() {
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <a
-                href="/contratar"
-                className="inline-flex items-center justify-center px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
+                href="/downloads"
+                className="inline-flex items-center justify-center gap-3 px-7 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
               >
-                {t("boton_demo")}
+                <Image src={LogoApple} alt="App Store" className="h-6 w-6 object-contain" />
+                <span>{t("boton_app_store")}</span>
               </a>
               <a
-                href="/funcionamiento"
-                className="inline-flex items-center justify-center px-8 py-4 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-xl transition-colors"
+                href="/downloads"
+                className="inline-flex items-center justify-center gap-3 px-7 py-4 bg-[#2a2c38] hover:bg-[#1f222d] text-white font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
               >
-                {t("boton_funciona")}
+                <Image src={LogoGooglePlay} alt="Google Play" className="h-6 w-6 object-contain" />
+                <span>{t("boton_play_store")}</span>
               </a>
             </div>
           </div>
