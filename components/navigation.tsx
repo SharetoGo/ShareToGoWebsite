@@ -139,7 +139,7 @@ export default function Navigation() {
                     <Link href="/espacio-empresas">{t("nav_empresas_simple")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/espacio-eventos">{t("nav_eventos_simple")}</Link>
+                    <Link href="/zonas-favoritas">{t("nav_eventos_simple")}</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -251,7 +251,7 @@ export default function Navigation() {
                   <Link href="/espacio-empresas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_empresas_simple")}
                   </Link>
-                  <Link href="/espacio-eventos" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link href="/zonas-favoritas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_eventos_simple")}
                   </Link>
                 </div>
