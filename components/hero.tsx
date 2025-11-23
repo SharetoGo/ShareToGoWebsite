@@ -1,6 +1,8 @@
 import Image from "next/image";
 import AppPreview1 from "@/public/images/movil1.png";
 import AppPreview2 from "@/public/images/movil2.png";
+import LogoApple from "@/public/images/logo-apple.png";
+import LogoGooglePlay from "@/public/images/logo-google-play.png";
 import { Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -31,20 +33,46 @@ export default function Hero() {
                 {t("empresa_unica")}
               </p>
             </div>
-
             {/* CTA */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start w-full sm:w-auto">
+              {/* App Store */}
               <a
-                href="/contratar"
-                className="inline-flex items-center justify-center px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
+                href="/downloads"
+                className="inline-flex w-full sm:w-64 items-center gap-3 rounded-sm bg-black px-5 py-3 text-white shadow-sm transition-colors hover:bg-primary"
               >
-                {t("boton_demo")}
+                <Image
+                  src={LogoApple}
+                  alt="App Store"
+                  className="h-7 w-7 object-contain"
+                />
+                <div className="flex flex-col leading-tight text-left">
+                  <span className="text-[11px] uppercase tracking-[0.12em]">
+                    {t("boton_app_store_download")}
+                  </span>
+                  <span className="text-base font-semibold">
+                    {t("boton_app_store")}
+                  </span>
+                </div>
               </a>
+
+              {/* Google Play */}
               <a
-                href="/funcionamiento"
-                className="inline-flex items-center justify-center px-8 py-4 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-xl transition-colors"
+                href="/downloads"
+                className="inline-flex w-full sm:w-64 items-center gap-3 rounded-sm bg-black px-5 py-3 text-white shadow-sm transition-colors hover:bg-primary"
               >
-                {t("boton_funciona")}
+                <Image
+                  src={LogoGooglePlay}
+                  alt="Google Play"
+                  className="h-7 w-7 object-contain"
+                />
+                <div className="flex flex-col leading-tight text-left">
+                  <span className="text-[11px] uppercase tracking-[0.12em]">
+                    {t("boton_play_store_download")}
+                  </span>
+                  <span className="text-base font-semibold">
+                    {t("boton_play_store")}
+                  </span>
+                </div>
               </a>
             </div>
           </div>
