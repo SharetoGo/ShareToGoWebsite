@@ -134,50 +134,19 @@ export default function EspacioEmpresas() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
               {t("ee_sol_title")}
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
               {t("ee_sol_sub")}
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              {t("ee_sol_sub2")}
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              {t("ee_sol_sub3")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Medium companies */}
-            <Card className="p-8 border-2 hover:border-[#9dd187] transition-colors">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#9dd187] rounded-xl flex items-center justify-center mb-6">
-                  <Building2 className="text-white text-2xl" />
-                </div>
-                <h3 className="text-xl font-semibold text-[#2a2c38] mb-4">
-                  {t("ee_sol_mid_title")}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {t("ee_sol_mid_text")}
-                </p>
-                <ul className="space-y-2 mb-6">
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
-                    <span>{t("ee_sol_mid_b1")}</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
-                    <span>{t("ee_sol_mid_b2")}</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
-                    <span>{t("ee_sol_mid_b3")}</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
-                    <span>{t("ee_sol_mid_b4")}</span>
-                  </li>
-                </ul>
-                <Link href="/contratar">
-                  <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
-                    {t("ee_sol_more")}
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-
+            
             {/* Large enterprises */}
             <Card className="p-8 border-2 hover:border-[#9dd187] transition-colors">
               <CardContent className="pt-6">
@@ -195,24 +164,66 @@ export default function EspacioEmpresas() {
                 </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_large_b1")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_large_b2")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_large_b3")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_large_b4")}</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_large_b5")}</span>
                   </li>
                 </ul>
                 <Link href="/contratar">
                   <Button className="w-full bg-[#2a2c38] hover:bg-[#1a1c24] text-white">
+                    {t("ee_sol_more")}
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Medium companies */}
+            <Card className="p-8 border-2 hover:border-[#9dd187] transition-colors">
+              <CardContent className="pt-6">
+                <div className="w-16 h-16 bg-[#9dd187] rounded-xl flex items-center justify-center mb-6">
+                  <Building2 className="text-white text-2xl" />
+                </div>
+                <h3 className="text-xl font-semibold text-[#2a2c38] mb-4">
+                  {t("ee_sol_mid_title")}
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  {t("ee_sol_mid_text")}
+                </p>
+                <ul className="space-y-2 mb-6">
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_mid_b1")}</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_mid_b2")}</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_mid_b3")}</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_mid_b4")}</span>
+                  </li>
+                </ul>
+                <Link href="/contratar">
+                  <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
                     {t("ee_sol_more")}
                   </Button>
                 </Link>
@@ -233,20 +244,24 @@ export default function EspacioEmpresas() {
                 </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_small_b1")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_small_b2")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_small_b3")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={8} />
+                    <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_small_b4")}</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_small_b5")}</span>
                   </li>
                 </ul>
                 <Link href="/contratar">
@@ -376,12 +391,21 @@ export default function EspacioEmpresas() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
               {t("ee_cases_title")}
             </h2>
-            <p className="text-lg text-gray-600">
+            <p className="text-xl text-gray-600 font-bold">
               {t("ee_cases_sub")}
+            </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto text-center">
+              {t("ee_cases_sub2")}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+              <p className="text-xl text-[#2a2c38] mx-auto font-bold">
+                {t("ee_cases_sub3")}
+              </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
             {/* Case 1 */}
             <Card className="p-8">
               <CardContent className="pt-6">
@@ -474,6 +498,16 @@ export default function EspacioEmpresas() {
               </CardContent>
             </Card>
           </div>
+
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+                <p className="text-xl text-[#2a2c38] mx-auto font-medium">
+                  {t("ee_reality")}
+                </p>
+                <p className="text-l text-[#2a2c38] mx-auto font-normal text-center">
+                  {t("ee_reality2")}
+                </p>
+              </div>
+          
         </div>
       </motion.section>
     </main>
