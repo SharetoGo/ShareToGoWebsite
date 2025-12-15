@@ -210,16 +210,20 @@ export default function EspacioEmpresas() {
                     <span>{t("ee_sol_mid_b1")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <CheckCircle className="text-[#9dd187]" size={24} />
                     <span>{t("ee_sol_mid_b2")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <CheckCircle className="text-[#9dd187]" size={20} />
                     <span>{t("ee_sol_mid_b3")}</span>
                   </li>
                   <li className="flex items-center gap-2 text-sm">
                     <CheckCircle className="text-[#9dd187]" size={28} />
                     <span>{t("ee_sol_mid_b4")}</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="text-[#9dd187]" size={28} />
+                    <span>{t("ee_sol_mid_b5")}</span>
                   </li>
                 </ul>
                 <Link href="/contratar">
