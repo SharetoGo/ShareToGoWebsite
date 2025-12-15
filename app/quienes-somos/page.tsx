@@ -3,13 +3,14 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Reviews from "@/components/ui/reviews";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Leaf } from "lucide-react";
 import { ODSSection } from "@/components/ODSSection";
 import { useTranslation } from "react-i18next";
+
 
 export default function QuienesSomos() {
   const { t } = useTranslation();
@@ -18,39 +19,42 @@ export default function QuienesSomos() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const [trayectos, setTrayectos] = useState<number>(0);
+  const [totalTravels, setTotalTravels] = useState<number>(0);
   const [personas, setPersonas] = useState<number>(0);
-  const [co2Saved] = useState<number>(3);
+  const [co2Saved, setCo2Saved] = useState<number>(0);
 
-  const fetchTravels = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "travels"));
-      setTrayectos(querySnapshot.size);
-    } catch (error) {
-      console.error("Error fetching travels:", error);
+const fetchGlobalStats = async () => {
+  try {
+    const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      // totalTravels
+      setTotalTravels(
+        typeof data.totalTravels === "number" ? data.totalTravels : 0
+      );
+
+      // totalPassengers
+      setPersonas(
+        typeof data.totalPassengers === "number" ? data.totalPassengers : 0
+      );
+
+      // totalCo2 (redondeado)
+      setCo2Saved(
+        typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0
+      );
     }
-  };
+  } catch (error) {
+    console.error("Error fetching global stats:", error);
+  }
+};
 
-  const fetchPeople = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "travels"));
-      let totalPeople = 0;
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        totalPeople += Array.isArray(data.reservedBy)
-          ? data.reservedBy.length
-          : 0;
-      });
-      setPersonas(totalPeople);
-    } catch (error) {
-      console.error("Error fetching travels:", error);
-    }
-  };
 
-  useEffect(() => {
-    fetchTravels();
-    fetchPeople();
-  }, []);
+useEffect(() => {
+  fetchGlobalStats();
+}, []);
+
 
   return (
     <main className="scroll-smooth">
@@ -143,7 +147,7 @@ export default function QuienesSomos() {
                   <TrendingUp className="text-white text-2xl" />
                 </div>
                 <div className="text-4xl md:text-6xl font-extrabold text-[#2a2c38] mb-4">
-                  {trayectos.toLocaleString()}
+                  {totalTravels.toLocaleString()}
                 </div>
                 <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
                   {t("qs_trayectos_label")}
