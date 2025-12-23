@@ -21,6 +21,11 @@ export default function Footer() {
       href: "https://www.eae.es/carreras-profesionales/eae-emprendedores",
       logo: "/images/EAEemprende-logo.png",
         },
+        {
+      name: "Ayuntament de Castelldefels",
+      href: "https://www.castelldefels.org/",
+      logo: "/images/aytoCastefa.png",
+        },
   ];
 
   return (
@@ -154,8 +159,11 @@ export default function Footer() {
                     <img
                       src={p.logo}
                       alt={p.name}
-                      className="h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition"
+                      className={`h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition
+                        ${p.name === "Ayuntament de Castelldefels" ? "scale-125 sm:scale-275" : ""}
+                      `}
                     />
+
                   </a>
                 </li>
               ))}
