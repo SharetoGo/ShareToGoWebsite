@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import WhiteLogo from "./ui/whiteLogo";
+import TreeNationWidget from "./TreeNationWidget";
+
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
@@ -159,6 +161,12 @@ export default function Footer() {
               ))}
             </ul>
           </section>
+
+          {/* TreeNation */}
+          <nav className="lg:col-span-2" aria-label="Espacios">
+            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_tree")}</h6>
+              <TreeNationWidget />
+          </nav>
 
           </div>
         </div>
