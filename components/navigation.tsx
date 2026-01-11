@@ -41,6 +41,12 @@ export default function Navigation() {
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
+  useEffect(() => {
+    if (isMobile && showQR) {
+      setShowQR(false)
+    }
+  }, [isMobile, showQR])
+
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
 
@@ -139,7 +145,7 @@ export default function Navigation() {
                     <Link href="/espacio-empresas">{t("nav_empresas_simple")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/espacio-eventos">{t("nav_eventos_simple")}</Link>
+                    <Link href="/zonas-favoritas">{t("nav_eventos_simple")}</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -204,11 +210,27 @@ export default function Navigation() {
             </Link>
 
             {/* DESCARGAR */}
-            <Link href="/descargar">
-              <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-white">
-                {t("nav_descarga")}
-              </Button>
-            </Link>
+            <div
+              className="relative"
+              onMouseEnter={() => !isMobile && setShowQR(true)}
+              onMouseLeave={() => !isMobile && setShowQR(false)}
+            >
+              <Link href="/descargar">
+                <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-white">
+                  {t("nav_descarga")}
+                </Button>
+              </Link>
+              {!isMobile && showQR && (
+                <div className="absolute top-full right-0 mt-3">
+                  <div className="bg-white border rounded-2xl shadow-lg p-3 flex flex-col items-center gap-2 w-40">
+                    <QRCodeCanvas value={qrLink} size={110} />
+                    <p className="text-xs text-[#2a2c38] leading-tight text-center">
+                      {t("nav_descargar_app")}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
 
           </div>
 
@@ -251,7 +273,7 @@ export default function Navigation() {
                   <Link href="/espacio-empresas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_empresas_simple")}
                   </Link>
-                  <Link href="/espacio-eventos" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link href="/zonas-favoritas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_eventos_simple")}
                   </Link>
                 </div>

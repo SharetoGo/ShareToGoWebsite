@@ -19,21 +19,18 @@ export default function Funcionamiento() {
   const driverSlides = [
     {
       image: "/images/conductor1.PNG",
-      title: "Publica tu trayecto",
-      description:
-        "Abre la app y publica fácilmente tu ruta diaria. Indica tu origen, destino, horario y las plazas que tienes disponibles.",
+      title: t("driver1_titulo"),
+      description: t("driver1_texto"),
     },
     {
       image: "/images/conductor2.PNG",
-      title: "Recibe solicitudes",
-      description:
-        "Tus compañeros de empresa verán tus trayectos y podrán solicitar unirse. Recibirás notificaciones al instante.",
+      title: t("driver2_titulo"),
+      description: t("driver2_texto"),
     },
     {
       image: "/images/conductor3.PNG",
-      title: "Ahorra y comparte",
-      description:
-        "Acepta a tus pasajeros, comparte gastos de forma automática y disfruta de un trayecto más ameno y sostenible.",
+      title: t("driver3_titulo"),
+      description: t("driver3_texto"),
     },
   ];
 
@@ -45,9 +42,8 @@ export default function Funcionamiento() {
     },
     {
       image: "/images/info_trayecto.PNG",
-      title: "Reserva tu plaza",
-      description:
-        "Revisa los detalles del trayecto, el perfil del conductor y reserva tu asiento con un solo toque.",
+      title: t("pass2_titulo"),
+      description: t("pass2_texto"),
     },
     {
       image: "/images/chat1.png",
