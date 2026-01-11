@@ -38,7 +38,6 @@ export default function Hero() {
               {/* App Store */}
               <a
                 href="/downloads"
-<<<<<<< HEAD
                 className="inline-flex w-full sm:w-64 items-center gap-3 rounded-sm bg-black px-5 py-3 text-white shadow-sm transition-colors hover:bg-primary"
               >
                 <Image
@@ -54,18 +53,11 @@ export default function Hero() {
                     {t("boton_app_store")}
                   </span>
                 </div>
-=======
-                className="inline-flex items-center justify-center gap-3 px-7 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
-              >
-                <Image src={LogoApple} alt="App Store" className="h-6 w-6 object-contain" />
-                <span>{t("boton_app_store")}</span>
->>>>>>> 897f3615c8769ba243891d3e95564460084cb24f
               </a>
 
               {/* Google Play */}
               <a
                 href="/downloads"
-<<<<<<< HEAD
                 className="inline-flex w-full sm:w-64 items-center gap-3 rounded-sm bg-black px-5 py-3 text-white shadow-sm transition-colors hover:bg-primary"
               >
                 <Image
@@ -81,12 +73,6 @@ export default function Hero() {
                     {t("boton_play_store")}
                   </span>
                 </div>
-=======
-                className="inline-flex items-center justify-center gap-3 px-7 py-4 bg-[#2a2c38] hover:bg-[#1f222d] text-white font-semibold rounded-xl transition-colors shadow-lg hover:shadow-xl"
-              >
-                <Image src={LogoGooglePlay} alt="Google Play" className="h-6 w-6 object-contain" />
-                <span>{t("boton_play_store")}</span>
->>>>>>> 897f3615c8769ba243891d3e95564460084cb24f
               </a>
             </div>
           </div>
