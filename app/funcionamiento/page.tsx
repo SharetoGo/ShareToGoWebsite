@@ -77,10 +77,6 @@ export default function Funcionamiento() {
             <p className="text-xl text-gray-300 mb-8 text-balance">
               {t("hero_texto")}
             </p>
-            <Button className="bg-[#9dd187] hover:bg-[#8bc475] text-[#2a2c38] font-semibold px-8 py-4 text-lg">
-              <Play className="mr-2" size={20} />
-              {t("hero_boton")}
-            </Button>
           </div>
         </section>
 

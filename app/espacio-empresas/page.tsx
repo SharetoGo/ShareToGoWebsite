@@ -189,7 +189,7 @@ export default function EspacioEmpresas() {
 
             <div className="grid grid-cols-2 gap-4">
               <StatCard value="20" label={t("ee_hero_stat1_label")} />
-              <StatCard value="300T" label={t("ee_hero_stat2_label")} />
+              <StatCard value="300 tCO₂e" label={t("ee_hero_stat2_label")} />
               <StatCard value="40%" label={t("ee_hero_stat3_label")} />
               <StatCard value="95%" label={t("ee_hero_stat4_label")} />
             </div>

@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from "@/lib/firebase"
+import { collection, query, where, getDocs } from "firebase/firestore"
+import { auth, db } from "@/lib/firebase"
 import Image from "next/image"
 import Link from "next/link"
 import { Mail, Lock } from "lucide-react"
@@ -19,19 +20,31 @@ export default function AuthPage() {
   const [sending, setSending] = useState(false)
   const router = useRouter()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
-    try {
-      await signInWithEmailAndPassword(auth, email, password)
-      router.push("/espacio-empresas")
-    } catch {
-      setError("Correo o contraseña incorrectos.")
-    } finally {
-      setLoading(false)
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Optional: Pre-verify admin status to show a specific error
+    const q = query(collection(db, 'companies'), where("adminIds", "array-contains", user.uid));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      setError("No tienes permisos de administrador para acceder.");
+      await auth.signOut();
+    } else {
+      router.push("/intranet-empresas");
     }
+  } catch (err) {
+    setError("Credenciales inválidas.");
+  } finally {
+    setLoading(false);
   }
+};
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,13 +78,13 @@ export default function AuthPage() {
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
       {/* Fondo con mesh blur */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#eef6ee] via-[#e7f3e6] to-[#dcecd9]" />
+      <div className="absolute inset-0 bg-linear-to-br from-[#eef6ee] via-[#e7f3e6] to-[#dcecd9]" />
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#9dd187]/40 blur-3xl rounded-full" />
       <div className="absolute bottom-[-100px] right-[-60px] w-[400px] h-[400px] bg-[#2a2c38]/20 blur-[140px] rounded-full" />
 
       {/* Tarjeta principal */}
       <div className="relative z-10 w-full max-w-lg bg-white/90 backdrop-blur-sm shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
-        <div className="flex items-center justify-center py-3 px-4 bg-gradient-to-r from-[#9dd187] to-[#b1dea0]">
+        <div className="flex items-center justify-center py-3 px-4 bg-linear-to-r from-[#9dd187] to-[#b1dea0]">
           <Image
             src="/logos/side_logo.png"
             alt="ShareToGo"

@@ -22,7 +22,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-gradient-to-br from-[#2a2c38] to-[#1a1c24] text-white rounded-t-[28px]">
+    <footer className="bg-linear-to-br from-[#2a2c38] to-[#1a1c24] text-white rounded-t-[28px]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Top */}
         <div className="grid gap-10 lg:grid-cols-12 py-12">

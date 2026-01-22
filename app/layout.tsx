@@ -7,6 +7,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { Suspense } from "react";
 import ClientI18nProvider from "@/components/ClientI18nProvider";
+import ConditionalFooterWrapper from "../components/common/ConditionalFooterWrapper";
 
 export const metadata: Metadata = {
   title: "ShareToGo - Plataforma de coche compartido para empresas",
@@ -32,7 +33,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ClientI18nProvider>
             <Navigation />
             {children}
-            <Footer />
+            <ConditionalFooterWrapper>
+              <Footer />
+            </ConditionalFooterWrapper>
           </ClientI18nProvider>
         </Suspense>
         <Analytics />
