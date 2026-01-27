@@ -30,6 +30,24 @@ export function DashboardSidebar({ activeTab, setActiveTab }: any) {
 
   return (
     <aside className="w-64 bg-[#2a2c38] text-white hidden lg:flex flex-col border-r border-gray-800 shrink-0 h-full overflow-hidden">
+      {/* Company Header */}
+      <div className="p-6 pb-2 flex items-center gap-3">
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
+          {companyData?.logoUrl ? (
+            <img 
+              src={companyData.logoUrl} 
+              alt="Logo" 
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <span className="text-lg font-bold text-[#2a2c38]">
+              {companyData?.name?.substring(0, 2).toUpperCase()}
+            </span>
+          )}
+        </div>
+        <p className="font-bold text-white truncate text-lg flex-1">{companyData?.name || "Cargando..."}</p>
+      </div>
+
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-2 mt-4">
         {NAV_ITEMS.map((item) => (
@@ -50,39 +68,16 @@ export function DashboardSidebar({ activeTab, setActiveTab }: any) {
 
       {/* Footer Profile Section */}
       <div className="p-4 mt-auto">
-        <div className="bg-white/5 rounded-[2rem] p-4 border border-white/10">
-          {/* Company Info Row */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-gray-700 border-2 border-[#9dd187] overflow-hidden flex items-center justify-center">
-                {companyData?.logoUrl ? (
-                  <img 
-                    src={companyData.logoUrl} 
-                    alt="Logo" 
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-xs font-bold text-[#9dd187]">
-                    {companyData?.name?.substring(0, 2).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              {/* Status Indicator */}
-              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#2a2c38] rounded-full"></div>
-            </div>
+        <div className="bg-white/5 rounded-4xl p-4 border border-white/10">
+          {/* User Admin Row */}
+          <div className="flex items-center gap-3 mb-3 px-2">
+            <UserCircle size={20} className="text-gray-400" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white truncate">
-                {companyData?.name || "Cargando..."}
+              <p className="text-xs text-gray-400">Sesión</p>
+              <p className="text-xs text-white truncate font-medium">
+              {user?.email || "Admin Session"}
               </p>
             </div>
-          </div>
-
-          {/* User Admin Row */}
-          <div className="flex items-center gap-2 px-2 py-2 bg-white/5 rounded-xl mb-2">
-            <UserCircle size={14} className="text-gray-400" />
-            <span className="text-[11px] text-gray-300 truncate font-medium">
-              {user?.email || "Admin Session"}
-            </span>
           </div>
 
           <button 

@@ -11,7 +11,7 @@ interface Zone {
 }
 
 interface CompanyData {
-  adminIds: string[];
+  id: string;
   name: string;
   email: string;
   accessCode: string;
@@ -30,6 +30,8 @@ interface CompanyData {
   headquarters: string[];
   co2Target: number;
   zones: Zone[];
+  adminIds: string[];
+  membersIds: string[];
 }
 
 interface AuthContextType {

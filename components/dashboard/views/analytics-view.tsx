@@ -2,27 +2,20 @@
 'use client'
 
 import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
-import { getEcoEquivalence, formatStats } from "@/lib/utils/format";
+import { formatStats } from "@/lib/utils/format";
 import { Card } from "@/components/ui/card";
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
-  ResponsiveContainer, PieChart, Pie, Cell, Legend, LineChart, Line 
+  ResponsiveContainer, LineChart, Line, AreaChart, Area, Legend 
 } from "recharts";
-import { TrendingUp, TrendingDown, Activity, Leaf } from "lucide-react";
+import { TrendingUp, Users, Leaf, Car, Repeat } from "lucide-react";
 
-// Mock data for visualizations (In a real app, these would come from your 'trips' collection)
-const timeDistribution = [
-  { name: "Mañana (6-10 AM)", value: 45, color: "#9dd187" },
-  { name: "Mediodía (10-14 PM)", value: 15, color: "#b8dfa8" },
-  { name: "Tarde (14-18 PM)", value: 8, color: "#d3edc9" },
-  { name: "Noche (18-22 PM)", value: 32, color: "#7cbd68" },
-];
-
-const weeklyTrends = [
-  { week: "Sem 1", trips: 285, users: 142 },
-  { week: "Sem 2", trips: 312, users: 156 },
-  { week: "Sem 3", trips: 298, users: 149 },
-  { week: "Sem 4", trips: 345, users: 172 },
+// Mocking trend data - In production, you'd fetch this from a 'monthly_stats' collection
+const monthlyTrend = [
+  { month: "Sep", co2: 120, trips: 45, activeUsers: 30, repetition: 65 },
+  { month: "Oct", co2: 190, trips: 52, activeUsers: 38, repetition: 68 },
+  { month: "Nov", co2: 230, trips: 68, activeUsers: 45, repetition: 72 },
+  { month: "Dic", co2: 310, trips: 85, activeUsers: 55, repetition: 78 },
 ];
 
 export function AnalyticsView() {
@@ -30,158 +23,149 @@ export function AnalyticsView() {
   
   if (!companyData) return null;
 
-  const eco = getEcoEquivalence(companyData.totalCo2);
-  
-  // Dynamic office data based on your headquarters array
-  const officeData = companyData.headquarters?.map((city: string, index: number) => ({
-    office: city,
-    trips: Math.floor(companyData.totalTrips * (0.4 - index * 0.1)),
-    co2: Math.floor(companyData.totalCo2 * (0.4 - index * 0.1)),
-  })) || [];
+  // Logic for Participation Rate
+  const totalEmployees = companyData.membersIds?.length || 0;
+  const activeUsers = 55; // This would ideally be a count of users with >0 trips
+  const participationRate = totalEmployees > 0 ? (activeUsers / totalEmployees) * 100 : 0;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-[#2a2c38]">Análisis Avanzado</h1>
-        <p className="text-gray-500">Patrones de movilidad y métricas de sostenibilidad profunda</p>
-      </div>
-
-      {/* Impact Equivalence Card (The Premium Header) */}
-      <div className="bg-[#2a2c38] p-8 rounded-4xl text-white overflow-hidden relative shadow-xl">
-        <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-[#9dd187] opacity-10 blur-[100px] rounded-full" />
-        <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 bg-[#9dd187]/20 rounded-3xl flex items-center justify-center border border-[#9dd187]/30">
-              <Leaf className="text-[#9dd187] w-10 h-10" />
-            </div>
-            <div>
-              <p className="text-[#9dd187] font-bold tracking-widest uppercase text-xs mb-1">Impacto Real Acumulado</p>
-              <h2 className="text-4xl font-black">{formatStats(companyData.totalCo2)} <span className="text-lg font-normal opacity-60">kg CO2e</span></h2>
-            </div>
+    <div className="space-y-8 animate-in fade-in duration-700 pb-20">
+      {/* 1. Impact Real Message & Total */}
+      <div className="bg-[#2a2c38] p-10 rounded-[3rem] text-white relative overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 p-8 opacity-10">
+          <Leaf size={120} className="text-[#9dd187]" />
+        </div>
+        
+        <div className="relative z-10 max-w-2xl">
+          <div className="flex items-center gap-3 text-[#9dd187] mb-4">
+            <div className="h-px w-8 bg-[#9dd187]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em]">Impacto Real</span>
           </div>
-          <div className="flex gap-12 border-l border-white/10 pl-12">
-            <div className="text-center">
-              <p className="text-4xl font-black text-[#9dd187]">{eco.trees}</p>
-              <p className="text-sm text-gray-400">Árboles eq.</p>
-            </div>
-            <div className="text-center">
-              <p className="text-4xl font-black text-blue-400">12</p>
-              <p className="text-sm text-gray-400">Certificados</p>
-            </div>
+          <h2 className="text-2xl font-bold mb-4">Compartir coche: impacto directo en CO₂e</h2>
+          <p className="text-gray-400 font-medium leading-relaxed mb-8">
+            Acumula el máximo CO2e mensualmente entre toda tu plantilla y te lo mostraremos con gráficos y comparaciones equivalentes.
+          </p>
+          <div className="flex items-baseline gap-4">
+            <span className="text-6xl font-black text-[#9dd187] tracking-tighter">
+              {formatStats(companyData.totalCo2 || 0)}
+            </span>
+            <span className="text-xl text-gray-400 font-bold uppercase">Kg CO2e Evitados</span>
           </div>
         </div>
       </div>
 
-      {/* Key Insights Grid */}
+      {/* 2. Key Insights Grid (Participation, Occupancy, Growth) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 rounded-3xl border-none shadow-sm bg-white">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-green-50 rounded-2xl text-[#9dd187]">
-              <TrendingUp size={24} />
+        <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+          <div className="flex justify-between items-start mb-6">
+            <div className="p-4 bg-green-50 rounded-2xl text-[#9dd187]">
+              <Users size={24} />
             </div>
-            <span className="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-lg">+18.5%</span>
+            <span className="text-xs font-bold text-green-500 bg-green-50 px-3 py-1 rounded-full">+12%</span>
           </div>
-          <h3 className="text-3xl font-bold text-[#2a2c38]">75%</h3>
-          <p className="text-sm text-gray-500">Tasa de participación</p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Tasa de Participación</p>
+          <h3 className="text-4xl font-black text-[#2a2c38]">{participationRate.toFixed(1)}%</h3>
         </Card>
 
-        <Card className="p-6 rounded-3xl border-none shadow-sm bg-white">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-blue-50 rounded-2xl text-blue-500">
-              <Activity size={24} />
+        <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+          <div className="flex justify-between items-start mb-6">
+            <div className="p-4 bg-blue-50 rounded-2xl text-blue-500">
+              <Car size={24} />
             </div>
-            <span className="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-lg">Estable</span>
+            <span className="text-xs font-bold text-blue-500 bg-blue-50 px-3 py-1 rounded-full">+5%</span>
           </div>
-          <h3 className="text-3xl font-bold text-[#2a2c38]">3.2</h3>
-          <p className="text-sm text-gray-500">Ocupación media/vehículo</p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Ocupación Media / Vehículo</p>
+          <h3 className="text-4xl font-black text-[#2a2c38]">3.2</h3>
         </Card>
 
-        <Card className="p-6 rounded-3xl border-none shadow-sm bg-white">
-          <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-orange-50 rounded-2xl text-orange-500">
-              <TrendingDown size={24} />
+        <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+          <div className="flex justify-between items-start mb-6">
+            <div className="p-4 bg-purple-50 rounded-2xl text-purple-500">
+              <Repeat size={24} />
             </div>
-            <span className="text-xs font-bold text-orange-500 bg-orange-50 px-2 py-1 rounded-lg">-€240</span>
+            <span className="text-xs font-bold text-purple-500 bg-purple-50 px-3 py-1 rounded-full">+8.2%</span>
           </div>
-          <h3 className="text-3xl font-bold text-[#2a2c38]">14.7€</h3>
-          <p className="text-sm text-gray-500">Ahorro medio por empleado</p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Trayectos Compartidos</p>
+          <h3 className="text-4xl font-black text-[#2a2c38]">{companyData.totalTrips || 0}</h3>
         </Card>
       </div>
 
-      {/* Main Charts Section */}
+      {/* 3. Main Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Office Performance */}
-        <Card className="p-8 rounded-3xl border-none shadow-sm bg-white">
-          <div className="mb-8">
-            <h3 className="text-lg font-bold text-[#2a2c38]">Rendimiento por Sede</h3>
-            <p className="text-sm text-gray-500">Comparativa de viajes y ahorro de CO2</p>
+        
+        {/* Monthly Activity (Trips & Active Users) */}
+        <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+          <div className="mb-8 flex justify-between items-end">
+            <div>
+              <h3 className="text-lg font-black text-[#2a2c38] uppercase tracking-tight">Actividad Mensual</h3>
+              <p className="text-sm text-gray-400 font-medium text-pretty">Trayectos vs Usuarios Activos</p>
+            </div>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={officeData}>
+              <BarChart data={monthlyTrend}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="office" axisLine={false} tickLine={false} />
-                <YAxis axisLine={false} tickLine={false} />
-                <Tooltip 
-                  cursor={{fill: '#f9fafb'}}
-                  contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)'}}
-                />
-                <Bar dataKey="trips" fill="#9dd187" radius={[6, 6, 0, 0]} name="Viajes" />
-                <Bar dataKey="co2" fill="#2a2c38" radius={[6, 6, 0, 0]} name="CO2 Ahorrado" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
+                <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
+                <Tooltip cursor={{fill: '#f9fafb'}} contentStyle={{borderRadius: '20px', border: 'none', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)'}} />
+                <Legend iconType="circle" />
+                <Bar dataKey="trips" fill="#9dd187" radius={[10, 10, 0, 0]} name="Trayectos" />
+                <Bar dataKey="activeUsers" fill="#2a2c38" radius={[10, 10, 0, 0]} name="Usuarios Activos" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
-        {/* Time Distribution */}
-        <Card className="p-8 rounded-3xl border-none shadow-sm bg-white">
+        {/* Sustainability Report (CO2e avoided) */}
+        <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
           <div className="mb-8">
-            <h3 className="text-lg font-bold text-[#2a2c38]">Distribución Horaria</h3>
-            <p className="text-sm text-gray-500">Franjas de mayor uso del servicio</p>
+            <h3 className="text-lg font-black text-[#2a2c38] uppercase tracking-tight">Sostenibilidad Mensual</h3>
+            <p className="text-sm text-gray-400 font-medium">CO2e Evitado acumulado (Kg)</p>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={timeDistribution}
-                  innerRadius={80}
-                  outerRadius={100}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {timeDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend iconType="circle" layout="vertical" align="right" verticalAlign="middle" />
-              </PieChart>
+              <AreaChart data={monthlyTrend}>
+                <defs>
+                  <linearGradient id="colorCo2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#9dd187" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#9dd187" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{borderRadius: '20px', border: 'none'}} />
+                <Area type="monotone" dataKey="co2" stroke="#9dd187" strokeWidth={4} fillOpacity={1} fill="url(#colorCo2)" name="CO2e Evitado" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        {/* Repetition Rate (Loyalty) */}
+        <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white lg:col-span-2">
+          <div className="mb-8 flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-black text-[#2a2c38] uppercase tracking-tight">Tasa de Repetición Semanal</h3>
+              <p className="text-sm text-gray-400 font-medium">Usuarios que repiten hábito como conductor/pasajero</p>
+            </div>
+            <div className="text-right">
+              <span className="text-2xl font-black text-[#2a2c38]">78%</span>
+              <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-widest">Fidelidad Alta</p>
+            </div>
+          </div>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={monthlyTrend}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} unit="%" />
+                <Tooltip contentStyle={{borderRadius: '20px', border: 'none'}} />
+                <Line type="stepAfter" dataKey="repetition" stroke="#2a2c38" strokeWidth={4} dot={{ r: 8, fill: '#9dd187', strokeWidth: 0 }} name="% Repetición" />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </Card>
       </div>
-
-      {/* Weekly Trends Line Chart */}
-      <Card className="p-8 rounded-3xl border-none shadow-sm bg-white">
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-[#2a2c38]">Tendencia de Actividad</h3>
-          <p className="text-sm text-gray-500">Crecimiento de usuarios y viajes en las últimas 4 semanas</p>
-        </div>
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={weeklyTrends}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-              <XAxis dataKey="week" axisLine={false} tickLine={false} />
-              <YAxis axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{borderRadius: '16px', border: 'none'}} />
-              <Legend />
-              <Line type="monotone" dataKey="trips" stroke="#9dd187" strokeWidth={4} dot={{ r: 6 }} name="Viajes Totales" />
-              <Line type="monotone" dataKey="users" stroke="#2a2c38" strokeWidth={4} dot={{ r: 6 }} name="Usuarios Activos" />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
     </div>
   );
 }

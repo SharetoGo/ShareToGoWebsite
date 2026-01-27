@@ -8,7 +8,7 @@ import { doc, updateDoc, collection, query, where, getDocs } from "firebase/fire
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { 
   Settings, Globe, Users, 
-  Camera, Save, Loader2, CheckCircle2, Plus, X 
+  Camera, Save, Loader2, CheckCircle2, Plus, X, Eye, EyeOff, Copy, Check
 } from "lucide-react";
 
 export function SettingsView() {
@@ -27,6 +27,8 @@ export function SettingsView() {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [showAccessCode, setShowAccessCode] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (companyData) {
@@ -73,6 +75,14 @@ export function SettingsView() {
   
   const removeHQ = (index: number) => {
     setFormData({ ...formData, headquarters: formData.headquarters.filter((_, i) => i !== index) });
+  };
+
+  // --- COPY ACCESS CODE ---
+  const handleCopyCode = () => {
+    if (!companyData?.accessCodeDisplay) return;
+    navigator.clipboard.writeText(companyData.accessCodeDisplay);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   // --- SAVE TO FIRESTORE ---
@@ -154,6 +164,35 @@ export function SettingsView() {
             <h3 className="font-bold text-[#2a2c38]">{formData.name}</h3>
             <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">Logo Corporativo</p>
           </div>
+
+          {/* Access Code Section */}
+          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <h4 className="font-bold text-[#2a2c38] mb-2">Código de Acceso</h4>
+            <p className="text-xs text-gray-400 mb-4">
+              Comparte este código con tus empleados para que se unan a la empresa en la app.
+            </p>
+            <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 flex items-center justify-between gap-2">
+              <span className="font-mono font-bold text-sm text-[#2a2c38] tracking-widest">
+                {showAccessCode ? companyData.accessCodeDisplay : 'xxx-xxxx-xxx'}
+              </span>
+              <div className="flex items-center">
+                <button 
+                  onClick={() => setShowAccessCode(!showAccessCode)}
+                  className="p-2 text-gray-400 hover:text-[#2a2c38] transition-colors"
+                  title={showAccessCode ? "Ocultar código" : "Mostrar código"}
+                >
+                  {showAccessCode ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+                <button
+                  onClick={handleCopyCode}
+                  className="p-2 text-gray-400 hover:text-[#9dd187] transition-colors"
+                  title="Copiar código"
+                >
+                  {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Form Fields */}
@@ -220,7 +259,7 @@ export function SettingsView() {
               </div>
             </div>
           </section>
-
+          {/* ESG Goals Section 
           <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
             <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
               <Globe className="text-[#9dd187]" />
@@ -247,6 +286,7 @@ export function SettingsView() {
               </div>
             </div>
           </section>
+          */}
         </div>
       </div>
     </div>

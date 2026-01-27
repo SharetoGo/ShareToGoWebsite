@@ -43,32 +43,25 @@ export function DashboardView() {
       </div>
 
       {/* Hero Metrics - Real Data + Trend Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <StatCard 
-          label="CO2e Evitado" 
-          value={`${formatStats(companyData.totalCo2)} kg`} 
-          icon={Leaf} 
-          trend="+12.5% vs mes anterior"
+          label="Usuarios Activos" 
+          value={companyData.membersIds?.length || 0}
+          icon={Users} 
         />
         <StatCard 
           label="Km Compartidos" 
           value={`${formatStats(companyData.totalKm)} km`} 
           icon={Route} 
-          trend="+8.2% vs mes anterior"
-        />
-        <StatCard 
-          label="Usuarios Activos" 
-          value={companyData.totalDrivers + 142} // Adding some fake 'passenger' data for scale
-          icon={Users} 
-          trend="+5 new this week"
         />
       </div>
 
-      {/* Main Charts Section */}
+      {/* Main Charts Section*/} 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <EnvironmentalImpactChart />
         <PeakUsageHeatmap />
       </div>
+      
 
       {/* Actionable Bottom Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

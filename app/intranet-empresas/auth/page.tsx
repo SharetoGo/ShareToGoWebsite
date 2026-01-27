@@ -133,23 +133,6 @@ const handleLogin = async (e: React.FormEvent) => {
               />
             </div>
 
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  className="rounded border-gray-300 text-[#9dd187] focus:ring-[#9dd187] cursor-pointer"
-                />
-                <span>Recordar sesión</span>
-              </label>
-              <button
-                type="button"
-                onClick={() => setShowForgotForm(true)}
-                className="text-[#2a2c38] hover:text-[#9dd187] transition-colors"
-              >
-                ¿Has olvidado tu contraseña?
-              </button>
-            </div>
-
             {error && (
               <p className="text-red-500 text-sm text-center bg-red-50 py-2 rounded-md border border-red-100">
                 {error}
