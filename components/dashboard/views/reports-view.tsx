@@ -1,11 +1,11 @@
 // components/dashboard/views/reports-view.tsx
-import { FileText, Download, Clock } from "lucide-react";
+import { FileText, Download, Clock, ShieldCheck, Mail } from "lucide-react";
 
 export function ReportsView() {
   const reports = [
-    { title: "Reporte Mensual ESG", date: "Dic 2025", type: "PDF", status: "Disponible", url: "/pdf/pdf-test.pdf" },
-    { title: "Certificado de Huella de Carbono", date: "Anual 2025", type: "PDF", status: "Procesando" },
-    { title: "Detalle de Subvenciones", date: "Trimestre 4", type: "XLSX", status: "Disponible", url: "/pdf/pdf-test.pdf" },
+    { title: "Reporte mensual de sostenibilidad", date: "Dic 2025", type: "PDF", status: "Disponible", url: "/pdf/pdf-test.pdf" },
+    { title: "Informe de huella de carbono mensual", date: "Anual 2025", type: "PDF", status: "Procesando" },
+    { title: "Informes Anuales", date: "Trimestre 4", type: "XLSX", status: "Disponible", url: "/pdf/pdf-test.pdf" },
   ];
 
   const handleDownload = (url: string, fileName: string) => {
@@ -50,6 +50,31 @@ export function ReportsView() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Audit Services Info */}
+      <div className="bg-[#2a2c38] p-8 rounded-[2rem] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-white mt-4">
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 text-[#9dd187] mb-2">
+            <ShieldCheck size={28} />
+            <h3 className="text-xl font-bold">Servicios de auditoría y certificación</h3>
+          </div>
+          <p className="text-gray-400 font-medium ml-1">
+            Disponibles bajo consulta.
+          </p>
+        </div>
+        
+        <a 
+          href="mailto:contactosharetogo@gmail.com"
+          className="relative z-10 flex items-center gap-2 bg-[#9dd187] text-[#2a2c38] px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-all shadow-lg shadow-[#9dd187]/20 whitespace-nowrap"
+        >
+          <Mail size={20} />
+          Contacta con nosotros
+        </a>
+
+        <div className="absolute -right-10 -bottom-10 opacity-5 pointer-events-none rotate-12">
+          <ShieldCheck size={200} />
+        </div>
       </div>
     </div>
   );
