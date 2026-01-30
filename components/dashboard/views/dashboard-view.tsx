@@ -44,24 +44,24 @@ export function DashboardView() {
 
       {/* Hero Metrics - Real Data + Trend Insights */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        <StatCard 
-          label="Usuarios Activos" 
+        <StatCard
+          label="Usuarios Activos"
           value={companyData.membersIds?.length || 0}
-          icon={Users} 
+          icon={Users}
         />
-        <StatCard 
-          label="Km Compartidos" 
-          value={`${formatStats(companyData.totalKm)} km`} 
-          icon={Route} 
+        <StatCard
+          label="Km Compartidos"
+          value={`${formatStats(companyData.totalKm)} km`}
+          icon={Route}
         />
       </div>
 
-      {/* Main Charts Section*/} 
+      {/* Main Charts Section*/}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <EnvironmentalImpactChart />
         <PeakUsageHeatmap />
       </div>
-      
+
 
       {/* Actionable Bottom Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

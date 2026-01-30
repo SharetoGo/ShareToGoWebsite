@@ -4,28 +4,28 @@
 import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
 import { formatStats } from "@/lib/utils/format";
 import { Card } from "@/components/ui/card";
-import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, 
-  ResponsiveContainer, LineChart, Line, AreaChart, Area, Legend 
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, LineChart, Line, AreaChart, Area, Legend
 } from "recharts";
 import { TrendingUp, Users, Leaf, Car, Repeat, Target } from "lucide-react";
 
 export function AnalyticsView() {
   const { companyData } = useAuth();
-  
+
   if (!companyData) return null;
 
   // --- ACCURATE CALCULATIONS FROM YOUR DATA ---
-  
+
   // 1. Participation: (members enrolled / total capacity) 
   // Using employeeCount as the denominator if it exists, else use members length
   const totalMembers = companyData.membersIds?.length || 0;
-  const targetEmployees = companyData.employeeCount || totalMembers || 1; 
+  const targetEmployees = companyData.employeeCount || totalMembers || 1;
   const participationRate = (totalMembers / targetEmployees) * 100;
 
   // 2. Average Occupancy: Total KM / Total Travels (approximation)
   // In your data: totalKm (1857) and totalTrips (23)
-  const avgOccupancy = companyData.totalTrips > 0 
+  const avgOccupancy = companyData.totalTrips > 0
     ? (companyData.totalKm / companyData.totalTrips / 10).toFixed(1) // Normalized factor
     : "1.2";
 
@@ -50,7 +50,7 @@ export function AnalyticsView() {
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Leaf size={120} className="text-[#9dd187]" />
         </div>
-        
+
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="max-w-xl">
             <div className="flex items-center gap-3 text-[#9dd187] mb-4">
@@ -59,15 +59,15 @@ export function AnalyticsView() {
             </div>
             <h2 className="text-2xl font-bold mb-4">Compartir coche: impacto directo en CO₂e</h2>
             <p className="text-gray-400 font-medium leading-relaxed">
-              Tu empresa ha evitado <span className="text-white font-bold">{co2Current.toFixed(1)} kg</span> de CO2e. 
+              Tu empresa ha evitado <span className="text-white font-bold">{co2Current.toFixed(1)} kg</span> de CO2e.
               Estás al <span className="text-[#9dd187] font-bold">{targetReached}%</span> de tu objetivo anual de {co2Target}kg.
             </p>
           </div>
-          
+
           <div className="bg-white/5 backdrop-blur-md p-6 rounded-3xl border border-white/10 text-center min-w-[200px]">
-             <Target className="text-[#9dd187] mx-auto mb-2" size={32} />
-             <p className="text-4xl font-black text-white">{targetReached}%</p>
-             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Meta Lograda</p>
+            <Target className="text-[#9dd187] mx-auto mb-2" size={32} />
+            <p className="text-4xl font-black text-white">{targetReached}%</p>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Meta Lograda</p>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@ export function AnalyticsView() {
 
       {/* 3. Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
+
         {/* Evolution of Trips */}
         <Card className="p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
           <div className="mb-8">
@@ -125,7 +125,7 @@ export function AnalyticsView() {
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                 <XAxis dataKey="month" axisLine={false} tickLine={false} />
                 <YAxis axisLine={false} tickLine={false} />
-                <Tooltip cursor={{fill: '#f9fafb'}} />
+                <Tooltip cursor={{ fill: '#f9fafb' }} />
                 <Bar dataKey="trips" fill="#9dd187" radius={[10, 10, 0, 0]} name="Trayectos" />
               </BarChart>
             </ResponsiveContainer>
@@ -143,8 +143,8 @@ export function AnalyticsView() {
               <AreaChart data={monthlyTrend}>
                 <defs>
                   <linearGradient id="colorCo2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#9dd187" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#9dd187" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#9dd187" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#9dd187" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />

@@ -53,7 +53,7 @@ export function ReportsView() {
       </div>
 
       {/* Audit Services Info */}
-      <div className="bg-[#2a2c38] p-8 rounded-[2rem] relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-white mt-4">
+      <div className="bg-[#2a2c38] p-8 rounded-4xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-white mt-4">
         <div className="relative z-10">
           <div className="flex items-center gap-3 text-[#9dd187] mb-2">
             <ShieldCheck size={28} />
