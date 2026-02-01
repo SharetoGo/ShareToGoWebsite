@@ -36,13 +36,13 @@ export default function EspacioEmpresas() {
   const renderView = () => {
     
     switch (activeTab) {
-      case "dashboard": return <DashboardView />;
+      case "dashboard": return <DashboardView setActiveTab={setActiveTab} />;
       case "employees": return <EmployeesView />;
-      case "analytics": return <AnalyticsView />;
+      case "analytics": return <AnalyticsView setActiveTab={setActiveTab} />;
       case "content":   return <ContentView />;
       case "reports":   return <ReportsView />;
       case "settings":  return <SettingsView />;
-      default: return <DashboardView />;
+      default: return<DashboardView setActiveTab={setActiveTab} />;
     }
   };
 

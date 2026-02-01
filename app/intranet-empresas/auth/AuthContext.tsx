@@ -27,6 +27,7 @@ interface CompanyData {
   logoUrl: string;
   industry: string;
   employeeCount: number;
+  travels: string[];
   headquarters: string[];
   co2Target: number;
   zones: Zone[];

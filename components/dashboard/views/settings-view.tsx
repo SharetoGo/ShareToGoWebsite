@@ -20,7 +20,7 @@ export function SettingsView() {
     industry: "technology",
     employeeCount: 0,
     headquarters: [] as string[],
-    co2Target: 0,
+    CO2Goal: 0,
     logoUrl: ""
   });
 
@@ -37,7 +37,7 @@ export function SettingsView() {
         industry: companyData.industry || "technology",
         employeeCount: companyData.employeeCount || 0,
         headquarters: Array.isArray(companyData.headquarters) ? companyData.headquarters : [],
-        co2Target: companyData.co2Target || 3000,
+        CO2Goal: companyData.CO2Goal || 0,
         logoUrl: companyData.logoUrl || ""
       });
     }
@@ -100,7 +100,7 @@ export function SettingsView() {
         await updateDoc(docRef, {
           ...formData,
           employeeCount: Number(formData.employeeCount),
-          co2Target: Number(formData.co2Target),
+          CO2Goal: Number(formData.CO2Goal),
         });
 
         setSaveSuccess(true);
@@ -259,7 +259,8 @@ export function SettingsView() {
               </div>
             </div>
           </section>
-          {/* ESG Goals Section 
+
+          {/* ESG Goals Section */}
           <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
             <div className="flex items-center gap-3 border-b border-gray-50 pb-4">
               <Globe className="text-[#9dd187]" />
@@ -267,13 +268,18 @@ export function SettingsView() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase ml-1">Meta CO2e (kg)</label>
+                <label className="text-xs font-bold text-gray-400 uppercase ml-1">Meta CO₂e (kg/año)</label>
                 <input 
                   type="number" 
-                  value={formData.co2Target}
-                  onChange={(e) => setFormData({...formData, co2Target: Number(e.target.value)})}
+                  value={formData.CO2Goal}
+                  onChange={(e) => setFormData({...formData, CO2Goal: Number(e.target.value)})}
+                  placeholder="Ej. 5000"
+                  min="0"
                   className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#9dd187]"
                 />
+                <p className="text-[10px] text-gray-400 ml-1">
+                  Cantidad de CO₂e (kg) que tu empresa busca evitar en un año. Si lo dejas en 0, no se mostrará la meta en Analytics.
+                </p>
               </div>
               <div className="space-y-2">
                 <label className="text-xs font-bold text-gray-400 uppercase ml-1">Empleados</label>
@@ -281,12 +287,16 @@ export function SettingsView() {
                   type="number" 
                   value={formData.employeeCount}
                   onChange={(e) => setFormData({...formData, employeeCount: Number(e.target.value)})}
+                  placeholder="Ej. 200"
+                  min="0"
                   className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#9dd187]"
                 />
+                <p className="text-[10px] text-gray-400 ml-1">
+                  Número total de empleados en la empresa.
+                </p>
               </div>
             </div>
           </section>
-          */}
         </div>
       </div>
     </div>
