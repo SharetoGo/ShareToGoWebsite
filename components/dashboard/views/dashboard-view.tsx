@@ -123,7 +123,7 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
   
   const totalUsers = companyData.membersIds?.length || 0;
   const totalKm = companyData.totalKm || 0;
-  const co2Target = companyData.co2Target;
+  const co2Target = companyData.CO2Goal;
   const totalDrivers = companyData.totalDrivers || 0;
   const totalPassengers = companyData.totalPassengers || 0;
   const totalTravels = companyData.travels?.length || 0;
@@ -209,6 +209,7 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
         <UserRoleStats
           companyName={companyData.name}
           totalMembers={companyData.membersIds?.length || 0}
+          travelIds={companyData.travels || []}
         />
       </div>
 

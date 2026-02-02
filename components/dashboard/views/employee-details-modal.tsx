@@ -49,10 +49,9 @@ export function EmployeeDetailsModal({ employee, onClose }: EmployeeDetailsModal
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <StatCard icon={<Car size={18}/>} label="KM Totales" value={`${employee.kmTravelled?.toFixed(1) || 0} km`} />
             <StatCard icon={<Users size={18}/>} label="Viajes" value={employee.passengerTravels + employee.driverTravels} />
-            <StatCard icon={<Leaf size={18}/>} label="CO2 Ahorrado" value={`${employee.co2SavedKg?.toFixed(1) || 0} kg`} color="text-[#9dd187]" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

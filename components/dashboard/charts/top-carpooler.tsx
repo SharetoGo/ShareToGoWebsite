@@ -53,16 +53,14 @@ export function TopCarpoolers() {
 
         const sorted = allUsers
           .sort((a, b) => b.km - a.km)
-          .slice(0, 5)
+          .slice(0, 3)
           .map((user, index) => ({
             ...user,
             color: index === 0 
               ? "text-yellow-500" 
               : index === 1 
                 ? "text-slate-400" 
-                : index === 2
-                  ? "text-amber-700"
-                  : "text-gray-400"
+                : "text-amber-700"
           }));
 
         setChampions(sorted);
