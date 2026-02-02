@@ -1,72 +1,227 @@
 // components/dashboard/views/dashboard-view.tsx
-import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
+import { useState, useEffect } from "react";
+import { useAuth} from "@/app/intranet-empresas/auth/AuthContext";
+import { db } from "@/lib/firebase";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc
+} from "firebase/firestore";
 import { formatStats } from "@/lib/utils/format";
-import { Leaf, Route, Users, Euro, Share2, ShieldCheck, TrendingUp } from "lucide-react";
-import { StatCard } from "@/components/dashboard/StatCard"; // Assuming StatCard is your MetricCard
-
-// Internal Sub-components (We'll define these below)
-import { EnvironmentalImpactChart } from "../charts/environmental-impact-chart";
-import { PeakUsageHeatmap } from "../charts/peak-usage-heatmap";
+import { Route, Users, TrendingUp, Leaf, UserCheck, Car, Target } from "lucide-react";
+import { StatCard } from "@/components/dashboard/StatCard";
 import { LinkedInHub } from "../charts/linkedin-hub";
-import { ComplianceTracker } from "../charts/compliance-tracker";
 import { TopCarpoolers } from "../charts/top-carpooler";
+import { UserRoleStats } from "../charts/user-role-stats";
+import { QuickStatsCompact } from "../widgets/quick-stats-compact";
+import { AnalyticsHub } from "../widgets/analytics-hub";
 
-export function DashboardView() {
+
+function getCurrentMonthId() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function getMonthIds() {
+  const now = new Date();
+
+  const currentMonth = `${now.getFullYear()}-${String(
+    now.getMonth() + 1
+  ).padStart(2, "0")}`;
+
+  const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const previousMonth = `${prevDate.getFullYear()}-${String(
+    prevDate.getMonth() + 1
+  ).padStart(2, "0")}`;
+
+  return { currentMonth, previousMonth };
+}
+
+
+export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const { companyData } = useAuth();
 
+  const [loadingMonthly, setLoadingMonthly] = useState(true);
+  const [monthlyMetrics, setMonthlyMetrics] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchMonthlyMetrics() {
+      if (!companyData?.name) return;
+
+      try {
+        setLoadingMonthly(true);
+
+        // 1️⃣ Buscar empresa por name
+        const q = query(
+          collection(db, "companies"),
+          where("name", "==", companyData.name)
+        );
+
+        const snap = await getDocs(q);
+        if (snap.empty) return;
+
+        const companyId = snap.docs[0].id;
+
+        const { currentMonth, previousMonth } = getMonthIds();
+
+        // 2️⃣ Intentar mes actual
+        const currentRef = doc(
+          db,
+          "companies",
+          companyId,
+          "metrics",
+          "metrics",
+          "monthly",
+          currentMonth
+        );
+
+        const currentSnap = await getDoc(currentRef);
+
+        if (currentSnap.exists()) {
+          setMonthlyMetrics(currentSnap.data());
+          return;
+        }
+
+        // 3️⃣ Fallback → mes anterior
+        const prevRef = doc(
+          db,
+          "companies",
+          companyId,
+          "metrics",
+          "metrics",
+          "monthly",
+          previousMonth
+        );
+
+        const prevSnap = await getDoc(prevRef);
+
+        if (prevSnap.exists()) {
+          setMonthlyMetrics(prevSnap.data());
+        } else {
+          setMonthlyMetrics(null);
+        }
+
+      } catch (e) {
+        console.error("Error loading monthly metrics:", e);
+      } finally {
+        setLoadingMonthly(false);
+      }
+    }
+
+    fetchMonthlyMetrics();
+  }, [companyData?.name]);
+
+  
   if (!companyData) return null;
 
-  // Real-time logical calculations
-  // Average fuel price saved per km shared: ~0.25€
-  const moneySaved = companyData.totalKm * 0.25;
+  // ═══════════════════════════════════════════════════════════
+  // MÉTRICAS CALCULADAS
+  // ═══════════════════════════════════════════════════════════
+  
+  const totalUsers = companyData.membersIds?.length || 0;
+  const totalKm = companyData.totalKm || 0;
+  const co2Target = companyData.co2Target;
+  const totalDrivers = companyData.totalDrivers || 0;
+  const totalPassengers = companyData.totalPassengers || 0;
+  const totalTravels = companyData.travels?.length || 0;
+
+  const totalCo2 = monthlyMetrics?.co2SavedKg || 0;
+  const seatOccupancyRate = monthlyMetrics?.seatOccupancyRate || 0;
+  const participationRate = monthlyMetrics?.participationRate || 0;
+  const totalTravelsMontly = monthlyMetrics?.totalTravels || 0;
+  
+  
+  // Dinero ahorrado (0.25€ por km)
+  const moneySaved = Math.round(totalKm * 0.25);
+  
+  // Progreso hacia meta de CO2 (solo si existe)
+  const co2Progress = co2Target && co2Target > 0 
+    ? Math.min((totalCo2 / co2Target) * 100, 100) 
+    : 0;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header & Filter Bar Placeholder */}
+      {/* ═══════════════════════════════════════════════════════════
+          HEADER & FILTERS
+          ═══════════════════════════════════════════════════════════ */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-[#2a2c38]">Impacto Medioambiental</h1>
-          <p className="text-gray-500">Métricas de movilidad sostenible y rendimiento ESG</p>
+          <h1 className="text-3xl font-bold text-[#2a2c38]">
+            Impacto Medioambiental
+          </h1>
+          <p className="text-gray-500">
+            Métricas de movilidad sostenible y rendimiento ESG
+          </p>
         </div>
-        {/* Mock Filter Bar */}
-        <div className="flex gap-2 bg-white p-1 rounded-xl border border-gray-100 shadow-sm">
-          <select className="text-sm border-none bg-transparent focus:ring-0 cursor-pointer px-3 py-2 font-medium">
-            <option>Todas las Sedes</option>
-            {companyData.zones?.map(z => <option key={z.key}>{z.key}</option>)}
-          </select>
-          <div className="w-px h-8 bg-gray-100 self-center" />
-          <select className="text-sm border-none bg-transparent focus:ring-0 cursor-pointer px-3 py-2 font-medium">
-            <option>Últimos 30 días</option>
-            <option>Este trimestre</option>
-          </select>
-        </div>
+
       </div>
 
-      {/* Hero Metrics - Real Data + Trend Insights */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      {/* ═══════════════════════════════════════════════════════════
+          HERO METRICS - 3 Cards Principales
+          ═══════════════════════════════════════════════════════════ */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
-          label="Usuarios Activos"
-          value={companyData.membersIds?.length || 0}
+          label="Usuarios Registrados"
+          value={totalUsers}
           icon={Users}
+          description={`${totalUsers} usuarios en la plataforma`}
+          trend="up"
+          trendValue="+12%"
+          color="#9dd187"
+          bgColor="#E8F5E0"
         />
+        
         <StatCard
-          label="Km Compartidos"
-          value={`${formatStats(companyData.totalKm)} km`}
+          label="Km Recorridos Compartidos"
+          value={`${formatStats(totalKm)}`}
           icon={Route}
+          description={`${totalKm} km recorridos juntos`}
+          trend="up"
+          trendValue="+8%"
+          color="#9dd187"
+          bgColor="#E8F5E0"
+        />
+
+        <StatCard
+          label="Trayectos Compartidos"
+          value={`${formatStats(totalTravels)}`}
+          icon={Leaf}
+          description={`${totalTravels} trayectos totales`}
+          trend="up"
+          trendValue="+15%"
+          color="#5A9642"
+          bgColor="#D4E8CC"
         />
       </div>
+      
+      <QuickStatsCompact
+        totalCo2={totalCo2}
+        seatOccupancyRate={seatOccupancyRate}
+        participationRate={participationRate}
+        totalTravelsMonthly={totalTravelsMontly}
+      />
 
-      {/* Main Charts Section*/}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <EnvironmentalImpactChart />
-        <PeakUsageHeatmap />
+      {/* 🆕 USER ROLE STATS - Conductores vs Pasajeros */}
+      <div className="grid grid-cols-1">
+        <UserRoleStats
+          companyName={companyData.name}
+          totalMembers={companyData.membersIds?.length || 0}
+        />
       </div>
-
 
       {/* Actionable Bottom Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <LinkedInHub data={companyData} />
-        <ComplianceTracker />
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1.6fr] gap-6">
+        <LinkedInHub 
+          data={companyData} 
+          onViewContent={() => setActiveTab("content")} 
+        />
+          <AnalyticsHub
+            totalCo2={totalCo2} 
+            onViewAnalytics={() => setActiveTab("analytics")} 
+          />  
         <TopCarpoolers />
       </div>
     </div>

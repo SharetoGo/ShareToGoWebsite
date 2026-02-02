@@ -4,9 +4,6 @@ export const StatCard = ({ label, value, icon: Icon, description }: any) => (
       <div className="p-2 bg-[#9dd187]/20 rounded-lg">
         <Icon className="w-6 h-6 text-[#2a2c38]" />
       </div>
-      <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-        +12% vs last month
-      </span>
     </div>
     <div>
       <p className="text-sm text-gray-500 font-medium">{label}</p>
