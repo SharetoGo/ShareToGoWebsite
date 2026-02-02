@@ -209,6 +209,7 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
         <UserRoleStats
           companyName={companyData.name}
           totalMembers={companyData.membersIds?.length || 0}
+          travelIds={companyData.travels || []}
         />
       </div>
 

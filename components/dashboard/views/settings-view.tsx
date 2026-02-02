@@ -20,7 +20,7 @@ export function SettingsView() {
     industry: "technology",
     employeeCount: 0,
     headquarters: [] as string[],
-    CO2Goal: 0,
+    co2Target: 0,
     logoUrl: ""
   });
 
@@ -37,7 +37,7 @@ export function SettingsView() {
         industry: companyData.industry || "technology",
         employeeCount: companyData.employeeCount || 0,
         headquarters: Array.isArray(companyData.headquarters) ? companyData.headquarters : [],
-        CO2Goal: companyData.CO2Goal || 0,
+        co2Target: companyData.co2Target || 0,
         logoUrl: companyData.logoUrl || ""
       });
     }
@@ -100,7 +100,7 @@ export function SettingsView() {
         await updateDoc(docRef, {
           ...formData,
           employeeCount: Number(formData.employeeCount),
-          CO2Goal: Number(formData.CO2Goal),
+          co2Target: Number(formData.co2Target),
         });
 
         setSaveSuccess(true);
@@ -271,8 +271,8 @@ export function SettingsView() {
                 <label className="text-xs font-bold text-gray-400 uppercase ml-1">Meta CO₂e (kg/año)</label>
                 <input 
                   type="number" 
-                  value={formData.CO2Goal}
-                  onChange={(e) => setFormData({...formData, CO2Goal: Number(e.target.value)})}
+                  value={formData.co2Target}
+                  onChange={(e) => setFormData({...formData, co2Target: Number(e.target.value)})}
                   placeholder="Ej. 5000"
                   min="0"
                   className="w-full bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#9dd187]"

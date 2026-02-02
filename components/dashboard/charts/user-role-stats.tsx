@@ -4,11 +4,12 @@
 import { useEffect, useState } from "react";
 import { Users, Car, UserCheck } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, documentId } from "firebase/firestore";
 
 interface UserRoleStatsProps {
   companyName: string;
   totalMembers: number;
+  travelIds: string[];
 }
 
 interface RoleStats {
@@ -19,8 +20,7 @@ interface RoleStats {
   loading: boolean;
 }
 
-
-export function UserRoleStats({ companyName, totalMembers }: UserRoleStatsProps) {
+export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRoleStatsProps) {
   const [stats, setStats] = useState<RoleStats>({
     drivers: 0,
     passengers: 0,
@@ -31,7 +31,7 @@ export function UserRoleStats({ companyName, totalMembers }: UserRoleStatsProps)
 
   useEffect(() => {
     // Si no hay datos suficientes para buscar, salir inmediatamente
-    if (!companyName || totalMembers === 0) {
+    if (!companyName || totalMembers === 0 || !travelIds || travelIds.length === 0) {
       setStats(prev => ({ ...prev, loading: false }));
       return;
     }
@@ -40,45 +40,43 @@ export function UserRoleStats({ companyName, totalMembers }: UserRoleStatsProps)
       try {
         setStats(prev => ({ ...prev, loading: true }));
 
-        const usersRef = collection(db, "users");
-        const usersQuery = query(usersRef, where("company", "==", companyName));
-        const usersSnapshot = await getDocs(usersQuery);
-
-        const travelsRef = collection(db, "travels");
-        const travelsSnapshot = await getDocs(travelsRef);
-
         const driverIds = new Set<string>();
         const passengerIds = new Set<string>();
 
-        travelsSnapshot.forEach((travelDoc) => {
-          const travelData = travelDoc.data();
+        // Procesar en batches de 30 (límite de Firestore para "in" queries)
+        for (let i = 0; i < travelIds.length; i += 30) {
+          const batch = travelIds.slice(i, i + 30);
           
-          if (travelData.userId) {
-            driverIds.add(travelData.userId);
-          }
+          const travelsRef = collection(db, "travels");
+          const travelsQuery = query(travelsRef, where(documentId(), "in", batch));
+          const travelsSnapshot = await getDocs(travelsQuery);
 
-          if (travelData.reservedBy && Array.isArray(travelData.reservedBy)) {
-            travelData.reservedBy.forEach((userId: string) => {
-              passengerIds.add(userId);
-            });
-          }
-        });
+          travelsSnapshot.forEach((travelDoc) => {
+            const travelData = travelDoc.data();
+            
+            // Conductor
+            if (travelData.userId) {
+              driverIds.add(travelData.userId);
+            }
 
-        const companyUserIds = new Set<string>();
-        usersSnapshot.forEach((userDoc) => {
-          companyUserIds.add(userDoc.id);
-        });
+            // Pasajeros
+            if (travelData.reservedBy && Array.isArray(travelData.reservedBy)) {
+              travelData.reservedBy.forEach((userId: string) => {
+                passengerIds.add(userId);
+              });
+            }
+          });
+        }
 
-        const companyDrivers = Array.from(driverIds).filter(id => 
-          companyUserIds.has(id)
-        ).length;
+        const companyDrivers = driverIds.size;
+        const companyPassengers = passengerIds.size;
 
-        const companyPassengers = Array.from(passengerIds).filter(id => 
-          companyUserIds.has(id)
-        ).length;
-
-        const driversPercentage = Math.round((companyDrivers / totalMembers) * 100);
-        const passengersPercentage = Math.round((companyPassengers / totalMembers) * 100);
+        const driversPercentage = totalMembers > 0 
+          ? Math.round((companyDrivers / totalMembers) * 100) 
+          : 0;
+        const passengersPercentage = totalMembers > 0 
+          ? Math.round((companyPassengers / totalMembers) * 100) 
+          : 0;
 
         setStats({
           drivers: companyDrivers,
@@ -95,7 +93,7 @@ export function UserRoleStats({ companyName, totalMembers }: UserRoleStatsProps)
     };
 
     fetchUserRoleStats();
-  }, [companyName, totalMembers]);
+  }, [companyName, totalMembers, travelIds]);
 
   // Carga
   if (stats.loading) {

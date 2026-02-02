@@ -184,7 +184,7 @@ export function EmployeesView() {
             <thead className="bg-[#fcfdfe] text-gray-400 text-[10px] uppercase font-black tracking-[0.15em]">
               <tr>
                 <th className="px-8 py-6">Colaborador</th>
-                <th className="px-8 py-6">Viajes Totales</th>
+                <th className="px-8 py-6">Trayectos Totales</th>
                 <th className="px-8 py-6">Km Recorridos</th>
                 <th className="px-8 py-6">Impacto</th>
                 <th className="px-8 py-6 text-right">Acciones</th>
