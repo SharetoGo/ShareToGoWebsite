@@ -3,9 +3,9 @@ import { FileText, Download, Clock, ShieldCheck, Mail } from "lucide-react";
 
 export function ReportsView() {
   const reports = [
-    { title: "Reporte mensual de sostenibilidad", date: "Dic 2025", type: "PDF", status: "Disponible", url: "/pdf/pdf-test.pdf" },
+    { title: "Reporte mensual de sostenibilidad", date: "Dic 2025", type: "PDF", status: "Procesando", url: "/pdf/pdf-test.pdf" },
     { title: "Informe de huella de carbono mensual", date: "Anual 2025", type: "PDF", status: "Procesando" },
-    { title: "Informes Anuales", date: "Trimestre 4", type: "XLSX", status: "Disponible", url: "/pdf/pdf-test.pdf" },
+    { title: "Informes Anuales", date: "Trimestre 4", type: "XLSX", status: "Procesando", url: "/pdf/pdf-test.pdf" },
   ];
 
   const handleDownload = (url: string, fileName: string) => {
