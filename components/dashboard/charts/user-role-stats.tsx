@@ -1,110 +1,64 @@
 // components/dashboard/charts/user-role-stats.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { Users, Car, UserCheck } from "lucide-react";
-import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs, documentId } from "firebase/firestore";
 
 interface UserRoleStatsProps {
   companyName: string;
   totalMembers: number;
-  travelIds: string[];
+  travels: any[];
+  users: any[];
 }
 
-interface RoleStats {
-  drivers: number;
-  passengers: number;
-  driversPercentage: number;
-  passengersPercentage: number;
-  loading: boolean;
-}
-
-export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRoleStatsProps) {
-  const [stats, setStats] = useState<RoleStats>({
-    drivers: 0,
-    passengers: 0,
-    driversPercentage: 0,
-    passengersPercentage: 0,
-    loading: true,
-  });
-
-  useEffect(() => {
-    // Si no hay datos suficientes para buscar, salir inmediatamente
-    if (!companyName || totalMembers === 0 || !travelIds || travelIds.length === 0) {
-      setStats(prev => ({ ...prev, loading: false }));
-      return;
+export function UserRoleStats({ companyName, totalMembers, travels, users }: UserRoleStatsProps) {
+  
+  // ✨ CAMBIO CLAVE: En lugar de useEffect con queries, usamos useMemo con datos pre-cargados
+  const stats = useMemo(() => {
+    if (!travels || travels.length === 0) {
+      return {
+        drivers: 0,
+        passengers: 0,
+        driversPercentage: 0,
+        passengersPercentage: 0
+      };
     }
 
-    const fetchUserRoleStats = async () => {
-      try {
-        setStats(prev => ({ ...prev, loading: true }));
+    const driverIds = new Set<string>();
+    const passengerIds = new Set<string>();
 
-        const driverIds = new Set<string>();
-        const passengerIds = new Set<string>();
-
-        // Procesar en batches de 30 (límite de Firestore para "in" queries)
-        for (let i = 0; i < travelIds.length; i += 30) {
-          const batch = travelIds.slice(i, i + 30);
-          
-          const travelsRef = collection(db, "travels");
-          const travelsQuery = query(travelsRef, where(documentId(), "in", batch));
-          const travelsSnapshot = await getDocs(travelsQuery);
-
-          travelsSnapshot.forEach((travelDoc) => {
-            const travelData = travelDoc.data();
-            
-            // Conductor
-            if (travelData.userId) {
-              driverIds.add(travelData.userId);
-            }
-
-            // Pasajeros
-            if (travelData.reservedBy && Array.isArray(travelData.reservedBy)) {
-              travelData.reservedBy.forEach((userId: string) => {
-                passengerIds.add(userId);
-              });
-            }
-          });
-        }
-
-        const companyDrivers = driverIds.size;
-        const companyPassengers = passengerIds.size;
-
-        const driversPercentage = totalMembers > 0 
-          ? Math.round((companyDrivers / totalMembers) * 100) 
-          : 0;
-        const passengersPercentage = totalMembers > 0 
-          ? Math.round((companyPassengers / totalMembers) * 100) 
-          : 0;
-
-        setStats({
-          drivers: companyDrivers,
-          passengers: companyPassengers,
-          driversPercentage,
-          passengersPercentage,
-          loading: false,
-        });
-
-      } catch (error) {
-        console.error("Error fetching user role stats:", error);
-        setStats(prev => ({ ...prev, loading: false }));
+    // Procesar travels (ya pre-cargados del contexto)
+    travels.forEach(travel => {
+      // Conductor
+      if (travel.userId) {
+        driverIds.add(travel.userId);
       }
+
+      // Pasajeros
+      if (travel.reservedBy && Array.isArray(travel.reservedBy)) {
+        travel.reservedBy.forEach((userId: string) => {
+          passengerIds.add(userId);
+        });
+      }
+    });
+
+    const companyDrivers = driverIds.size;
+    const companyPassengers = passengerIds.size;
+
+    const driversPercentage = totalMembers > 0 
+      ? Math.round((companyDrivers / totalMembers) * 100) 
+      : 0;
+    const passengersPercentage = totalMembers > 0 
+      ? Math.round((companyPassengers / totalMembers) * 100) 
+      : 0;
+
+    return {
+      drivers: companyDrivers,
+      passengers: companyPassengers,
+      driversPercentage,
+      passengersPercentage
     };
-
-    fetchUserRoleStats();
-  }, [companyName, totalMembers, travelIds]);
-
-  // Carga
-  if (stats.loading) {
-    return (
-      <div className="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <div className="flex items-center justify-center h-48">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#9CD186]"></div>
-        </div>
-      </div>
-    );
-  }
+  }, [travels, totalMembers]);
 
   // Sin datos
   if (!companyName || totalMembers === 0 || (stats.drivers === 0 && stats.passengers === 0)) {

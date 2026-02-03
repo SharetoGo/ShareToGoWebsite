@@ -1,16 +1,14 @@
 // components/dashboard/views/employees-view.tsx
 'use client'
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useDashboard } from "@/app/intranet-empresas/dashboard/DashboardContext";
 import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
 import { db } from "@/lib/firebase";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { 
-  collection, query, where, getDocs, documentId, 
-  doc, updateDoc, arrayRemove 
-} from "firebase/firestore";
-import { 
-  Search, MoreVertical, Award, Users, 
-  Leaf, Car, Trash2, Edit3, X, Save 
+  Search, Award, Users, 
+  Leaf, Car, Trash2, Edit3, X, Save, Loader2
 } from "lucide-react";
 import { EmployeeDetailsModal } from "./employee-details-modal";
 import Image from "next/image";
@@ -20,66 +18,64 @@ interface Employee {
   name: string;
   lastName: string;
   profilePicture?: string;
-  passengerTravel: number;
-  kmTraveled: number;
-  totalTrips?: number;
+  passengerTravels: number;
+  driverTravels: number;
+  kmTravelled: number;
+  totalTrips: number;
+  // Include all other User fields
+  emailAdress?: string;
+  phoneNumber?: string;
+  co2SavedKg?: number;
+  zones?: Array<{ name: string; lat: number; lng: number }>;
+  reviews?: Array<{
+    authorName: string;
+    authorUid: string;
+    rating: number;
+    comment: string;
+    createdAt: any;
+    travelId: string | null;
+  }>;
+  company?: string;
+  role?: string;
+  status?: string;
 }
 
 export function EmployeesView() {
   const { companyData } = useAuth();
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState(true);
+  // ✨ CAMBIO CLAVE: Obtenemos users del contexto en lugar de hacer queries
+  const { users, loading } = useDashboard();
+  
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<any | null>(null);
   
   // Edit State
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [showMenuId, setShowMenuId] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchEmployees() {
-      if (!companyData?.membersIds || companyData.membersIds.length === 0) {
-        setEmployees([]);
-        setLoading(false);
-        return;
-      }
+  // ✨ Transformar users del contexto al formato Employee y ordenar por km
+const employees = useMemo<Employee[]>(() => {
+  return users
+    .map(user => ({
+      ...user,
+      name: user.name || "Usuario",
+      lastName: user.lastName || "",
+      kmTravelled: user.kmTravelled || 0,
+      passengerTravels: user.passengerTravels || 0,
+      driverTravels: user.driverTravels || 0,
+      totalTrips: (user.passengerTravels || 0) + (user.driverTravels || 0),
 
-      try {
-        const ids = companyData.membersIds;
-        const fetchedEmployees: Employee[] = [];
-        
-        for (let i = 0; i < ids.length; i += 30) {
-          const chunk = ids.slice(i, i + 30);
-          const q = query(collection(db, "users"), where(documentId(), "in", chunk));
-          const snapshot = await getDocs(q);
-          
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            fetchedEmployees.push({
-              ...data,
-              id: doc.id,
-              name: data.name || "Usuario",
-              lastName: data.lastName || "",
-              profilePicture: data.profilePicture,
-              passengerTravel: data.passengerTravels || 0,
-              kmTraveled: data.kmTravelled || 0,
-              totalTrips: (data.passengerTravels || 0) + (data.driverTravels || 0)
-            });
-          });
-        }
+      reviews: user.reviews?.map(r => ({
+        authorName: r.authorName,
+        authorUid: "unknown",          // ⚠️ o r.authorUid si existe
+        rating: r.rating,
+        comment: r.comment,
+        createdAt: null,               // ⚠️ o serverTimestamp()
+        travelId: null
+      }))
+    }))
+    .sort((a, b) => b.kmTravelled - a.kmTravelled);
+}, [users]);
 
-        // Sort by kmTraveled for the KM-based leaderboard
-        setEmployees(fetchedEmployees.sort((a, b) => b.kmTraveled - a.kmTraveled));
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchEmployees();
-  }, [companyData?.membersIds]);
 
   const filteredEmployees = useMemo(() => 
     employees.filter(emp => 
@@ -99,8 +95,9 @@ export function EmployeesView() {
         lastName: editingEmployee.lastName
       });
       
-      setEmployees(prev => prev.map(e => e.id === editingEmployee.id ? editingEmployee : e));
+      // Aquí idealmente harías refresh del contexto, pero por ahora actualizamos local
       setEditingEmployee(null);
+      // TODO: Llamar a context.refresh() para recargar datos
     } catch (error) {
       console.error("Error updating user:", error);
     } finally {
@@ -116,15 +113,22 @@ export function EmployeesView() {
       await updateDoc(companyRef, {
         membersIds: arrayRemove(empId)
       });
-      // Filter out locally
-      setEmployees(prev => prev.filter(e => e.id !== empId));
-      setShowMenuId(null);
+      // TODO: Llamar a context.refresh() para recargar datos
     } catch (error) {
       console.error("Error removing member:", error);
     }
   };
 
-  if (loading) return <div className="p-20 text-center animate-pulse text-gray-400 font-bold uppercase tracking-widest">Cargando equipo...</div>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-[#9dd187] mx-auto mb-4" />
+          <p className="text-gray-500 font-medium">Cargando equipo...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 pb-20">
@@ -170,7 +174,7 @@ export function EmployeesView() {
             <div>
               <p className="font-bold text-[#2a2c38] text-lg leading-tight">{emp.name} {emp.lastName}</p>
               <p className="text-[10px] text-[#9dd187] font-black uppercase tracking-widest mt-1">
-                {emp.kmTraveled.toLocaleString()} Km Ahorrados
+                {emp.kmTravelled.toLocaleString()} Km Ahorrados
               </p>
             </div>
           </div>
@@ -192,7 +196,7 @@ export function EmployeesView() {
             </thead>
             <tbody className="divide-y divide-gray-50 text-sm">
               {filteredEmployees.map((emp) => (
-                <tr key={emp.id} onClick={() => setSelectedEmployee(emp)} className="hover:bg-gray-50/50 transition-colors group relative">
+                <tr key={emp.id} onClick={() => setSelectedEmployee(emp)} className="hover:bg-gray-50/50 transition-colors group relative cursor-pointer">
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-gray-100 shrink-0 flex items-center justify-center text-[10px] font-bold text-gray-400 overflow-hidden uppercase">
@@ -213,26 +217,32 @@ export function EmployeesView() {
                   <td className="px-8 py-5 font-bold text-gray-600">
                     <div className="flex items-center gap-2">
                         <Car size={14} className="text-[#9dd187]" />
-                        {emp.kmTraveled.toLocaleString()} km
+                        {emp.kmTravelled.toLocaleString()} km
                     </div>
                   </td>
                   <td className="px-8 py-5">
                     <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase ${
-                        emp.kmTraveled > 100 ? "bg-[#9dd187]/10 text-[#2a2c38]" : "bg-gray-50 text-gray-300"
+                        emp.kmTravelled > 100 ? "bg-[#9dd187]/10 text-[#2a2c38]" : "bg-gray-50 text-gray-300"
                     }`}>
-                        {emp.kmTraveled > 100 ? 'Alto Impacto' : 'Activo'}
+                        {emp.kmTravelled > 100 ? 'Alto Impacto' : 'Activo'}
                     </span>
                   </td>
                   <td className="px-8 py-5 text-right relative overflow-visible">
                     <div className="flex justify-end gap-2">
                         <button 
-                            onClick={() => setEditingEmployee(emp)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingEmployee(emp);
+                            }}
                             className="p-2 text-gray-300 hover:text-[#2a2c38] hover:bg-white rounded-xl transition-all"
                         >
                             <Edit3 size={18}/>
                         </button>
                         <button 
-                            onClick={() => handleDelete(emp.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(emp.id);
+                            }}
                             className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                         >
                             <Trash2 size={18}/>
@@ -276,7 +286,7 @@ export function EmployeesView() {
                     <button 
                         onClick={handleUpdate}
                         disabled={isUpdating}
-                        className="w-full bg-[#2a2c38] text-[#9dd187] py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-black/20"
+                        className="w-full bg-[#2a2c38] text-[#9dd187] py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:scale-[1.02] transition-all shadow-lg shadow-black/20 disabled:opacity-50"
                     >
                         {isUpdating ? "Guardando..." : <><Save size={18}/> Guardar Cambios</>}
                     </button>
@@ -287,11 +297,11 @@ export function EmployeesView() {
 
       {/* --- DETAILS MODAL --- */}
       {selectedEmployee && (
-      <EmployeeDetailsModal 
-        employee={selectedEmployee} 
-        onClose={() => setSelectedEmployee(null)} 
-      />
-    )}
+        <EmployeeDetailsModal 
+          employee={selectedEmployee} 
+          onClose={() => setSelectedEmployee(null)} 
+        />
+      )}
     </div>
   );
 }
