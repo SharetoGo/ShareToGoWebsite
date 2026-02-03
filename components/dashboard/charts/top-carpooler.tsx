@@ -1,11 +1,8 @@
 // components/dashboard/widgets/top-carpoolers.tsx
 'use client'
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
-import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs, documentId } from "firebase/firestore";
-import { Trophy, Medal, Car, Loader2, TrendingUp } from "lucide-react";
+import { useMemo } from "react";
+import { Trophy, Medal, Car, TrendingUp } from "lucide-react";
 
 interface Champion {
   name: string;
@@ -15,64 +12,35 @@ interface Champion {
   color: string;
 }
 
-export function TopCarpoolers() {
-  const { companyData } = useAuth();
-  const [champions, setChampions] = useState<Champion[]>([]);
-  const [loading, setLoading] = useState(true);
+interface TopCarpoolersProps {
+  users: any[];
+}
 
-  useEffect(() => {
-    async function fetchTopCarpoolers() {
-      if (!companyData?.membersIds || companyData.membersIds.length === 0) {
-        setLoading(false);
-        return;
-      }
+export function TopCarpoolers({ users }: TopCarpoolersProps) {
+  
+  // ✨ CAMBIO CLAVE: En lugar de useEffect con queries, usamos useMemo con datos pre-cargados
+  const champions = useMemo(() => {
+    if (!users || users.length === 0) return [];
 
-      try {
-        const allUsers: Array<{
-          name: string;
-          lastName: string;
-          km: number;
-          trips: number;
-        }> = [];        
-        
-        for (let i = 0; i < companyData.membersIds.length; i += 30) {
-          const batch = companyData.membersIds.slice(i, i + 30);
-          const q = query(collection(db, "users"), where(documentId(), "in", batch));
-          const snapshot = await getDocs(q);
-          
-          snapshot.docs.forEach(doc => {
-            const data = doc.data();
-            allUsers.push({
-              name: data.name || "Usuario",
-              lastName: data.lastName || "",
-              km: data.kmTravelled || 0,
-              trips: (data.passengerTravels || 0) + (data.driverTravels || 0),
-            });
-          });
-        }
-
-        const sorted = allUsers
-          .sort((a, b) => b.km - a.km)
-          .slice(0, 3)
-          .map((user, index) => ({
-            ...user,
-            color: index === 0 
-              ? "text-yellow-500" 
-              : index === 1 
-                ? "text-slate-400" 
-                : "text-amber-700"
-          }));
-
-        setChampions(sorted);
-      } catch (error) {
-        console.error("Error fetching top carpoolers:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchTopCarpoolers();
-  }, [companyData?.membersIds]);
+    return users
+      .map(user => ({
+        name: user.name || "Usuario",
+        lastName: user.lastName || "",
+        km: user.kmTravelled || 0,
+        trips: (user.passengerTravels || 0) + (user.driverTravels || 0),
+        color: ""
+      }))
+      .sort((a, b) => b.km - a.km)
+      .slice(0, 3)
+      .map((user, index) => ({
+        ...user,
+        color: index === 0 
+          ? "text-yellow-500" 
+          : index === 1 
+            ? "text-slate-400" 
+            : "text-amber-700"
+      }));
+  }, [users]);
 
   return (
     <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col">
@@ -89,11 +57,7 @@ export function TopCarpoolers() {
 
       {/* Content */}
       <div className="flex-1">
-        {loading ? (
-          <div className="flex items-center justify-center h-24">
-            <Loader2 className="animate-spin text-gray-200" size={24} />
-          </div>
-        ) : champions.length > 0 ? (
+        {champions.length > 0 ? (
           <div className="space-y-2.5">
             {champions.map((person, i) => (
               <div 
