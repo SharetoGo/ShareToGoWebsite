@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 export default function DownloadSection() {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ export default function DownloadSection() {
         </span>
       ) : (
         part
-      )
+      ),
     );
   };
   const tBold = (key: string) => formatBold(t(key));
@@ -31,9 +32,7 @@ export default function DownloadSection() {
   };
 
   const qrLink =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/downloads`
-      : "/downloads";
+    typeof window !== "undefined" ? `${window.location.origin}/downloads` : "/downloads";
 
   const cards = [
     {
@@ -82,20 +81,19 @@ export default function DownloadSection() {
               <div className="bg-white p-6 rounded-2xl shadow-lg">
                 <QRCodeCanvas value={qrLink} size={160} />
               </div>
-              <h2 className="mt-6 text-2xl font-semibold text-white">
-                {t("dl_qr_title")}
-              </h2>
-              <p className="mt-2 text-white max-w-sm">
-                {t("dl_qr_text")}
-              </p>
+              <h2 className="mt-6 text-2xl font-semibold text-white">{t("dl_qr_title")}</h2>
+              <p className="mt-2 text-white max-w-sm">{t("dl_qr_text")}</p>
             </div>
 
             {/* RIGHT SIDE */}
             <div className="md:w-1/2 flex justify-center">
-              <img
+              <Image
                 src="/images/descargar/inicio.jpeg"
                 alt={t("dl_qr_mock_alt")}
+                width={420}
+                height={840}
                 className="max-w-xs w-full drop-shadow-lg rounded-xl"
+                priority
               />
             </div>
           </div>
@@ -113,9 +111,11 @@ export default function DownloadSection() {
             <div className="flex flex-col md:flex-row items-center gap-12">
               {/* LEFT SIDE - Photo */}
               <div className="md:w-1/2 flex justify-center">
-                <img
+                <Image
                   src="/images/descargar/movil.png"
                   alt={t("dl_mid_phone_alt")}
+                  width={420}
+                  height={840}
                   className="max-w-xs w-full h-120 object-cover object-top drop-shadow-lg rounded-xl"
                 />
               </div>
@@ -154,7 +154,10 @@ export default function DownloadSection() {
               <FaCheckCircle className="text-[#9dd187]" />
               <span>
                 {t("dl_zones_b4_prefix")}{" "}
-                <Link href="/contratar" className="text-[#4d7c41] underline underline-offset-4 font-semibold">
+                <Link
+                  href="/contratar"
+                  className="text-[#4d7c41] underline underline-offset-4 font-semibold"
+                >
                   {t("dl_zones_b4_link")}
                 </Link>
                 .
@@ -170,9 +173,7 @@ export default function DownloadSection() {
           <h3 className="text-3xl md:text-4xl font-bold text-[#2a2c38]">
             {t("dl_individual_title")}
           </h3>
-          <p className="text-lg text-[#2a2c38]">
-            {t("dl_individual_text")}
-          </p>
+          <p className="text-lg text-[#2a2c38]">{t("dl_individual_text")}</p>
           <Button
             className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475] rounded-full px-8"
             asChild
@@ -186,9 +187,7 @@ export default function DownloadSection() {
               key={i}
               className="relative md:w-[calc(50%-1rem)] w-full h-72 sm:h-80 rounded-xl overflow-hidden flex flex-col items-center justify-center text-center group cursor-pointer"
               style={{
-                backgroundImage: card.image
-                  ? `url(${card.image})`
-                  : card.bgFallback ?? undefined,
+                backgroundImage: card.image ? `url(${card.image})` : (card.bgFallback ?? undefined),
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundColor: card.bgFallback ? undefined : "#0f172a",
@@ -198,12 +197,8 @@ export default function DownloadSection() {
 
               {/* Mobile (no hover) */}
               <div className="relative z-10 flex flex-col items-center justify-center text-white px-4 md:hidden">
-                <h3 className="text-2xl sm:text-3xl font-bold mb-3">
-                  {t(card.titleKey)}
-                </h3>
-                <p className="text-base mb-4 max-w-xs">
-                  {t(card.textKey)}
-                </p>
+                <h3 className="text-2xl sm:text-3xl font-bold mb-3">{t(card.titleKey)}</h3>
+                <p className="text-base mb-4 max-w-xs">{t(card.textKey)}</p>
                 <Button
                   variant="secondary"
                   className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475]"
@@ -226,9 +221,7 @@ export default function DownloadSection() {
 
               {/* Hover content (desktop only) */}
               <div className="absolute inset-0 hidden md:flex flex-col items-center justify-center text-center text-white opacity-0 translate-y-6 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 z-10 px-4">
-                <p className="text-lg mb-4 max-w-sm text-center">
-                  {t(card.textKey)}
-                </p>
+                <p className="text-lg mb-4 max-w-sm text-center">{t(card.textKey)}</p>
                 <Button
                   variant="secondary"
                   className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475] mx-auto"

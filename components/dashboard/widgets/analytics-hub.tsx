@@ -4,7 +4,13 @@
 import { BarChart3, ArrowRight, Leaf, TrendingUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, onViewAnalytics: () => void; }) {
+export function AnalyticsHub({
+  totalCo2,
+  onViewAnalytics,
+}: {
+  totalCo2: number;
+  onViewAnalytics: () => void;
+}) {
   const router = useRouter();
 
   return (
@@ -26,17 +32,13 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
         </div>
 
         {/* Title */}
-        <h4 className="text-xl font-bold mb-2 text-white">
-          Información detallada
-        </h4>
-        
-        <p className="text-sm font-semibold text-gray-300 mb-1">
-          Visualiza tu impacto mes a mes
-        </p>
+        <h4 className="text-xl font-bold mb-2 text-white">Información detallada</h4>
+
+        <p className="text-sm font-semibold text-gray-300 mb-1">Visualiza tu impacto mes a mes</p>
 
         <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-          Accede a gráficos detallados de CO₂e evitado, tendencias de uso, 
-          ocupación y análisis completo de tu programa de carpooling.
+          Accede a gráficos detallados de CO₂e evitado, tendencias de uso, ocupación y análisis
+          completo de tu programa de carpooling.
         </p>
 
         {/* Highlights */}
@@ -46,9 +48,7 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
               <Leaf className="w-4 h-4 text-[#9dd187]" />
               <span className="text-xs text-gray-400">CO₂e Total</span>
             </div>
-            <p className="text-lg font-bold text-white">
-              {totalCo2.toFixed(0)} kg
-            </p>
+            <p className="text-lg font-bold text-white">{totalCo2.toFixed(0)} kg</p>
           </div>
 
           <div className="p-3 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
@@ -56,14 +56,12 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
               <TrendingUp className="w-4 h-4 text-[#9dd187]" />
               <span className="text-xs text-gray-400">Evolución</span>
             </div>
-            <p className="text-lg font-bold text-[#9dd187]">
-              +15%
-            </p>
+            <p className="text-lg font-bold text-[#9dd187]">+15%</p>
           </div>
         </div>
 
         {/* Action Button */}
-        <button 
+        <button
           onClick={onViewAnalytics}
           className="w-full bg-[#9dd187] text-[#2a2c38] font-bold py-3 px-4 rounded-xl hover:bg-[#8bc175] transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group/btn"
         >

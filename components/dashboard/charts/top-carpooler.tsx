@@ -1,5 +1,5 @@
 // components/dashboard/widgets/top-carpoolers.tsx
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
@@ -33,14 +33,14 @@ export function TopCarpoolers() {
           lastName: string;
           km: number;
           trips: number;
-        }> = [];        
-        
+        }> = [];
+
         for (let i = 0; i < companyData.membersIds.length; i += 30) {
           const batch = companyData.membersIds.slice(i, i + 30);
           const q = query(collection(db, "users"), where(documentId(), "in", batch));
           const snapshot = await getDocs(q);
-          
-          snapshot.docs.forEach(doc => {
+
+          snapshot.docs.forEach((doc) => {
             const data = doc.data();
             allUsers.push({
               name: data.name || "Usuario",
@@ -56,11 +56,8 @@ export function TopCarpoolers() {
           .slice(0, 3)
           .map((user, index) => ({
             ...user,
-            color: index === 0 
-              ? "text-yellow-500" 
-              : index === 1 
-                ? "text-slate-400" 
-                : "text-amber-700"
+            color:
+              index === 0 ? "text-yellow-500" : index === 1 ? "text-slate-400" : "text-amber-700",
           }));
 
         setChampions(sorted);
@@ -96,14 +93,16 @@ export function TopCarpoolers() {
         ) : champions.length > 0 ? (
           <div className="space-y-2.5">
             {champions.map((person, i) => (
-              <div 
-                key={i} 
+              <div
+                key={i}
                 className="flex items-center justify-between p-3 rounded-2xl hover:bg-gradient-to-r hover:from-[#E8F5E0]/30 hover:to-transparent transition-all border border-transparent hover:border-[#9dd187]/20 group"
               >
                 {/* Left: Medal + User Info */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="flex-shrink-0">
-                    <div className={`p-2 rounded-xl bg-gray-50 group-hover:bg-white transition-colors ${person.color}`}>
+                    <div
+                      className={`p-2 rounded-xl bg-gray-50 group-hover:bg-white transition-colors ${person.color}`}
+                    >
                       <Medal size={16} />
                     </div>
                   </div>
@@ -119,9 +118,7 @@ export function TopCarpoolers() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] text-gray-500 font-medium">
-                      {person.trips} viajes
-                    </p>
+                    <p className="text-[10px] text-gray-500 font-medium">{person.trips} viajes</p>
                   </div>
                 </div>
 
@@ -129,13 +126,9 @@ export function TopCarpoolers() {
                 <div className="text-right flex-shrink-0 ml-3">
                   <div className="flex items-center justify-end gap-1.5">
                     <Car className="text-[#9dd187]" size={14} />
-                    <p className="text-lg font-bold text-[#2a2c38]">
-                      {person.km.toLocaleString()}
-                    </p>
+                    <p className="text-lg font-bold text-[#2a2c38]">{person.km.toLocaleString()}</p>
                   </div>
-                  <p className="text-[9px] text-gray-400 uppercase font-bold">
-                    km
-                  </p>
+                  <p className="text-[9px] text-gray-400 uppercase font-bold">km</p>
                 </div>
               </div>
             ))}
@@ -162,12 +155,8 @@ export function TopCarpoolers() {
             <div className="p-3 rounded-full bg-gray-50 mb-2">
               <Trophy className="text-gray-200" size={32} />
             </div>
-            <p className="text-sm text-gray-400 font-semibold">
-              No hay datos
-            </p>
-            <p className="text-xs text-gray-300 mt-1">
-              Aparecerán al viajar
-            </p>
+            <p className="text-sm text-gray-400 font-semibold">No hay datos</p>
+            <p className="text-xs text-gray-300 mt-1">Aparecerán al viajar</p>
           </div>
         )}
       </div>

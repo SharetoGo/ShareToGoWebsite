@@ -25,9 +25,7 @@ export default function Reviews() {
   useEffect(() => {
     const fetchReviews = async () => {
       const querySnapshot = await getDocs(collection(db, "reviews"));
-      const data: Review[] = querySnapshot.docs.map(
-        (doc) => doc.data() as Review
-      );
+      const data: Review[] = querySnapshot.docs.map((doc) => doc.data() as Review);
       setReviews(data);
     };
 
@@ -53,12 +51,8 @@ export default function Reviews() {
             <Users className="w-4 h-4" />
             {t("rev_badge")}
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
-            {t("rev_title")}
-          </h2>
-          <p className="text-lg text-gray-600">
-            {t("rev_sub")}
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">{t("rev_title")}</h2>
+          <p className="text-lg text-gray-600">{t("rev_sub")}</p>
         </div>
 
         {/* Toggle form button */}
@@ -76,9 +70,7 @@ export default function Reviews() {
         {isFormOpen && (
           <Card className="mb-12 bg-white shadow-lg py-10 min-h-[350px] flex flex-col justify-center">
             <CardHeader>
-              <CardTitle className="text-xl text-[#2a2c38]">
-                {t("rev_form_title")}
-              </CardTitle>
+              <CardTitle className="text-xl text-[#2a2c38]">{t("rev_form_title")}</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -86,24 +78,18 @@ export default function Reviews() {
                   type="text"
                   placeholder={t("rev_name_ph")}
                   value={newReview.user}
-                  onChange={(e) =>
-                    setNewReview({ ...newReview, user: e.target.value })
-                  }
+                  onChange={(e) => setNewReview({ ...newReview, user: e.target.value })}
                   required
                 />
                 <Textarea
                   placeholder={t("rev_text_ph")}
                   value={newReview.review}
-                  onChange={(e) =>
-                    setNewReview({ ...newReview, review: e.target.value })
-                  }
+                  onChange={(e) => setNewReview({ ...newReview, review: e.target.value })}
                   rows={4}
                   required
                 />
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">
-                    {t("rev_rating_label")}
-                  </span>
+                  <span className="text-sm font-medium text-gray-700">{t("rev_rating_label")}</span>
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
@@ -113,9 +99,7 @@ export default function Reviews() {
                             ? "text-yellow-400 fill-yellow-400"
                             : "text-gray-300"
                         }`}
-                        onClick={() =>
-                          setNewReview({ ...newReview, stars: star })
-                        }
+                        onClick={() => setNewReview({ ...newReview, stars: star })}
                       />
                     ))}
                   </div>
@@ -170,9 +154,7 @@ function UserReview({ user, stars, review }: Review) {
               <Building2 className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
-              <div className="font-bold text-[#2a2c38] text-lg mb-1">
-                {user}
-              </div>
+              <div className="font-bold text-[#2a2c38] text-lg mb-1">{user}</div>
             </div>
           </div>
         </div>

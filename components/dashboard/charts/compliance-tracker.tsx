@@ -22,7 +22,7 @@ export function ComplianceTracker() {
               <span>{goal.progress}%</span>
             </div>
             <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full bg-[#9dd187] rounded-full transition-all duration-1000"
                 style={{ width: `${goal.progress}%` }}
               />

@@ -56,31 +56,19 @@ export function ODSSection({ dark = false }: { dark?: boolean }) {
   ];
 
   return (
-    <section
-      className={clsx(
-        "py-12 md:py-16",
-        dark ? "bg-[#1a1c24]" : "bg-white"
-      )}
-    >
+    <section className={clsx("py-12 md:py-16", dark ? "bg-[#1a1c24]" : "bg-white")}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <Badge className="bg-[#9dd187] text-white">
-            {t("od_badge")}
-          </Badge>
+          <Badge className="bg-[#9dd187] text-white">{t("od_badge")}</Badge>
           <h2
             className={clsx(
               "mt-3 text-3xl md:text-4xl font-bold",
-              dark ? "text-white" : "text-[#2a2c38]"
+              dark ? "text-white" : "text-[#2a2c38]",
             )}
           >
             {t("od_titulo")}
           </h2>
-          <p
-            className={clsx(
-              "mt-2 max-w-2xl mx-auto",
-              dark ? "text-gray-300" : "text-gray-600"
-            )}
-          >
+          <p className={clsx("mt-2 max-w-2xl mx-auto", dark ? "text-gray-300" : "text-gray-600")}>
             {t("od_texto")}
           </p>
         </div>
@@ -99,7 +87,7 @@ export function ODSSection({ dark = false }: { dark?: boolean }) {
                   isKey &&
                     (dark
                       ? "ring-2 ring-[#9dd187] shadow-[0_0_0_4px_rgba(157,209,135,0.15)]"
-                      : "ring-2 ring-[#9dd187] shadow-[0_0_0_6px_rgba(157,209,135,0.10)] bg-gradient-to-br from-white to-[#f6fbf1]")
+                      : "ring-2 ring-[#9dd187] shadow-[0_0_0_6px_rgba(157,209,135,0.10)] bg-gradient-to-br from-white to-[#f6fbf1]"),
                 )}
               >
                 {/* Badge "Clave" en esquina */}
@@ -107,9 +95,7 @@ export function ODSSection({ dark = false }: { dark?: boolean }) {
                   <span
                     className={clsx(
                       "absolute -top-2 -right-2 rounded-md px-2 py-1 text-[10px] font-bold",
-                      dark
-                        ? "bg-[#9dd187] text-[#1a1c24]"
-                        : "bg-[#9dd187] text-white"
+                      dark ? "bg-[#9dd187] text-[#1a1c24]" : "bg-[#9dd187] text-white",
                     )}
                     aria-label="ODS prioritario"
                   >
@@ -122,7 +108,7 @@ export function ODSSection({ dark = false }: { dark?: boolean }) {
                     <div
                       className={clsx(
                         "w-8 h-8 rounded-md flex items-center justify-center",
-                        "bg-[#9dd187]"
+                        "bg-[#9dd187]",
                       )}
                     >
                       {o.icon}
@@ -130,26 +116,16 @@ export function ODSSection({ dark = false }: { dark?: boolean }) {
                     <span
                       className={clsx(
                         "text-xs font-semibold tracking-wide",
-                        dark ? "text-white" : "text-[#2a2c38]"
+                        dark ? "text-white" : "text-[#2a2c38]",
                       )}
                     >
                       {o.code}
                     </span>
                   </div>
-                  <p
-                    className={clsx(
-                      "font-semibold",
-                      dark ? "text-white" : "text-[#2a2c38]"
-                    )}
-                  >
+                  <p className={clsx("font-semibold", dark ? "text-white" : "text-[#2a2c38]")}>
                     {o.title}
                   </p>
-                  <p
-                    className={clsx(
-                      "text-sm mt-1",
-                      dark ? "text-gray-300" : "text-gray-600"
-                    )}
-                  >
+                  <p className={clsx("text-sm mt-1", dark ? "text-gray-300" : "text-gray-600")}>
                     {o.desc}
                   </p>
                 </CardContent>

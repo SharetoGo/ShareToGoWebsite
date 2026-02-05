@@ -16,15 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  CheckCircle,
-  Users,
-  Building,
-  Calendar,
-  Phone,
-  Mail,
-  MapPin,
-} from "lucide-react";
+import { CheckCircle, Users, Building, Calendar, Phone, Mail, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Contratar() {
@@ -67,12 +59,8 @@ export default function Contratar() {
         className="py-16 md:py-24 bg-linear-to-br from-[#2a2c38] to-[#1a1c24]"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            {t("ct_hero_title")}
-          </h1>
-          <p className="text-xl text-gray-300 mb-8 text-balance">
-            {t("ct_hero_sub")}
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">{t("ct_hero_title")}</h1>
+          <p className="text-xl text-gray-300 mb-8 text-balance">{t("ct_hero_sub")}</p>
           <div className="flex flex-wrap md:flex-nowrap justify-center gap-6 text-white">
             <div className="flex items-center gap-2 whitespace-nowrap">
               <CheckCircle className="text-[#9dd187]" size={20} />
@@ -111,9 +99,7 @@ export default function Contratar() {
                 <CardContent className="pt-6">
                   {submitted ? (
                     <div className="py-10 text-center">
-                      <p className="text-lg text-gray-700">
-                        {t("ct_form_done")}
-                      </p>
+                      <p className="text-lg text-gray-700">{t("ct_form_done")}</p>
                     </div>
                   ) : (
                     <>
@@ -129,9 +115,7 @@ export default function Contratar() {
                             <Input
                               id="nombre"
                               value={formData.nombre}
-                              onChange={(e) =>
-                                handleInputChange("nombre", e.target.value)
-                              }
+                              onChange={(e) => handleInputChange("nombre", e.target.value)}
                               placeholder={t("ct_name_ph")}
                               required
                             />
@@ -144,9 +128,7 @@ export default function Contratar() {
                               id="email"
                               type="email"
                               value={formData.email}
-                              onChange={(e) =>
-                                handleInputChange("email", e.target.value)
-                              }
+                              onChange={(e) => handleInputChange("email", e.target.value)}
                               placeholder={t("ct_email_ph")}
                               required
                             />
@@ -161,9 +143,7 @@ export default function Contratar() {
                             <Input
                               id="empresa"
                               value={formData.empresa}
-                              onChange={(e) =>
-                                handleInputChange("empresa", e.target.value)
-                              }
+                              onChange={(e) => handleInputChange("empresa", e.target.value)}
                               placeholder={t("ct_company_ph")}
                               required
                             />
@@ -176,9 +156,7 @@ export default function Contratar() {
                               id="telefono"
                               type="tel"
                               value={formData.telefono}
-                              onChange={(e) =>
-                                handleInputChange("telefono", e.target.value)
-                              }
+                              onChange={(e) => handleInputChange("telefono", e.target.value)}
                               placeholder={t("ct_phone_ph")}
                             />
                           </div>
@@ -188,29 +166,15 @@ export default function Contratar() {
                           <Label className="mb-2 pl-2" htmlFor="empleados">
                             {t("ct_emp_label")}
                           </Label>
-                          <Select
-                            onValueChange={(value) =>
-                              handleInputChange("empleados", value)
-                            }
-                          >
+                          <Select onValueChange={(value) => handleInputChange("empleados", value)}>
                             <SelectTrigger>
-                              <SelectValue
-                                placeholder={t("ct_emp_ph")}
-                              />
+                              <SelectValue placeholder={t("ct_emp_ph")} />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="10-50">
-                                {t("ct_emp_opt1")}
-                              </SelectItem>
-                              <SelectItem value="51-100">
-                                {t("ct_emp_opt2")}
-                              </SelectItem>
-                              <SelectItem value="101-250">
-                                {t("ct_emp_opt3")}
-                              </SelectItem>
-                              <SelectItem value="250+">
-                                {t("ct_emp_opt4")}
-                              </SelectItem>
+                              <SelectItem value="10-50">{t("ct_emp_opt1")}</SelectItem>
+                              <SelectItem value="51-100">{t("ct_emp_opt2")}</SelectItem>
+                              <SelectItem value="101-250">{t("ct_emp_opt3")}</SelectItem>
+                              <SelectItem value="250+">{t("ct_emp_opt4")}</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -222,9 +186,7 @@ export default function Contratar() {
                           <Textarea
                             id="mensaje"
                             value={formData.mensaje}
-                            onChange={(e) =>
-                              handleInputChange("mensaje", e.target.value)
-                            }
+                            onChange={(e) => handleInputChange("mensaje", e.target.value)}
                             placeholder={t("ct_msg_ph")}
                             rows={4}
                           />
@@ -237,9 +199,7 @@ export default function Contratar() {
                           {t("ct_submit")}
                         </Button>
 
-                        <p className="text-sm text-gray-500 text-center">
-                          {t("ct_consent")}
-                        </p>
+                        <p className="text-sm text-gray-500 text-center">{t("ct_consent")}</p>
                       </form>
                     </>
                   )}
@@ -250,9 +210,7 @@ export default function Contratar() {
             {/* Benefits */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">
-                  {t("ct_demo_title")}
-                </h2>
+                <h2 className="text-2xl font-bold text-[#2a2c38] mb-6">{t("ct_demo_title")}</h2>
                 <div className="space-y-4">
                   <div className="flex gap-4">
                     <div className="shrink-0">
@@ -261,12 +219,8 @@ export default function Contratar() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2a2c38] mb-1">
-                        {t("ct_demo_b1_title")}
-                      </h3>
-                      <p className="text-gray-600">
-                        {t("ct_demo_b1_text")}
-                      </p>
+                      <h3 className="font-semibold text-[#2a2c38] mb-1">{t("ct_demo_b1_title")}</h3>
+                      <p className="text-gray-600">{t("ct_demo_b1_text")}</p>
                     </div>
                   </div>
 
@@ -277,12 +231,8 @@ export default function Contratar() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2a2c38] mb-1">
-                        {t("ct_demo_b2_title")}
-                      </h3>
-                      <p className="text-gray-600">
-                        {t("ct_demo_b2_text")}
-                      </p>
+                      <h3 className="font-semibold text-[#2a2c38] mb-1">{t("ct_demo_b2_title")}</h3>
+                      <p className="text-gray-600">{t("ct_demo_b2_text")}</p>
                     </div>
                   </div>
 
@@ -293,12 +243,8 @@ export default function Contratar() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2a2c38] mb-1">
-                        {t("ct_demo_b3_title")}
-                      </h3>
-                      <p className="text-gray-600">
-                        {t("ct_demo_b3_text")}
-                      </p>
+                      <h3 className="font-semibold text-[#2a2c38] mb-1">{t("ct_demo_b3_title")}</h3>
+                      <p className="text-gray-600">{t("ct_demo_b3_text")}</p>
                     </div>
                   </div>
                 </div>
@@ -307,9 +253,7 @@ export default function Contratar() {
               {/* Contact info */}
               <Card className="p-4 bg-[#2a2c38] text-white">
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4">
-                    {t("ct_contact_title")}
-                  </h3>
+                  <h3 className="text-xl font-semibold mb-4">{t("ct_contact_title")}</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <Phone size={20} className="text-[#9dd187]" />
@@ -324,9 +268,7 @@ export default function Contratar() {
                       <span>{t("ct_contact_location")}</span>
                     </div>
                   </div>
-                  <p className="text-gray-300 text-sm mt-4">
-                    {t("ct_contact_hours")}
-                  </p>
+                  <p className="text-gray-300 text-sm mt-4">{t("ct_contact_hours")}</p>
                 </CardContent>
               </Card>
             </div>
@@ -350,34 +292,22 @@ export default function Contratar() {
           <div className="space-y-6">
             <Card className="p-6">
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">
-                  {t("ct_faq1_q")}
-                </h3>
-                <p className="text-gray-600">
-                  {t("ct_faq1_a")}
-                </p>
+                <h3 className="font-semibold text-[#2a2c38] mb-2">{t("ct_faq1_q")}</h3>
+                <p className="text-gray-600">{t("ct_faq1_a")}</p>
               </CardContent>
             </Card>
 
             <Card className="p-6">
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">
-                  {t("ct_faq2_q")}
-                </h3>
-                <p className="text-gray-600">
-                  {t("ct_faq2_a")}
-                </p>
+                <h3 className="font-semibold text-[#2a2c38] mb-2">{t("ct_faq2_q")}</h3>
+                <p className="text-gray-600">{t("ct_faq2_a")}</p>
               </CardContent>
             </Card>
 
             <Card className="p-6">
               <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">
-                  {t("ct_faq3_q")}
-                </h3>
-                <p className="text-gray-600">
-                  {t("ct_faq3_a")}
-                </p>
+                <h3 className="font-semibold text-[#2a2c38] mb-2">{t("ct_faq3_q")}</h3>
+                <p className="text-gray-600">{t("ct_faq3_a")}</p>
               </CardContent>
             </Card>
           </div>

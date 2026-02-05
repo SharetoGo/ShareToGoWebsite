@@ -40,18 +40,12 @@ export default function Hero() {
                 href="/downloads"
                 className="inline-flex w-full sm:w-64 items-center gap-3 rounded-sm bg-black px-5 py-3 text-white shadow-sm transition-colors hover:bg-primary"
               >
-                <Image
-                  src={LogoApple}
-                  alt="App Store"
-                  className="h-7 w-7 object-contain"
-                />
+                <Image src={LogoApple} alt="App Store" className="h-7 w-7 object-contain" />
                 <div className="flex flex-col leading-tight text-left">
                   <span className="text-[11px] uppercase tracking-[0.12em]">
                     {t("boton_app_store_download")}
                   </span>
-                  <span className="text-base font-semibold">
-                    {t("boton_app_store")}
-                  </span>
+                  <span className="text-base font-semibold">{t("boton_app_store")}</span>
                 </div>
               </a>
 
@@ -60,18 +54,12 @@ export default function Hero() {
                 href="/downloads"
                 className="inline-flex w-full sm:w-64 items-center gap-3 rounded-sm bg-black px-5 py-3 text-white shadow-sm transition-colors hover:bg-primary"
               >
-                <Image
-                  src={LogoGooglePlay}
-                  alt="Google Play"
-                  className="h-7 w-7 object-contain"
-                />
+                <Image src={LogoGooglePlay} alt="Google Play" className="h-7 w-7 object-contain" />
                 <div className="flex flex-col leading-tight text-left">
                   <span className="text-[11px] uppercase tracking-[0.12em]">
                     {t("boton_play_store_download")}
                   </span>
-                  <span className="text-base font-semibold">
-                    {t("boton_play_store")}
-                  </span>
+                  <span className="text-base font-semibold">{t("boton_play_store")}</span>
                 </div>
               </a>
             </div>

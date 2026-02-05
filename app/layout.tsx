@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "optimización de transporte",
     "empleados",
   ],
- };
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -73,7 +73,7 @@
   "_preguntas_frecuentes": "Preguntas frecuentes",
   "coche_pregunta": "¿De quién es el coche?",
   "coche_respuesta": "En el caso de que la empresa solicite un servicio hermético para sus trabajadores, el coche es de uno de los empleados de la empresa. La idea es que los diferentes empleados de las empresas se vayan organizando para que siempre haya una persona que ofrezca las plazas de su coche y otras que les cuadre para reservarlas. Si la empresa decide que sus empleados puedan compartir coche con cualquier usuario de la app, el coche puede ser de cualquiera de nuestros usuarios verificados.",
-  "beneficios_badge":"Beneficios",
+  "beneficios_badge": "Beneficios",
   "beneficios_pregunta": "¿Si actúo como conductor, cuáles son los beneficios económicos?",
   "beneficios_respuesta": "Los beneficios dependerán del uso que se haga de la plataforma y las plazas libres que se ofrezcan. Garantizamos que la mitad de los gastos están cubiertos en cada trayecto compartido.",
   "pasajeros_pregunta": "¿Los pasajeros pagan? ¿Cuánto?",
@@ -142,7 +142,6 @@
   "paso3c_titulo": "Comunicación fluida",
   "paso3c_texto": "Herramientas integradas para coordinar cada detalle del trayecto.",
 
-
   "_quienes_somos": "Quiénes somos",
   "qs_hero_titulo": "Quiénes somos",
   "qs_hero_texto": "Somos el equipo detrás de la revolución del carpooling corporativo, comprometidos con crear un futuro más sostenible y conectado para las empresas.",
@@ -191,7 +190,7 @@
   "rev_rating_label": "Tu valoración:",
   "rev_submit": "Enviar reseña",
 
-    "_contratar": "Contratar",
+  "_contratar": "Contratar",
   "ct_hero_title": "Solicita tu demo gratuita",
   "ct_hero_sub": "Descubre cómo SharetoGo puede transformar la movilidad de tu empresa en solo 30 minutos",
   "ct_hero_b1": "Demo personalizada",
@@ -410,8 +409,7 @@
   "ev_nightlife_title": "Comparte coche a discotecas y zonas de ocio con SharetoGo",
   "ev_nightlife_p": "Cada fin de semana, miles de personas se desplazan en coche hacia discotecas y zonas de ocio nocturno. Más del <bold>80%<bold> lo hace en vehículo individual, generando tráfico, emisiones y dificultad para aparcar. Si solo el <bold>30%<bold> compartiera trayecto, se podrían <bold>evitar más de 600 toneladas de CO₂ al año<bold>, el equivalente a <bold>dejar de consumir 250 000 litros de gasolina ⛽<bold>. Con <bold>SharetoGo<bold>, llegas cómodo, ahorras dinero y cuidas el planeta. <bold>Menos coches. Más noches para disfrutar.<bold>",
 
-
-    "_contacto": "Contacto",
+  "_contacto": "Contacto",
   "co_hero_title": "Contacta con nosotros",
   "co_hero_sub": "¿Tienes preguntas sobre SharetoGo? Nuestro equipo está aquí para ayudarte a transformar la movilidad de tu empresa.",
   "co_hero_sub_payments": "¿Reclamar pagos?  Contacta con nosotros para poder reclamar los pagos de los pasajeros que no han efectuado el pago después del trayecto.",
@@ -454,7 +452,7 @@
   "co_faq3_q": "¿Es posible recibir una visita de un comercial?",
   "co_faq3_a": "Por supuesto. Nuestro equipo comercial puede desplazarse a tu empresa para presentaciones personalizadas.",
 
-    "_descargar": "Descargar app",
+  "_descargar": "Descargar app",
   "dl_qr_title": "Descarga nuestra aplicación",
   "dl_qr_text": "Comparte tus trayectos diarios y ahorra todo el año. Optimiza las plazas libres de tu coche y obtén beneficios económicos con SharetoGo.",
   "dl_qr_img_alt": "Código QR para descargar la aplicación SharetoGo",
@@ -463,7 +461,8 @@
   "dl_mid_subtitle": "¿Empezamos?",
   "dl_mid_block_title": "Empieza hoy mismo",
   "dl_mid_b1": "Cualquier persona puede descargar <bold>SharetoGo<bold> y descubrir una forma más sostenible de moverse cada día.",
-  "dl_mid_b2": "Ya seas <bold>trabajador de un polígono, estudiante universitario, oficinista<bold> o simplemente alguien que se desplaza a un lugar concreto, descarga la app y <bold>empieza hoy el cambio hacia una movilidad más inteligente.<bold>",  "dl_mid_phone_alt": "Aplicación SharetoGo en un dispositivo móvil",
+  "dl_mid_b2": "Ya seas <bold>trabajador de un polígono, estudiante universitario, oficinista<bold> o simplemente alguien que se desplaza a un lugar concreto, descarga la app y <bold>empieza hoy el cambio hacia una movilidad más inteligente.<bold>",
+  "dl_mid_phone_alt": "Aplicación SharetoGo en un dispositivo móvil",
   "dl_zones_section_title": "Empresas y zonas favoritas",
   "dl_zones_b1": "Recuerda compartir tu coche cada día, ya sea para ir al trabajo, a la universidad o a tu zona favorita.",
   "dl_zones_b2": "Otros compañeros de trayecto podrán unirse a tu coche y ahorrar juntos tiempo y dinero.",
@@ -482,6 +481,4 @@
   "dl_card_workers_title": "¿Eres representante de trabajadores?",
   "dl_card_workers_text": "Mejora la movilidad de tu equipo y promueve el coche compartido en tu empresa o polígono.",
   "dl_card_cta": "Agenda reunión"
-
-
 }

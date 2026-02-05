@@ -26,7 +26,7 @@ export function EnvironmentalImpactChart() {
           <line x1="0" y1="0" x2="200" y2="0" stroke="#f1f5f9" strokeWidth="1" />
           <line x1="0" y1="50" x2="200" y2="50" stroke="#f1f5f9" strokeWidth="1" />
           <line x1="0" y1="100" x2="200" y2="100" stroke="#f1f5f9" strokeWidth="1" />
-          
+
           {/* The Data Line */}
           <polyline
             fill="none"
@@ -37,13 +37,9 @@ export function EnvironmentalImpactChart() {
             points={points}
             className="drop-shadow-md"
           />
-          
+
           {/* Animated Gradient Area */}
-          <path
-            d={`M ${points} V 100 H 0 Z`}
-            fill="url(#gradient)"
-            className="opacity-20"
-          />
+          <path d={`M ${points} V 100 H 0 Z`} fill="url(#gradient)" className="opacity-20" />
 
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -56,7 +52,9 @@ export function EnvironmentalImpactChart() {
         {/* Labels */}
         <div className="flex justify-between mt-4">
           {months.map((m, i) => (
-            <span key={i} className="text-[10px] font-bold text-gray-300 uppercase">{m}</span>
+            <span key={i} className="text-[10px] font-bold text-gray-300 uppercase">
+              {m}
+            </span>
           ))}
         </div>
       </div>

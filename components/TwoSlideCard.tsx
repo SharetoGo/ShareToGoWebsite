@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState, useCallback } from "react"
-import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { AnimatePresence, motion } from "framer-motion"
-import { cn } from "@/lib/utils"
+import { useEffect, useRef, useState, useCallback } from "react";
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 // ==== Tipos ====
 type Slide = {
-  image: string
-  title: string
-  description: string
-}
+  image: string;
+  title: string;
+  description: string;
+};
 
 type TwoSlideCardProps = {
-  title: string
-  subtitle?: string
-  slides: [Slide, Slide] // <-- exactamente dos
-  dark?: boolean         // header oscuro tipo pasajero
-  intervalMs?: number    // por defecto 6000
-}
+  title: string;
+  subtitle?: string;
+  slides: [Slide, Slide]; // <-- exactamente dos
+  dark?: boolean; // header oscuro tipo pasajero
+  intervalMs?: number; // por defecto 6000
+};
 
 // ==== Componente Card con 2 slides ====
 export function TwoSlideCard({
@@ -30,38 +30,43 @@ export function TwoSlideCard({
   dark = false,
   intervalMs = 6000,
 }: TwoSlideCardProps) {
-  const [index, setIndex] = useState<0 | 1>(0)
-  const timer = useRef<NodeJS.Timeout | null>(null)
+  const [index, setIndex] = useState<0 | 1>(0);
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
   const next = useCallback(() => {
-    setIndex((prev) => (prev === 0 ? 1 : 0))
-  }, [])
+    setIndex((prev) => (prev === 0 ? 1 : 0));
+  }, []);
 
   const reset = useCallback(() => {
-    if (timer.current) clearInterval(timer.current)
-    timer.current = setInterval(next, intervalMs)
-  }, [next, intervalMs])
+    if (timer.current) clearInterval(timer.current);
+    timer.current = setInterval(next, intervalMs);
+  }, [next, intervalMs]);
 
   useEffect(() => {
-    reset()
+    reset();
     return () => {
-      if (timer.current) clearInterval(timer.current)
-    }
-  }, [reset])
+      if (timer.current) clearInterval(timer.current);
+    };
+  }, [reset]);
 
-  const isDark = dark
+  const isDark = dark;
   const headerClass = isDark
     ? "bg-gradient-to-br from-[#2a2c38] to-[#1a1c24] text-white"
-    : "bg-gradient-to-br from-[#9dd187] to-[#8bc475] text-[#2a2c38]"
+    : "bg-gradient-to-br from-[#9dd187] to-[#8bc475] text-[#2a2c38]";
 
-  const progressBarBg = "bg-white/50"
+  const progressBarBg = "bg-white/50";
 
   return (
     <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500">
       <CardHeader className={cn("p-7 md:p-8", headerClass)}>
         <CardTitle className="text-2xl md:text-3xl font-bold">{title}</CardTitle>
         {subtitle && (
-          <p className={cn("text-base md:text-lg font-semibold italic pt-2", isDark ? "text-gray-300" : "text-[#2a2c38]/85")}>
+          <p
+            className={cn(
+              "text-base md:text-lg font-semibold italic pt-2",
+              isDark ? "text-gray-300" : "text-[#2a2c38]/85",
+            )}
+          >
             “{subtitle}”
           </p>
         )}
@@ -118,12 +123,12 @@ export function TwoSlideCard({
                 <button
                   key={i}
                   onClick={() => {
-                    setIndex(i as 0 | 1)
-                    reset()
+                    setIndex(i as 0 | 1);
+                    reset();
                   }}
                   className={cn(
                     "relative h-1.5 w-12 rounded-full transition-colors",
-                    index === i ? "bg-[#9dd187]" : "bg-gray-300 hover:bg-gray-400"
+                    index === i ? "bg-[#9dd187]" : "bg-gray-300 hover:bg-gray-400",
                   )}
                   aria-label={`Ir al slide ${i + 1}`}
                 >
@@ -142,7 +147,7 @@ export function TwoSlideCard({
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 // ==== SECCIÓN DE EJEMPLO (usa exactamente 2 slides) ====
@@ -152,27 +157,31 @@ export function TwoSlideSection() {
     {
       image: "/images/eventos/movil2eventos.png", // Movil2EventosImage.src si lo importas
       title: "Publica tu trayecto",
-      description: "Selecciona evento, punto de salida y asientos. Pon precio y deja que otros se unan a tu ruta.",
+      description:
+        "Selecciona evento, punto de salida y asientos. Pon precio y deja que otros se unan a tu ruta.",
     },
     {
       image: "/images/eventos/movil3eventos.png",
       title: "Gestiona reservas",
-      description: "Confirma pasajeros y coordina la hora de encuentro desde la app de forma segura.",
+      description:
+        "Confirma pasajeros y coordina la hora de encuentro desde la app de forma segura.",
     },
-  ]
+  ];
 
   const passengerSlides: [Slide, Slide] = [
     {
       image: "/images/eventos/movil4eventos.png",
       title: "Busca y reserva",
-      description: "Filtra por hora, precio y cercanía. Reserva tu plaza en segundos para llegar al evento.",
+      description:
+        "Filtra por hora, precio y cercanía. Reserva tu plaza en segundos para llegar al evento.",
     },
     {
       image: "/images/eventos/movil1eventos.png",
       title: "Sigue tu viaje",
-      description: "Recibe notificaciones y chatea con el conductor. Todo centralizado en tu móvil.",
+      description:
+        "Recibe notificaciones y chatea con el conductor. Todo centralizado en tu móvil.",
     },
-  ]
+  ];
 
   return (
     <section className="py-12 md:py-16 bg-white">
@@ -193,5 +202,5 @@ export function TwoSlideSection() {
         />
       </div>
     </section>
-  )
+  );
 }

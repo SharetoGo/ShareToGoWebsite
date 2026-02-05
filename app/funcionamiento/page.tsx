@@ -68,15 +68,11 @@ export default function Funcionamiento() {
             <Badge variant="secondary" className="bg-white/10 text-white mb-6">
               {t("func_app")}
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              {t("hero_titulo")}
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">{t("hero_titulo")}</h1>
             <h2 className="text-2xl md:text-3xl font-medium text-gray-300 italic mb-8">
               {t("hero_sub")}
             </h2>
-            <p className="text-xl text-gray-300 mb-8 text-balance">
-              {t("hero_texto")}
-            </p>
+            <p className="text-xl text-gray-300 mb-8 text-balance">{t("hero_texto")}</p>
           </div>
         </section>
 
@@ -87,9 +83,7 @@ export default function Funcionamiento() {
               <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
                 {t("dual_titulo")}
               </h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                {t("dual_texto")}
-              </p>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t("dual_texto")}</p>
             </div>
 
             <div className="flex flex-col items-center gap-12 lg:gap-16">
@@ -153,33 +147,20 @@ export default function Funcionamiento() {
                   <div className="w-12 h-12 bg-[#9dd187] rounded-full flex items-center justify-center text-white font-bold text-lg">
                     1
                   </div>
-                  <h3 className="text-2xl font-bold text-[#2a2c38]">
-                    {t("paso1_titulo")}
-                  </h3>
+                  <h3 className="text-2xl font-bold text-[#2a2c38]">{t("paso1_titulo")}</h3>
                 </div>
-                <p className="text-gray-600 mb-6 text-lg">
-                  {t("paso1_texto")}
-                </p>
+                <p className="text-gray-600 mb-6 text-lg">{t("paso1_texto")}</p>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
-                    <CheckCircle
-                      className="text-[#9dd187] shrink-0"
-                      size={20}
-                    />
+                    <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                     <span>{t("paso1_b1")}</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle
-                      className="text-[#9dd187] shrink-0"
-                      size={20}
-                    />
+                    <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                     <span>{t("paso1_b2")}</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle
-                      className="text-[#9dd187] shrink-0"
-                      size={20}
-                    />
+                    <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                     <span>{t("paso1_b3")}</span>
                   </li>
                 </ul>
@@ -190,12 +171,8 @@ export default function Funcionamiento() {
                     <UserPlus className="text-white text-2xl" />
                   </div>
                   <div className="text-center">
-                    <h4 className="font-semibold text-[#2a2c38] mb-2">
-                      {t("paso1c_titulo")}
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      {t("paso1c_texto")}
-                    </p>
+                    <h4 className="font-semibold text-[#2a2c38] mb-2">{t("paso1c_titulo")}</h4>
+                    <p className="text-gray-600 text-sm">{t("paso1c_texto")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -209,12 +186,8 @@ export default function Funcionamiento() {
                     <MapPin className="text-white text-2xl" />
                   </div>
                   <div className="text-center">
-                    <h4 className="font-semibold text-[#2a2c38] mb-2">
-                      {t("paso2c_titulo")}
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      {t("paso2c_texto")}
-                    </p>
+                    <h4 className="font-semibold text-[#2a2c38] mb-2">{t("paso2c_titulo")}</h4>
+                    <p className="text-gray-600 text-sm">{t("paso2c_texto")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -223,58 +196,36 @@ export default function Funcionamiento() {
                   <div className="w-12 h-12 bg-[#2a2c38] rounded-full flex items-center justify-center text-white font-bold text-lg">
                     2
                   </div>
-                  <h3 className="text-2xl font-bold text-[#2a2c38]">
-                    {t("paso2_titulo")}
-                  </h3>
+                  <h3 className="text-2xl font-bold text-[#2a2c38]">{t("paso2_titulo")}</h3>
                 </div>
-                <p className="text-gray-600 mb-6 text-lg">
-                  {t("paso2_texto")}
-                </p>
+                <p className="text-gray-600 mb-6 text-lg">{t("paso2_texto")}</p>
                 <div className="flex flex-col md:flex-row md:items-center md:gap-8">
                   <ul className="space-y-3 flex-1">
                     <li className="flex items-center gap-3">
-                      <CheckCircle
-                        className="text-[#9dd187] shrink-0"
-                        size={20}
-                      />
+                      <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                       <span>{t("paso2_b1")}</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle
-                        className="text-[#9dd187] shrink-0"
-                        size={20}
-                      />
+                      <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                       <span>{t("paso2_b2")}</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle
-                        className="text-[#9dd187] shrink-0"
-                        size={20}
-                      />
+                      <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                       <span>{t("paso2_b3")}</span>
                     </li>
                   </ul>
                   <div className="my-6 h-px bg-[#2a2c38] md:my-0 md:w-px md:h-full md:self-stretch" />
                   <ul className="space-y-3 flex-1">
                     <li className="flex items-center gap-3">
-                      <CheckCircle
-                        className="text-[#9dd187] shrink-0"
-                        size={20}
-                      />
+                      <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                       <span>{t("paso2_b4")}</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle
-                        className="text-[#9dd187] shrink-0"
-                        size={20}
-                      />
+                      <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                       <span>{t("paso2_b5")}</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle
-                        className="text-[#9dd187] shrink-0"
-                        size={20}
-                      />
+                      <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                       <span>{t("paso2_b6")}</span>
                     </li>
                   </ul>
@@ -289,33 +240,20 @@ export default function Funcionamiento() {
                   <div className="w-12 h-12 bg-[#9dd187] rounded-full flex items-center justify-center text-white font-bold text-lg">
                     3
                   </div>
-                  <h3 className="text-2xl font-bold text-[#2a2c38]">
-                    {t("paso3_titulo")}
-                  </h3>
+                  <h3 className="text-2xl font-bold text-[#2a2c38]">{t("paso3_titulo")}</h3>
                 </div>
-                <p className="text-gray-600 mb-6 text-lg">
-                  {t("paso3_texto")}
-                </p>
+                <p className="text-gray-600 mb-6 text-lg">{t("paso3_texto")}</p>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-3">
-                    <CheckCircle
-                      className="text-[#9dd187] shrink-0"
-                      size={20}
-                    />
+                    <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                     <span>{t("paso3_b1")}</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle
-                      className="text-[#9dd187] shrink-0"
-                      size={20}
-                    />
+                    <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                     <span>{t("paso3_b2")}</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <CheckCircle
-                      className="text-[#9dd187] shrink-0"
-                      size={20}
-                    />
+                    <CheckCircle className="text-[#9dd187] shrink-0" size={20} />
                     <span>{t("paso3_b3")}</span>
                   </li>
                 </ul>
@@ -326,12 +264,8 @@ export default function Funcionamiento() {
                     <Users className="text-white text-2xl" />
                   </div>
                   <div className="text-center">
-                    <h4 className="font-semibold text-[#2a2c38] mb-2">
-                      {t("paso3c_titulo")}
-                    </h4>
-                    <p className="text-gray-600 text-sm">
-                      {t("paso3c_texto")}
-                    </p>
+                    <h4 className="font-semibold text-[#2a2c38] mb-2">{t("paso3c_titulo")}</h4>
+                    <p className="text-gray-600 text-sm">{t("paso3c_texto")}</p>
                   </div>
                 </CardContent>
               </Card>

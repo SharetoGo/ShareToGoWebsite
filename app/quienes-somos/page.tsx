@@ -11,7 +11,6 @@ import { Target, Users, TrendingUp, Leaf } from "lucide-react";
 import { ODSSection } from "@/components/ODSSection";
 import { useTranslation } from "react-i18next";
 
-
 export default function QuienesSomos() {
   const { t } = useTranslation();
   const fadeInUp = {
@@ -23,38 +22,30 @@ export default function QuienesSomos() {
   const [personas, setPersonas] = useState<number>(0);
   const [co2Saved, setCo2Saved] = useState<number>(0);
 
-const fetchGlobalStats = async () => {
-  try {
-    const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
+  const fetchGlobalStats = async () => {
+    try {
+      const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
 
-    if (snap.exists()) {
-      const data = snap.data();
+      if (snap.exists()) {
+        const data = snap.data();
 
-      // totalTravels
-      setTotalTravels(
-        typeof data.totalTravels === "number" ? data.totalTravels : 0
-      );
+        // totalTravels
+        setTotalTravels(typeof data.totalTravels === "number" ? data.totalTravels : 0);
 
-      // totalPassengers
-      setPersonas(
-        typeof data.totalPassengers === "number" ? data.totalPassengers : 0
-      );
+        // totalPassengers
+        setPersonas(typeof data.totalPassengers === "number" ? data.totalPassengers : 0);
 
-      // totalCo2 (redondeado)
-      setCo2Saved(
-        typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0
-      );
+        // totalCo2 (redondeado)
+        setCo2Saved(typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0);
+      }
+    } catch (error) {
+      console.error("Error fetching global stats:", error);
     }
-  } catch (error) {
-    console.error("Error fetching global stats:", error);
-  }
-};
+  };
 
-
-useEffect(() => {
-  fetchGlobalStats();
-}, []);
-
+  useEffect(() => {
+    fetchGlobalStats();
+  }, []);
 
   return (
     <main className="scroll-smooth">
@@ -71,9 +62,7 @@ useEffect(() => {
           <h1 className="text-4xl md:text-5xl font-bold text-[#9dd187] mb-6">
             {t("qs_hero_titulo")}
           </h1>
-          <p className="text-xl text-gray-300 mb-8 text-balance">
-            {t("qs_hero_texto")}
-          </p>
+          <p className="text-xl text-gray-300 mb-8 text-balance">{t("qs_hero_texto")}</p>
         </div>
       </motion.section>
 
@@ -136,9 +125,7 @@ useEffect(() => {
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center">
             {t("qs_impacto_titulo")}
           </h2>
-          <p className="text-xl text-gray-300 mb-16 text-center">
-            {t("qs_impacto_texto")}
-          </p>
+          <p className="text-xl text-gray-300 mb-16 text-center">{t("qs_impacto_texto")}</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center p-8 bg-white border-2 hover:border-[#9dd187] transition-all duration-300 hover:shadow-lg">

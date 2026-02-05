@@ -1,14 +1,21 @@
 // components/dashboard/sidebar.tsx
-'use client'
+"use client";
 
-import { useAuth } from '@/app/intranet-empresas/auth/AuthContext'
-import { signOut } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
-import { useRouter } from 'next/navigation'
-import { 
-  LogOut, LayoutDashboard, Users, Leaf, 
-  BarChart3, Settings, AppWindow, UserCircle 
-} from 'lucide-react'
+import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import {
+  LogOut,
+  LayoutDashboard,
+  Users,
+  Leaf,
+  BarChart3,
+  Settings,
+  AppWindow,
+  UserCircle,
+} from "lucide-react";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -20,13 +27,13 @@ const NAV_ITEMS = [
 ];
 
 export function DashboardSidebar({ activeTab, setActiveTab }: any) {
-  const router = useRouter()
-  const { companyData, user } = useAuth() // Get both company and user info
+  const router = useRouter();
+  const { companyData, user } = useAuth(); // Get both company and user info
 
   const handleLogout = async () => {
-    await signOut(auth)
-    router.replace('/intranet-empresas/auth')
-  }
+    await signOut(auth);
+    router.replace("/intranet-empresas/auth");
+  };
 
   return (
     <aside className="w-64 bg-[#2a2c38] text-white hidden lg:flex flex-col border-r border-gray-800 shrink-0 h-full overflow-hidden">
@@ -34,9 +41,11 @@ export function DashboardSidebar({ activeTab, setActiveTab }: any) {
       <div className="p-6 pb-2 flex items-center gap-3">
         <div className="w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
           {companyData?.logoUrl ? (
-            <img 
-              src={companyData.logoUrl} 
-              alt="Logo" 
+            <Image
+              src={companyData.logoUrl}
+              alt="Logo"
+              width={48}
+              height={48}
               className="w-full h-full object-contain"
             />
           ) : (
@@ -45,7 +54,9 @@ export function DashboardSidebar({ activeTab, setActiveTab }: any) {
             </span>
           )}
         </div>
-        <p className="font-bold text-white truncate text-lg flex-1">{companyData?.name || "Cargando..."}</p>
+        <p className="font-bold text-white truncate text-lg flex-1">
+          {companyData?.name || "Cargando..."}
+        </p>
       </div>
 
       {/* Navigation */}
@@ -55,8 +66,8 @@ export function DashboardSidebar({ activeTab, setActiveTab }: any) {
             key={item.id}
             onClick={() => setActiveTab(item.id)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 ${
-              activeTab === item.id 
-                ? "bg-[#9dd187] text-[#2a2c38] font-bold shadow-lg shadow-[#9dd187]/10" 
+              activeTab === item.id
+                ? "bg-[#9dd187] text-[#2a2c38] font-bold shadow-lg shadow-[#9dd187]/10"
                 : "text-gray-400 hover:bg-white/5 hover:text-white"
             }`}
           >
@@ -75,12 +86,12 @@ export function DashboardSidebar({ activeTab, setActiveTab }: any) {
             <div className="flex-1 min-w-0">
               <p className="text-xs text-gray-400">Sesión</p>
               <p className="text-xs text-white truncate font-medium">
-              {user?.email || "Admin Session"}
+                {user?.email || "Admin Session"}
               </p>
             </div>
           </div>
 
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center justify-center gap-2 hover:text-white hover:bg-red-300 text-red-400 bg-red-400/10 transition-all w-full py-2 rounded-xl text-xs font-bold"
           >

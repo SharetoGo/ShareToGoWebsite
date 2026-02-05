@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -41,7 +42,7 @@ export default function UsersPage() {
         (u.name + " " + u.lastName).toLowerCase().includes(q) ||
         (u.emailAdress || "").toLowerCase().includes(q) ||
         (u.company || "").toLowerCase().includes(q) ||
-        u.id.toLowerCase().includes(q) // 🔥 Ahora puedes buscar por ID
+        u.id.toLowerCase().includes(q), // 🔥 Ahora puedes buscar por ID
     );
   }, [query, users]);
 
@@ -51,14 +52,14 @@ export default function UsersPage() {
   const totalPassengers = users.filter((u) => (u.passengerTravels || 0) > 0).length;
 
   const usersWithProfilePic = users.filter(
-    (u) => u.profilePicture && u.profilePicture.trim() !== ""
+    (u) => u.profilePicture && u.profilePicture.trim() !== "",
   ).length;
 
   const inactiveUsers = users.filter(
     (u) =>
       (u.driverTravels || 0) === 0 &&
       (u.passengerTravels || 0) === 0 &&
-      (!u.reviews || u.reviews.length === 0)
+      (!u.reviews || u.reviews.length === 0),
   ).length;
 
   const allReviews = users.flatMap((u) => u.reviews || []);
@@ -66,9 +67,7 @@ export default function UsersPage() {
 
   const avgRating =
     totalReviews > 0
-      ? (
-          allReviews.reduce((s, r) => s + (r.rating || 0), 0) / totalReviews
-        ).toFixed(2)
+      ? (allReviews.reduce((s, r) => s + (r.rating || 0), 0) / totalReviews).toFixed(2)
       : 0;
 
   if (loading) {
@@ -135,29 +134,29 @@ export default function UsersPage() {
             className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-6 flex flex-col gap-5 border border-gray-100"
           >
             {/* AVATAR */}
-            <img
+            <Image
               src={
                 user.profilePicture ||
                 "https://firebasestorage.googleapis.com/v0/b/share-to-go-db.appspot.com/o/profile_images%2FsharetoGo_greenBG.png?alt=media"
               }
               alt="avatar"
+              width={96}
+              height={96}
               className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-[#9DD187]"
             />
 
             {/* NAME + EMAIL + ID */}
             <div className="text-center space-y-1">
-            <h2 className="text-xl font-bold text-[#2A2C38]">
+              <h2 className="text-xl font-bold text-[#2A2C38]">
                 {(user.name || "—") + " " + (user.lastName || "")}
-            </h2>
+              </h2>
 
-            <p className="text-gray-600 text-sm">{user.emailAdress || "Sin email"}</p>
+              <p className="text-gray-600 text-sm">{user.emailAdress || "Sin email"}</p>
 
-            {/* 🔥 USER ID REAL */}
-            {user.userId && (
-                <p className="text-gray-400 text-xs break-all mt-1">
-                UserID: {user.userId}
-                </p>
-            )}
+              {/* 🔥 USER ID REAL */}
+              {user.userId && (
+                <p className="text-gray-400 text-xs break-all mt-1">UserID: {user.userId}</p>
+              )}
             </div>
 
             {/* COMPANY */}
@@ -180,7 +179,9 @@ export default function UsersPage() {
               {Array.isArray(user.reviews) && user.reviews.length > 0 ? (
                 <ReviewCarousel reviews={user.reviews} />
               ) : (
-                <p className="text-gray-500 text-sm mt-2">Este usuario aún no tiene valoraciones.</p>
+                <p className="text-gray-500 text-sm mt-2">
+                  Este usuario aún no tiene valoraciones.
+                </p>
               )}
             </div>
           </motion.div>

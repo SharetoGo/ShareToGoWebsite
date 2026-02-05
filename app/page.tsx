@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Hero from "@/components/hero"
-import FeaturesBlocks from "@/components/features-blocks"
-import Options from "@/components/options"
-import Faqs from "@/app/faqs/page"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { CheckCircle, Users, MapPin } from "lucide-react"
-import { useTranslation } from "react-i18next"
+import { motion } from "framer-motion";
+import Hero from "@/components/hero";
+import FeaturesBlocks from "@/components/features-blocks";
+import Options from "@/components/options";
+import Faqs from "@/app/faqs/page";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { CheckCircle, Users, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const fadeInUp = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0 },
-  }
+  };
 
   const steps = [
     {
@@ -34,7 +34,7 @@ export default function Home() {
       titleKey: "paso_trayecto",
       textKey: "trayecto_seguro",
     },
-  ]
+  ];
 
   return (
     <main className="scroll-smooth">
@@ -82,10 +82,10 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">{t("como_funciona_titulo")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {t("carpooling_sencillo")}
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-4">
+              {t("como_funciona_titulo")}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("carpooling_sencillo")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -100,7 +100,9 @@ export default function Home() {
                     <div className="w-16 h-16 bg-[#9dd187] rounded-full flex items-center justify-center mx-auto mb-4">
                       {step.icon}
                     </div>
-                    <h3 className="text-xl font-semibold text-[#2a2c38] mb-2">{t(step.titleKey)}</h3>
+                    <h3 className="text-xl font-semibold text-[#2a2c38] mb-2">
+                      {t(step.titleKey)}
+                    </h3>
                     <p className="text-gray-600">{t(step.textKey)}</p>
                   </CardContent>
                 </Card>
@@ -110,5 +112,5 @@ export default function Home() {
         </div>
       </motion.section>
     </main>
-  )
+  );
 }

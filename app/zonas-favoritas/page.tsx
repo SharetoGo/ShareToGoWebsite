@@ -5,18 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { 
-  MapPin, 
-  Plane, 
-  Trophy, 
-  GraduationCap, 
-  Leaf, 
-  Car, 
-  SquareParking, 
-  Coins, 
-  CheckCircle2, 
-  ArrowRight, 
-  Lightbulb, 
+import {
+  MapPin,
+  Plane,
+  Trophy,
+  GraduationCap,
+  Leaf,
+  Car,
+  SquareParking,
+  Coins,
+  CheckCircle2,
+  ArrowRight,
+  Lightbulb,
   Search,
   Building2,
   Sparkles,
@@ -31,9 +31,24 @@ import AeropuertoImage from "@/public/images/eventos/aeropuerto.jpg";
 import EstadioFotoImage from "@/public/images/eventos/estadio-foto.jpg";
 import UniversidadImage from "@/public/images/eventos/universidad.jpeg";
 
-const SectionHeader = ({ badge, title, sub, className = "", icon: Icon }: { badge: string; title: string; sub?: string, className?: string, icon?: any }) => (
+const SectionHeader = ({
+  badge,
+  title,
+  sub,
+  className = "",
+  icon: Icon,
+}: {
+  badge: string;
+  title: string;
+  sub?: string;
+  className?: string;
+  icon?: any;
+}) => (
   <div className={`mb-12 ${className}`}>
-    <Badge variant="outline" className="bg-[#9dd187]/10 text-[#4d7c41] border-[#9dd187]/20 pl-3 pr-4 py-1.5 mb-6 rounded-full text-sm font-semibold tracking-wide uppercase flex w-fit items-center gap-2 shadow-sm">
+    <Badge
+      variant="outline"
+      className="bg-[#9dd187]/10 text-[#4d7c41] border-[#9dd187]/20 pl-3 pr-4 py-1.5 mb-6 rounded-full text-sm font-semibold tracking-wide uppercase flex w-fit items-center gap-2 shadow-sm"
+    >
       {Icon && <Icon className="w-4 h-4" />}
       {badge}
     </Badge>
@@ -45,7 +60,7 @@ const SectionHeader = ({ badge, title, sub, className = "", icon: Icon }: { badg
 );
 
 const FeatureCard = ({ icon: Icon, title, children }: any) => (
-  <motion.div 
+  <motion.div
     whileHover={{ y: -5 }}
     className="group p-8 rounded-4xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-[#9dd187]/10 hover:border-[#9dd187]/30 transition-all duration-300"
   >
@@ -59,14 +74,18 @@ const FeatureCard = ({ icon: Icon, title, children }: any) => (
 
 export default function EspacioEventos(): ReactNode {
   const { t } = useTranslation();
-  
+
   const formatBold = (value: string) => {
     const parts = value.split("<bold>");
     if (parts.length === 1) return value;
     return parts.map((part, idx) =>
       idx % 2 === 1 ? (
-        <span key={idx} className="font-semibold text-[#1a1c24]">{part}</span>
-      ) : (part)
+        <span key={idx} className="font-semibold text-[#1a1c24]">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
     );
   };
   const tBold = (key: string) => formatBold(t(key));
@@ -76,21 +95,20 @@ export default function EspacioEventos(): ReactNode {
     initial: { opacity: 0, y: 30 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
-    transition: { duration: 0.6 }
+    transition: { duration: 0.6 },
   };
 
   return (
     <main className="bg-[#fafafa] overflow-x-hidden">
-      
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#1a1c24]">
         <div className="absolute inset-0 opacity-40">
-           <Image 
-             src={EventoImage} 
-             alt="Hero" 
-             fill 
-             className="object-cover transition-opacity duration-1000"
-           />
-           <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#1a1c24]/50 to-[#1a1c24]" />
+          <Image
+            src={EventoImage}
+            alt="Hero"
+            fill
+            className="object-cover transition-opacity duration-1000"
+          />
+          <div className="absolute inset-0 bg-linear-to-b from-transparent via-[#1a1c24]/50 to-[#1a1c24]" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
@@ -108,12 +126,18 @@ export default function EspacioEventos(): ReactNode {
             </div>
             <div className="flex flex-wrap gap-4">
               <Link href="/descargar">
-                <Button size="lg" className="bg-[#9dd187] text-[#1a1c24] hover:bg-[#8bc374] rounded-full px-8">
+                <Button
+                  size="lg"
+                  className="bg-[#9dd187] text-[#1a1c24] hover:bg-[#8bc374] rounded-full px-8"
+                >
                   {t("ev_hero_cta_search")}
                 </Button>
               </Link>
               <Link href="/funcionamiento">
-                <Button size="lg" className="text-white border-white/20 bg-white/10 rounded-full px-8">
+                <Button
+                  size="lg"
+                  className="text-white border-white/20 bg-white/10 rounded-full px-8"
+                >
                   {t("ev_hero_cta_how")}
                 </Button>
               </Link>
@@ -122,33 +146,36 @@ export default function EspacioEventos(): ReactNode {
 
           {/* Abstract Floating UI Elements instead of messy bubbles */}
           <div className="hidden lg:flex relative h-[500px] items-center justify-center">
-             <motion.div 
-                {...fadeUp}
-               className="bg-white/10 backdrop-blur-xl p-8 rounded-4xl border border-white/20 shadow-2xl max-w-md w-full"
-             >
-                <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-6">
-                  <div className="h-12 w-12 rounded-full bg-[#9dd187] flex items-center justify-center text-[#1a1c24]">
-                     <Search className="h-6 w-6" />
-                  </div>
-                  <div>
-                     <div className="text-white font-bold text-lg">Find your zone</div>
-                     <div className="text-white/60 text-sm">Select where you want to go</div>
-                  </div>
+            <motion.div
+              {...fadeUp}
+              className="bg-white/10 backdrop-blur-xl p-8 rounded-4xl border border-white/20 shadow-2xl max-w-md w-full"
+            >
+              <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-6">
+                <div className="h-12 w-12 rounded-full bg-[#9dd187] flex items-center justify-center text-[#1a1c24]">
+                  <Search className="h-6 w-6" />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    {[
-                      { label: 'Universities', icon: GraduationCap },
-                      { label: 'Stadiums', icon: Trophy },
-                      { label: 'Industrial', icon: Building2 },
-                      { label: 'Airports', icon: Plane }
-                    ].map((item) => (
-                      <div key={item.label} className="p-4 bg-white/5 duration-300 rounded-2xl border border-white/10 group cursor-pointer">
-                        <item.icon className="h-6 w-6 text-[#9dd187] mb-2" />
-                        <div className="font-semibold text-white">{item.label}</div>
-                      </div>
-                    ))}
+                <div>
+                  <div className="text-white font-bold text-lg">Find your zone</div>
+                  <div className="text-white/60 text-sm">Select where you want to go</div>
                 </div>
-             </motion.div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: "Universities", icon: GraduationCap },
+                  { label: "Stadiums", icon: Trophy },
+                  { label: "Industrial", icon: Building2 },
+                  { label: "Airports", icon: Plane },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="p-4 bg-white/5 duration-300 rounded-2xl border border-white/10 group cursor-pointer"
+                  >
+                    <item.icon className="h-6 w-6 text-[#9dd187] mb-2" />
+                    <div className="font-semibold text-white">{item.label}</div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -164,12 +191,12 @@ export default function EspacioEventos(): ReactNode {
               {tBold("ev_intro_text")}
             </p>
             <div className="grid grid-cols-2 gap-4">
-               {["ev_intro_b1", "ev_intro_b2", "ev_intro_b3", "ev_intro_b4"].map((key) => (
-                 <div key={key} className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="text-white h-5 w-5" />
-                    {t(key)}
-                 </div>
-               ))}
+              {["ev_intro_b1", "ev_intro_b2", "ev_intro_b3", "ev_intro_b4"].map((key) => (
+                <div key={key} className="flex items-center gap-2 font-medium">
+                  <CheckCircle2 className="text-white h-5 w-5" />
+                  {t(key)}
+                </div>
+              ))}
             </div>
           </div>
           <div className="rounded-[3rem] overflow-hidden relative min-h-[400px] shadow-lg">
@@ -183,29 +210,28 @@ export default function EspacioEventos(): ReactNode {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div {...fadeUp}>
-               <div className="absolute -inset-4 rounded-[3rem] -z-10 blur-xl" />
-               <Image src={CapturaPoligonosImage} alt="App" className="mx-auto max-w-[320px]" />
+              <div className="absolute -inset-4 rounded-[3rem] -z-10 blur-xl" />
+              <Image src={CapturaPoligonosImage} alt="App" className="mx-auto max-w-[320px]" />
             </motion.div>
             <div className="space-y-1">
-              <SectionHeader 
-                badge={t("ev_poly_badge")} 
-                title={t("ev_poly_title")} 
-                icon={Factory}
-              />
+              <SectionHeader badge={t("ev_poly_badge")} title={t("ev_poly_title")} icon={Factory} />
               <div className="text-lg text-gray-600">
                 <p>{tBold("ev_poly_p1")}</p>
                 <p>{tBold("ev_poly_p2")}</p>
               </div>
-              
+
               {/* Stat Pills */}
               <div className="grid grid-cols-2 gap-4 mt-4">
                 {[
                   { icon: Leaf, k: "ev_poly_stats_b1" },
                   { icon: Car, k: "ev_poly_stats_b2" },
                   { icon: SquareParking, k: "ev_poly_stats_b3" },
-                  { icon: Coins, k: "ev_poly_stats_b4" }
+                  { icon: Coins, k: "ev_poly_stats_b4" },
                 ].map((item) => (
-                  <div key={item.k} className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#9dd187]/30 hover:bg-[#9dd187]/5 transition-all duration-300">
+                  <div
+                    key={item.k}
+                    className="flex items-center gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-[#9dd187]/30 hover:bg-[#9dd187]/5 transition-all duration-300"
+                  >
                     <item.icon className="text-[#9dd187] h-6 w-6 shrink-0" />
                     <span className="text-sm font-semibold">{tBold(item.k)}</span>
                   </div>
@@ -219,13 +245,13 @@ export default function EspacioEventos(): ReactNode {
       {/* --- UNIVERSITIES: FEATURE GRID --- */}
       <section className="py-24 bg-[#f4f9eb]">
         <div className="max-w-7xl mx-auto px-3">
-          <SectionHeader 
-            badge={t("ev_venues_badge")} 
-            title={t("ev_venues_title")} 
-            sub={t("ev_venues_sub")} 
+          <SectionHeader
+            badge={t("ev_venues_badge")}
+            title={t("ev_venues_title")}
+            sub={t("ev_venues_sub")}
             icon={GraduationCap}
           />
-          
+
           <div className="grid md:grid-cols-3 gap-8 mb-16 items-center">
             <FeatureCard icon={GraduationCap} title="Campus Inteligente">
               {tBold("ev_uni_desc1")}
@@ -233,26 +259,26 @@ export default function EspacioEventos(): ReactNode {
             <FeatureCard icon={MapPin} title="Movilidad Estudiantil">
               {tBold("ev_uni_desc2")}
             </FeatureCard>
-            
-            <div className="relative md:pl-8">
-               <div className="hidden md:block absolute -left-4 top-1/2 -translate-y-1/2 text-[#9dd187]">
-                  <ArrowRight className="w-8 h-8" />
-               </div>
-               <div className="md:hidden flex justify-center py-6">
-                  <ArrowRight className="w-8 h-8 text-[#9dd187] rotate-90" />
-               </div>
 
-               <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-2xl bg-[#9dd187] flex items-center justify-center text-[#1a1c24] shadow-lg shadow-[#9dd187]/20">
-                      <Trophy className="h-6 w-6" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-[#1a1c24]">Impacto Real</h3>
+            <div className="relative md:pl-8">
+              <div className="hidden md:block absolute -left-4 top-1/2 -translate-y-1/2 text-[#9dd187]">
+                <ArrowRight className="w-8 h-8" />
+              </div>
+              <div className="md:hidden flex justify-center py-6">
+                <ArrowRight className="w-8 h-8 text-[#9dd187] rotate-90" />
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-2xl bg-[#9dd187] flex items-center justify-center text-[#1a1c24] shadow-lg shadow-[#9dd187]/20">
+                    <Trophy className="h-6 w-6" />
                   </div>
-                  <div className="text-lg text-gray-600 leading-relaxed font-medium">
-                    {tBold("ev_uni_impact_p1")}
-                  </div>
-               </div>
+                  <h3 className="text-2xl font-bold text-[#1a1c24]">Impacto Real</h3>
+                </div>
+                <div className="text-lg text-gray-600 leading-relaxed font-medium">
+                  {tBold("ev_uni_impact_p1")}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -286,7 +312,7 @@ export default function EspacioEventos(): ReactNode {
               </div>
             </div>
             <div className="rounded-4xl overflow-hidden h-[300px] relative border border-white/10">
-               <Image src={UniversidadImage} alt="Uni" fill className="object-cover" />
+              <Image src={UniversidadImage} alt="Uni" fill className="object-cover" />
             </div>
           </div>
         </div>
@@ -295,14 +321,18 @@ export default function EspacioEventos(): ReactNode {
       {/* --- SPECIFIC VENUES (Stadium, Airport, etc) - Modern Horizontal Scroll or Alternating --- */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6 space-y-32">
-          
           {/* Airport */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1">
-              <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-100 px-4 py-1.5 mb-6 rounded-full text-sm font-bold flex w-fit items-center gap-2">
+              <Badge
+                variant="outline"
+                className="bg-blue-50 text-blue-600 border-blue-100 px-4 py-1.5 mb-6 rounded-full text-sm font-bold flex w-fit items-center gap-2"
+              >
                 <Plane className="w-4 h-4" /> Airport
               </Badge>
-              <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#1a1c24]">{t("ev_airport_title")}</h3>
+              <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#1a1c24]">
+                {t("ev_airport_title")}
+              </h3>
               <div className="text-lg text-gray-600 space-y-6">
                 <p>{tBold("ev_airport_p1")}</p>
                 <p>{tBold("ev_airport_p2")}</p>
@@ -316,53 +346,59 @@ export default function EspacioEventos(): ReactNode {
 
           {/* Stadium */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-             <div className="rounded-[3rem] overflow-hidden shadow-2xl h-[450px] relative group">
+            <div className="rounded-[3rem] overflow-hidden shadow-2xl h-[450px] relative group">
               <Image src={EstadioFotoImage} alt="Stadium" fill className="object-cover" />
               <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
             </div>
             <div>
-              <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-100 px-4 py-1.5 mb-6 rounded-full text-sm font-bold flex w-fit items-center gap-2">
+              <Badge
+                variant="outline"
+                className="bg-orange-50 text-orange-600 border-orange-100 px-4 py-1.5 mb-6 rounded-full text-sm font-bold flex w-fit items-center gap-2"
+              >
                 <Trophy className="w-4 h-4" /> Stadiums & Events
               </Badge>
-              <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#1a1c24]">{t("ev_stadium_title")}</h3>
+              <h3 className="text-3xl md:text-4xl font-bold mb-6 text-[#1a1c24]">
+                {t("ev_stadium_title")}
+              </h3>
               <div className="text-lg text-gray-600 space-y-6">
                 <p>{tBold("ev_stadium_p1")}</p>
                 <p>{tBold("ev_stadium_p2")}</p>
               </div>
             </div>
           </div>
-
         </div>
       </section>
 
       {/* --- CTA SECTION --- */}
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto bg-[#9dd187] rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-[#9dd187]/30">
-           {/* Abstract Circle Decoration */}
-           <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/20 rounded-full blur-3xl" />
-           
-           <h2 className="text-4xl md:text-6xl font-black text-[#1a1c24] mb-8 relative z-10">
-             {t("ev_event_section_title")}
-           </h2>
-           <p className="text-xl text-[#1a1c24]/70 mb-10 max-w-2xl mx-auto relative z-10">
-             {t("ev_event_card2_text")}
-           </p>
-           <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
-             <Link href="/contratar">
-               <Button size="lg" className="bg-[#1a1c24] text-white hover:bg-[#2f3140] rounded-full px-12 h-16 text-lg group">
-                 {t("ev_event_button")}
-                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-               </Button>
-             </Link>
-             <Link href="/contacto">
-               <Button className="bg-white text-[#1a1c24] hover:bg-[#2f3140] hover:text-white rounded-full px-12 h-16 text-lg">
-                 {t("ev_event_card2_link")}
-               </Button>
-             </Link>
-           </div>
+          {/* Abstract Circle Decoration */}
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/20 rounded-full blur-3xl" />
+
+          <h2 className="text-4xl md:text-6xl font-black text-[#1a1c24] mb-8 relative z-10">
+            {t("ev_event_section_title")}
+          </h2>
+          <p className="text-xl text-[#1a1c24]/70 mb-10 max-w-2xl mx-auto relative z-10">
+            {t("ev_event_card2_text")}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+            <Link href="/contratar">
+              <Button
+                size="lg"
+                className="bg-[#1a1c24] text-white hover:bg-[#2f3140] rounded-full px-12 h-16 text-lg group"
+              >
+                {t("ev_event_button")}
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link href="/contacto">
+              <Button className="bg-white text-[#1a1c24] hover:bg-[#2f3140] hover:text-white rounded-full px-12 h-16 text-lg">
+                {t("ev_event_card2_link")}
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
-
     </main>
   );
 }

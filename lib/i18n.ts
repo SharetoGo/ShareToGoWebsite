@@ -1,12 +1,12 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
-import en from '@/public/locales/en/common.json';
-import es from '@/public/locales/es/common.json';
-import fr from '@/public/locales/fr/common.json';
+import en from "@/public/locales/en/common.json";
+import es from "@/public/locales/es/common.json";
+import fr from "@/public/locales/fr/common.json";
 
-const isServer = typeof window === 'undefined';
+const isServer = typeof window === "undefined";
 
 if (!i18n.isInitialized) {
   i18n
@@ -18,16 +18,16 @@ if (!i18n.isInitialized) {
         es: { translation: es },
         fr: { translation: fr },
       },
-      fallbackLng: 'es',
-      lng: 'es',
+      fallbackLng: "es",
+      lng: "es",
       interpolation: {
         escapeValue: false,
       },
       detection: {
-        order: ['localStorage', 'navigator', 'htmlTag'],
-        caches: ['localStorage'],
+        order: ["localStorage", "navigator", "htmlTag"],
+        caches: ["localStorage"],
       },
-      supportedLngs: ['es', 'en', 'fr'],
+      supportedLngs: ["es", "en", "fr"],
     });
 }
 

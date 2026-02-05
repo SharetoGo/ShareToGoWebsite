@@ -10,7 +10,7 @@ const firebaseConfig = {
   storageBucket: "share-to-go-db.appspot.com",
   messagingSenderId: "556094605210",
   appId: "1:556094605210:web:036aa2f382e82cce5e5c23",
-  measurementId: "G-Q8KW90MKPY"
+  measurementId: "G-Q8KW90MKPY",
 };
 
 const app = initializeApp(firebaseConfig);

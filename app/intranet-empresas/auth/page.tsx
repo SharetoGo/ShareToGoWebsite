@@ -1,79 +1,79 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { collection, query, where, getDocs } from "firebase/firestore"
-import { auth, db } from "@/lib/firebase"
-import Image from "next/image"
-import Link from "next/link"
-import { Mail, Lock } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import Image from "next/image";
+import Link from "next/link";
+import { Mail, Lock } from "lucide-react";
 
 export default function AuthPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [showForgotForm, setShowForgotForm] = useState(false)
-  const [forgotEmail, setForgotEmail] = useState("")
-  const [reason, setReason] = useState("")
-  const [sending, setSending] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showForgotForm, setShowForgotForm] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [reason, setReason] = useState("");
+  const [sending, setSending] = useState(false);
+  const router = useRouter();
 
-const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    // Optional: Pre-verify admin status to show a specific error
-    const q = query(collection(db, 'companies'), where("adminIds", "array-contains", user.uid));
-    const snap = await getDocs(q);
+      // Optional: Pre-verify admin status to show a specific error
+      const q = query(collection(db, "companies"), where("adminIds", "array-contains", user.uid));
+      const snap = await getDocs(q);
 
-    if (snap.empty) {
-      setError("No tienes permisos de administrador para acceder.");
-      await auth.signOut();
-    } else {
-      router.push("/intranet-empresas");
+      if (snap.empty) {
+        setError("No tienes permisos de administrador para acceder.");
+        await auth.signOut();
+      } else {
+        router.push("/intranet-empresas");
+      }
+    } catch (err) {
+      setError("Credenciales inválidas.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setError("Credenciales inválidas.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!forgotEmail || !reason) {
-      alert("Por favor completa todos los campos.")
-      return
+      alert("Por favor completa todos los campos.");
+      return;
     }
 
-    setSending(true)
+    setSending(true);
     try {
       const res = await fetch("/api/support/forgot-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userEmail: forgotEmail, reason }),
-      })
+      });
 
-      if (!res.ok) throw new Error("Error al enviar el mensaje")
+      if (!res.ok) throw new Error("Error al enviar el mensaje");
 
-      alert("Tu solicitud ha sido enviada correctamente. Te contactaremos pronto.")
-      setShowForgotForm(false)
-      setForgotEmail("")
-      setReason("")
+      alert("Tu solicitud ha sido enviada correctamente. Te contactaremos pronto.");
+      setShowForgotForm(false);
+      setForgotEmail("");
+      setReason("");
     } catch (error) {
-      console.error(error)
-      alert("Hubo un problema al enviar tu solicitud. Inténtalo más tarde.")
+      console.error(error);
+      alert("Hubo un problema al enviar tu solicitud. Inténtalo más tarde.");
     } finally {
-      setSending(false)
+      setSending(false);
     }
-  }
+  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
@@ -105,7 +105,8 @@ const handleLogin = async (e: React.FormEvent) => {
             Accede al panel sostenible de tu empresa o solicita acceso{" "}
             <Link href="/contratar" className="text-[#8bc475] font-semibold hover:underline">
               aquí
-            </Link>.
+            </Link>
+            .
           </p>
 
           <form onSubmit={handleLogin} className="space-y-5">
@@ -154,8 +155,8 @@ const handleLogin = async (e: React.FormEvent) => {
 
           <div className="text-center text-xs text-gray-500 mt-8">
             © {new Date().getFullYear()}{" "}
-            <span className="text-[#9dd187] font-semibold">SharetoGo</span> — Acceso
-            restringido al personal autorizado
+            <span className="text-[#9dd187] font-semibold">SharetoGo</span> — Acceso restringido al
+            personal autorizado
           </div>
         </div>
       </div>
@@ -225,9 +226,7 @@ const handleLogin = async (e: React.FormEvent) => {
                   type="submit"
                   disabled={sending}
                   className={`flex-1 py-2 rounded-md text-white transition ${
-                    sending
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-[#9dd187] hover:bg-[#8bc475]"
+                    sending ? "bg-gray-400 cursor-not-allowed" : "bg-[#9dd187] hover:bg-[#8bc475]"
                   }`}
                 >
                   {sending ? "Enviando..." : "Enviar"}
@@ -238,5 +237,5 @@ const handleLogin = async (e: React.FormEvent) => {
         </div>
       )}
     </div>
-  )
+  );
 }

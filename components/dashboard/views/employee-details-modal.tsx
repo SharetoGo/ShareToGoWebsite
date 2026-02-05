@@ -1,5 +1,5 @@
 // components/dashboard/views/employee-details-modal.tsx
-'use client'
+"use client";
 
 import Image from "next/image";
 import { X, Mail, Phone, MapPin, Star, Car, Users, Leaf, Calendar } from "lucide-react";
@@ -15,10 +15,9 @@ export function EmployeeDetailsModal({ employee, onClose }: EmployeeDetailsModal
   return (
     <div className="fixed inset-0 bg-[#2a2c38]/60 backdrop-blur-md z-60 flex items-center justify-center p-4 animate-in fade-in duration-300">
       <div className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto no-scrollbar animate-in zoom-in-95 duration-300">
-        
         {/* Header / Cover Area */}
         <div className="relative h-32 bg-[#2a2c38]">
-          <button 
+          <button
             onClick={onClose}
             className="absolute top-6 right-6 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all z-10"
           >
@@ -44,32 +43,53 @@ export function EmployeeDetailsModal({ employee, onClose }: EmployeeDetailsModal
               </h2>
               <div className="flex items-center gap-2 text-[#9dd187] font-bold text-sm uppercase tracking-widest">
                 <Leaf size={14} />
-                <span>Impacto {employee.co2SavedKg > 100 ? 'Alto' : 'Activo'}</span>
+                <span>Impacto {employee.co2SavedKg > 100 ? "Alto" : "Activo"}</span>
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <StatCard icon={<Car size={18}/>} label="KM Totales" value={`${employee.kmTravelled?.toFixed(1) || 0} km`} />
-            <StatCard icon={<Users size={18}/>} label="Viajes" value={employee.passengerTravels + employee.driverTravels} />
+            <StatCard
+              icon={<Car size={18} />}
+              label="KM Totales"
+              value={`${employee.kmTravelled?.toFixed(1) || 0} km`}
+            />
+            <StatCard
+              icon={<Users size={18} />}
+              label="Viajes"
+              value={employee.passengerTravels + employee.driverTravels}
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Left Column: Contact & Zones */}
             <div className="space-y-6">
               <div>
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Contacto</h4>
+                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">
+                  Contacto
+                </h4>
                 <div className="space-y-3">
-                  <ContactItem icon={<Mail size={16}/>} text={employee.emailAdress || "No disponible"} />
-                  <ContactItem icon={<Phone size={16}/>} text={employee.phoneNumber || "Sin teléfono"} />
+                  <ContactItem
+                    icon={<Mail size={16} />}
+                    text={employee.emailAdress || "No disponible"}
+                  />
+                  <ContactItem
+                    icon={<Phone size={16} />}
+                    text={employee.phoneNumber || "Sin teléfono"}
+                  />
                 </div>
               </div>
 
               <div>
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Zonas Frecuentes</h4>
+                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">
+                  Zonas Frecuentes
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {employee.zones?.map((zone: any, i: number) => (
-                    <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-600 rounded-xl text-xs font-bold border border-gray-100">
+                    <span
+                      key={i}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 text-gray-600 rounded-xl text-xs font-bold border border-gray-100"
+                    >
                       <MapPin size={12} className="text-[#9dd187]" />
                       {zone.name}
                     </span>
@@ -80,20 +100,31 @@ export function EmployeeDetailsModal({ employee, onClose }: EmployeeDetailsModal
 
             {/* Right Column: Reviews */}
             <div>
-              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 text-right">Valoraciones Recientes</h4>
+              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 text-right">
+                Valoraciones Recientes
+              </h4>
               <div className="space-y-4">
                 {employee.reviews?.length > 0 ? (
                   employee.reviews.slice(0, 3).map((rev: any, i: number) => (
                     <div key={i} className="bg-[#fcfdfe] p-4 rounded-2xl border border-gray-50">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-[10px] font-bold text-[#2a2c38]">{rev.authorName}</span>
+                        <span className="text-[10px] font-bold text-[#2a2c38]">
+                          {rev.authorName}
+                        </span>
                         <div className="flex text-yellow-400">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={10} fill={i < rev.rating ? "currentColor" : "none"} strokeWidth={3} />
+                            <Star
+                              key={i}
+                              size={10}
+                              fill={i < rev.rating ? "currentColor" : "none"}
+                              strokeWidth={3}
+                            />
                           ))}
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500 italic leading-relaxed">"{rev.comment}"</p>
+                      <p className="text-xs text-gray-500 italic leading-relaxed">
+                        &quot;{rev.comment}&quot;
+                      </p>
                     </div>
                   ))
                 ) : (

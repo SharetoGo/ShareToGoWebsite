@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { auth, db } from '@/lib/firebase';
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
 
 interface Zone {
   key: string;
@@ -53,49 +53,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, async (user) => {
-    setUser(user);
-    
-    if (user) {
-      try {
-        // 1. Create a query to find companies where adminIds array contains user.uid
-        const companiesRef = collection(db, 'companies');
-        const q = query(companiesRef, where("adminIds", "array-contains", user.uid));
-        
-        const querySnapshot = await getDocs(q);
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
 
-        if (!querySnapshot.empty) {
-          // 2. Take the first company found
-          const docData = querySnapshot.docs[0].data() as CompanyData;
-          console.log("Acceso concedido a la empresa:", docData.name);
-          setCompanyData(docData);
-        } else {
-          console.error("El usuario no es administrador de ninguna empresa.");
+      if (user) {
+        try {
+          // 1. Create a query to find companies where adminIds array contains user.uid
+          const companiesRef = collection(db, "companies");
+          const q = query(companiesRef, where("adminIds", "array-contains", user.uid));
+
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            // 2. Take the first company found
+            const docData = querySnapshot.docs[0].data() as CompanyData;
+            console.log("Acceso concedido a la empresa:", docData.name);
+            setCompanyData(docData);
+          } else {
+            console.error("El usuario no es administrador de ninguna empresa.");
+            setCompanyData(null);
+          }
+        } catch (err) {
+          console.error("Error fetching company data:", err);
           setCompanyData(null);
         }
-      } catch (err) {
-        console.error("Error fetching company data:", err);
+      } else {
         setCompanyData(null);
       }
-    } else {
-      setCompanyData(null);
-    }
-    setLoading(false);
-  });
+      setLoading(false);
+    });
 
-  return () => unsubscribe();
-}, []);
+    return () => unsubscribe();
+  }, []);
   return (
-    <AuthContext.Provider value={{ user, companyData, loading }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user, companyData, loading }}>{children}</AuthContext.Provider>
   );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

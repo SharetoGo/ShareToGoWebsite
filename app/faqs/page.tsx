@@ -46,9 +46,7 @@ const FaqItem = ({
         }`}
       >
         <div className="overflow-hidden">
-          <div className="px-4 sm:px-6 pb-6 text-base sm:text-lg text-[#2a2c38]">
-            {faq.answer}
-          </div>
+          <div className="px-4 sm:px-6 pb-6 text-base sm:text-lg text-[#2a2c38]">{faq.answer}</div>
         </div>
       </div>
     </div>
@@ -97,9 +95,7 @@ export default function Faqs() {
     },
   ];
 
-  const [open, setOpen] = useState<boolean[]>(
-    Array(faqData.length).fill(false)
-  );
+  const [open, setOpen] = useState<boolean[]>(Array(faqData.length).fill(false));
 
   const handleToggle = (idx: number) => {
     setOpen((prev) => prev.map((v, i) => (i === idx ? !v : v)));
@@ -126,12 +122,7 @@ export default function Faqs() {
           </h2>
           <div className="w-full">
             {faqData.map((faq, idx) => (
-              <FaqItem
-                key={idx}
-                faq={faq}
-                isOpen={open[idx]}
-                onToggle={() => handleToggle(idx)}
-              />
+              <FaqItem key={idx} faq={faq} isOpen={open[idx]} onToggle={() => handleToggle(idx)} />
             ))}
           </div>
         </div>

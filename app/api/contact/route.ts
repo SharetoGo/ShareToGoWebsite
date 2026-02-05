@@ -123,7 +123,6 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
     });
-
   } catch (error) {
     console.error("❌ Error in POST:", error);
     return new Response(JSON.stringify({ error: "Server error" }), {

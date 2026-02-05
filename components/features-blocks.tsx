@@ -1,5 +1,5 @@
-import { Sprout, BadgeEuro, Users } from 'lucide-react';
-import Image from "next/image"
+import { Sprout, BadgeEuro, Users } from "lucide-react";
+import Image from "next/image";
 import { useTranslation } from "react-i18next";
 
 export default function FeaturesBlocks() {
@@ -12,14 +12,14 @@ export default function FeaturesBlocks() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* App preview */}
           <div className="relative order-2 lg:order-1">
-              <Image
-                src="/images/captura_inicio.png"
-                priority={true}
-                width={100}
-                height={100}
-                alt={t("preview_alt")}
-                className="w-xs h-xs border-10 border-white object-cover"
-              />
+            <Image
+              src="/images/captura_inicio.png"
+              priority={true}
+              width={100}
+              height={100}
+              alt={t("preview_alt")}
+              className="w-xs h-xs border-10 border-white object-cover"
+            />
           </div>
 
           {/* Content */}
@@ -46,7 +46,7 @@ export default function FeaturesBlocks() {
                 <div className="space-y-2">
                   <h3 className="font-semibold text-foreground">{t("reduccion_emisiones")}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">
-                     {t("coche_privado")}
+                    {t("coche_privado")}
                   </p>
                 </div>
               </div>
@@ -83,5 +83,5 @@ export default function FeaturesBlocks() {
         </div>
       </div>
     </section>
-  )
+  );
 }

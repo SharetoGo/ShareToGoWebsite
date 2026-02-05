@@ -1,107 +1,106 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import { Menu, X, ChevronDown } from "lucide-react"
-import { useTranslation } from "react-i18next"
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu"
-import { QRCodeCanvas } from "qrcode.react"
-import { MdLanguage } from "react-icons/md"
+} from "@/components/ui/dropdown-menu";
+import { QRCodeCanvas } from "qrcode.react";
+import { MdLanguage } from "react-icons/md";
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [mobileEspaciosOpen, setMobileEspaciosOpen] = useState(false)
-  const [mobileAyudaOpen, setMobileAyudaOpen] = useState(false)
-  const [openEspacios, setOpenEspacios] = useState(false)
-  const [openAyuda, setOpenAyuda] = useState(false)
-  const [showQR, setShowQR] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [mobileEspaciosOpen, setMobileEspaciosOpen] = useState(false);
+  const [mobileAyudaOpen, setMobileAyudaOpen] = useState(false);
+  const [openEspacios, setOpenEspacios] = useState(false);
+  const [openAyuda, setOpenAyuda] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const hideEspaciosTO = useRef<NodeJS.Timeout | null>(null)
-  const hideAyudaTO = useRef<NodeJS.Timeout | null>(null)
+  const hideEspaciosTO = useRef<NodeJS.Timeout | null>(null);
+  const hideAyudaTO = useRef<NodeJS.Timeout | null>(null);
 
-  const pathname = usePathname()
-  const { t, i18n } = useTranslation()
+  const pathname = usePathname();
+  const { t, i18n } = useTranslation();
 
-  const qrLink = "https://sharetogo.es/downloads"
+  const qrLink = "https://sharetogo.es/downloads";
 
   // Detect mobile size
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768)
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (isMobile && showQR) {
-      setShowQR(false)
+      setShowQR(false);
     }
-  }, [isMobile, showQR])
+  }, [isMobile, showQR]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href)
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   const linkBase =
-    "font-medium text-xs xl:text-sm transition-colors duration-200 whitespace-nowrap text-[#2a2c38] hover:text-[#9dd187]"
-  const linkActive = "text-[#9dd187] font-semibold"
+    "font-medium text-xs xl:text-sm transition-colors duration-200 whitespace-nowrap text-[#2a2c38] hover:text-[#9dd187]";
+  const linkActive = "text-[#9dd187] font-semibold";
 
   // Language options
   const languageOptions = [
     { code: "es", label: "Español" },
     { code: "en", label: "English" },
     { code: "fr", label: "Français" },
-  ] as const
+  ] as const;
 
-  type LanguageCode = (typeof languageOptions)[number]["code"]
+  type LanguageCode = (typeof languageOptions)[number]["code"];
 
   const currentLanguage =
-    languageOptions.find((option) => i18n.language?.startsWith(option.code))?.code ?? "es"
+    languageOptions.find((option) => i18n.language?.startsWith(option.code))?.code ?? "es";
 
   const handleLanguageChange = (lng: LanguageCode) => {
-    if (lng === currentLanguage) return
-    i18n.changeLanguage(lng)
-  }
+    if (lng === currentLanguage) return;
+    i18n.changeLanguage(lng);
+  };
 
   const logoDimensions =
-    currentLanguage === "fr"
-      ? { width: 120, height: 50 }
-      : { width: 160, height: 50 }
+    currentLanguage === "fr" ? { width: 120, height: 50 } : { width: 160, height: 50 };
 
   // Hover helpers
   const openWithHover = (
     setter: (value: boolean) => void,
-    toRef: React.MutableRefObject<NodeJS.Timeout | null>
+    toRef: React.MutableRefObject<NodeJS.Timeout | null>,
   ) => {
-    if (toRef.current) clearTimeout(toRef.current)
-    setter(true)
-  }
+    if (toRef.current) clearTimeout(toRef.current);
+    setter(true);
+  };
 
   const closeWithDelay = (
     setter: (value: boolean) => void,
-    toRef: React.MutableRefObject<NodeJS.Timeout | null>
+    toRef: React.MutableRefObject<NodeJS.Timeout | null>,
   ) => {
-    if (toRef.current) clearTimeout(toRef.current)
-    toRef.current = setTimeout(() => setter(false), 120)
-  }
+    if (toRef.current) clearTimeout(toRef.current);
+    toRef.current = setTimeout(() => setter(false), 120);
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* TOP BAR */}
         <div className="flex justify-between items-center h-16 gap-4">
-
           {/* LOGO */}
-          <Link href="/" aria-label={t("nav_aria_home")} className="flex items-center gap-2 shrink-0">
+          <Link
+            href="/"
+            aria-label={t("nav_aria_home")}
+            className="flex items-center gap-2 shrink-0"
+          >
             <Image
               src="/logos/side_logo.png"
               alt="SharetoGo"
@@ -114,16 +113,21 @@ export default function Navigation() {
 
           {/* DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center justify-end gap-x-6 flex-1 min-w-0">
-
             <Link href="/" className={`${linkBase} ${pathname === "/" ? linkActive : ""}`}>
               {t("nav_inicio")}
             </Link>
 
-            <Link href="/funcionamiento" className={`${linkBase} ${isActive("/funcionamiento") ? linkActive : ""}`}>
+            <Link
+              href="/funcionamiento"
+              className={`${linkBase} ${isActive("/funcionamiento") ? linkActive : ""}`}
+            >
               {t("nav_funcionamiento")}
             </Link>
 
-            <Link href="/quienes-somos" className={`${linkBase} ${isActive("/quienes-somos") ? linkActive : ""}`}>
+            <Link
+              href="/quienes-somos"
+              className={`${linkBase} ${isActive("/quienes-somos") ? linkActive : ""}`}
+            >
               {t("nav_quienes")}
             </Link>
 
@@ -165,9 +169,15 @@ export default function Navigation() {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start">
-                  <DropdownMenuItem asChild><Link href="/faqs">{t("nav_faqs")}</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link href="/contacto">{t("nav_contacto")}</Link></DropdownMenuItem>
-                  <DropdownMenuItem asChild><Link href="/contratar">{t("nav_contratar")}</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/faqs">{t("nav_faqs")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/contacto">{t("nav_contacto")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/contratar">{t("nav_contratar")}</Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -185,8 +195,8 @@ export default function Navigation() {
                     key={option.code}
                     className="flex items-center gap-3 cursor-pointer"
                     onSelect={(e) => {
-                      e.preventDefault()
-                      handleLanguageChange(option.code)
+                      e.preventDefault();
+                      handleLanguageChange(option.code);
                     }}
                   >
                     <span className="font-semibold uppercase">{option.code}</span>
@@ -231,7 +241,6 @@ export default function Navigation() {
                 </div>
               )}
             </div>
-
           </div>
 
           {/* MOBILE MENU BUTTON */}
@@ -246,34 +255,55 @@ export default function Navigation() {
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
-
-              <Link href="/" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
+              <Link
+                href="/"
+                className={`block px-3 py-2 text-sm ${linkBase}`}
+                onClick={() => setIsOpen(false)}
+              >
                 {t("nav_inicio")}
               </Link>
 
-              <Link href="/funcionamiento" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
+              <Link
+                href="/funcionamiento"
+                className={`block px-3 py-2 text-sm ${linkBase}`}
+                onClick={() => setIsOpen(false)}
+              >
                 {t("nav_funcionamiento")}
               </Link>
 
-              <Link href="/quienes-somos" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
+              <Link
+                href="/quienes-somos"
+                className={`block px-3 py-2 text-sm ${linkBase}`}
+                onClick={() => setIsOpen(false)}
+              >
                 {t("nav_quienes")}
               </Link>
 
               {/* ESPACIOS MOBILE */}
               <button
                 className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium"
-                onClick={() => setMobileEspaciosOpen(v => !v)}
+                onClick={() => setMobileEspaciosOpen((v) => !v)}
               >
                 {t("nav_espacios")}
-                <ChevronDown className={`h-4 w-4 transition-transform ${mobileEspaciosOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${mobileEspaciosOpen ? "rotate-180" : ""}`}
+                />
               </button>
 
               {mobileEspaciosOpen && (
                 <div className="ml-4">
-                  <Link href="/espacio-empresas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/espacio-empresas"
+                    className="block px-3 py-2 text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_empresas_simple")}
                   </Link>
-                  <Link href="/zonas-favoritas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/zonas-favoritas"
+                    className="block px-3 py-2 text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_eventos_simple")}
                   </Link>
                 </div>
@@ -282,21 +312,35 @@ export default function Navigation() {
               {/* AYUDA MOBILE */}
               <button
                 className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium"
-                onClick={() => setMobileAyudaOpen(v => !v)}
+                onClick={() => setMobileAyudaOpen((v) => !v)}
               >
                 {t("nav_ayuda")}
-                <ChevronDown className={`h-4 w-4 transition-transform ${mobileAyudaOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${mobileAyudaOpen ? "rotate-180" : ""}`}
+                />
               </button>
 
               {mobileAyudaOpen && (
                 <div className="ml-4">
-                  <Link href="/faqs" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/faqs"
+                    className="block px-3 py-2 text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_faqs")}
                   </Link>
-                  <Link href="/contacto" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/contacto"
+                    className="block px-3 py-2 text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_contacto")}
                   </Link>
-                  <Link href="/contratar" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/contratar"
+                    className="block px-3 py-2 text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_contratar")}
                   </Link>
                 </div>
@@ -332,7 +376,11 @@ export default function Navigation() {
               </div>
 
               {/* DESCARGA */}
-              <Link href="/descargar" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+              <Link
+                href="/descargar"
+                className="block px-3 py-2 text-sm"
+                onClick={() => setIsOpen(false)}
+              >
                 <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
                   {t("nav_descarga")}
                 </Button>
@@ -342,11 +390,10 @@ export default function Navigation() {
               <div className="flex justify-center mt-3">
                 <QRCodeCanvas value={qrLink} size={120} />
               </div>
-
             </div>
           </div>
         )}
       </div>
     </nav>
-  )
+  );
 }

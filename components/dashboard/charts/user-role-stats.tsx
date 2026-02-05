@@ -32,13 +32,13 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
   useEffect(() => {
     // Si no hay datos suficientes para buscar, salir inmediatamente
     if (!companyName || totalMembers === 0 || !travelIds || travelIds.length === 0) {
-      setStats(prev => ({ ...prev, loading: false }));
+      setStats((prev) => ({ ...prev, loading: false }));
       return;
     }
 
     const fetchUserRoleStats = async () => {
       try {
-        setStats(prev => ({ ...prev, loading: true }));
+        setStats((prev) => ({ ...prev, loading: true }));
 
         const driverIds = new Set<string>();
         const passengerIds = new Set<string>();
@@ -46,14 +46,14 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
         // Procesar en batches de 30 (límite de Firestore para "in" queries)
         for (let i = 0; i < travelIds.length; i += 30) {
           const batch = travelIds.slice(i, i + 30);
-          
+
           const travelsRef = collection(db, "travels");
           const travelsQuery = query(travelsRef, where(documentId(), "in", batch));
           const travelsSnapshot = await getDocs(travelsQuery);
 
           travelsSnapshot.forEach((travelDoc) => {
             const travelData = travelDoc.data();
-            
+
             // Conductor
             if (travelData.userId) {
               driverIds.add(travelData.userId);
@@ -71,12 +71,10 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
         const companyDrivers = driverIds.size;
         const companyPassengers = passengerIds.size;
 
-        const driversPercentage = totalMembers > 0 
-          ? Math.round((companyDrivers / totalMembers) * 100) 
-          : 0;
-        const passengersPercentage = totalMembers > 0 
-          ? Math.round((companyPassengers / totalMembers) * 100) 
-          : 0;
+        const driversPercentage =
+          totalMembers > 0 ? Math.round((companyDrivers / totalMembers) * 100) : 0;
+        const passengersPercentage =
+          totalMembers > 0 ? Math.round((companyPassengers / totalMembers) * 100) : 0;
 
         setStats({
           drivers: companyDrivers,
@@ -85,10 +83,9 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
           passengersPercentage,
           loading: false,
         });
-
       } catch (error) {
         console.error("Error fetching user role stats:", error);
-        setStats(prev => ({ ...prev, loading: false }));
+        setStats((prev) => ({ ...prev, loading: false }));
       }
     };
 
@@ -112,9 +109,7 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
       <div className="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div className="flex items-center gap-2 mb-6">
           <Users className="w-5 h-5 text-[#9CD186]" />
-          <h3 className="text-lg font-semibold text-[#2a2c38]">
-            Participación de Usuarios
-          </h3>
+          <h3 className="text-lg font-semibold text-[#2a2c38]">Participación de Usuarios</h3>
         </div>
 
         <div className="flex flex-col items-center justify-center py-8 gap-4">
@@ -122,9 +117,7 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
             <Users className="w-10 h-10 text-gray-300" />
           </div>
           <div className="text-center">
-            <p className="text-sm font-semibold text-gray-400">
-              Sin datos de participación
-            </p>
+            <p className="text-sm font-semibold text-gray-400">Sin datos de participación</p>
             <p className="text-xs text-gray-300 mt-1 max-w-xs mx-auto">
               Los datos aparecerán una vez que los empleados publiquen o reserven trayectos.
             </p>
@@ -139,9 +132,7 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
     <div className="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
       <div className="flex items-center gap-2 mb-6">
         <Users className="w-5 h-5 text-[#9CD186]" />
-        <h3 className="text-lg font-semibold text-[#2a2c38]">
-          Participación de Usuarios
-        </h3>
+        <h3 className="text-lg font-semibold text-[#2a2c38]">Participación de Usuarios</h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -154,15 +145,11 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Conductores</p>
-                <p className="text-2xl font-bold text-[#2a2c38]">
-                  {stats.drivers}
-                </p>
+                <p className="text-2xl font-bold text-[#2a2c38]">{stats.drivers}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold text-[#9CD186]">
-                {stats.driversPercentage}%
-              </p>
+              <p className="text-3xl font-bold text-[#9CD186]">{stats.driversPercentage}%</p>
               <p className="text-xs text-gray-400">del total</p>
             </div>
           </div>
@@ -190,15 +177,11 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
               </div>
               <div>
                 <p className="text-sm text-gray-500 font-medium">Pasajeros</p>
-                <p className="text-2xl font-bold text-[#2a2c38]">
-                  {stats.passengers}
-                </p>
+                <p className="text-2xl font-bold text-[#2a2c38]">{stats.passengers}</p>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-bold text-[#9CD186]">
-                {stats.passengersPercentage}%
-              </p>
+              <p className="text-3xl font-bold text-[#9CD186]">{stats.passengersPercentage}%</p>
               <p className="text-xs text-gray-400">del total</p>
             </div>
           </div>
@@ -225,19 +208,19 @@ export function UserRoleStats({ companyName, totalMembers, travelIds }: UserRole
             <Users className="w-4 h-4 text-[#5A9642]" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-semibold text-[#2a2c38] mb-1">
-              Tasa de Participación Total
-            </p>
+            <p className="text-sm font-semibold text-[#2a2c38] mb-1">Tasa de Participación Total</p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              {Math.round(((stats.drivers + stats.passengers) / totalMembers) * 100)}% de tus 
+              {Math.round(((stats.drivers + stats.passengers) / totalMembers) * 100)}% de tus
               empleados están participando activamente en el programa de carpooling.
               {stats.drivers > stats.passengers ? (
                 <span className="text-[#5A9642] font-medium">
-                  {" "}Hay más conductores que pasajeros, ¡excelente!
+                  {" "}
+                  Hay más conductores que pasajeros, ¡excelente!
                 </span>
               ) : (
                 <span className="text-[#5A9642] font-medium">
-                  {" "}Considera incentivar a más empleados a ofrecer plazas.
+                  {" "}
+                  Considera incentivar a más empleados a ofrecer plazas.
                 </span>
               )}
             </p>

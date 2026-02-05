@@ -1,60 +1,60 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Logo from './ui/logo'
-import dynamic from 'next/dynamic'
+import { useState, useEffect } from "react";
+import Logo from "./ui/logo";
+import dynamic from "next/dynamic";
 
-const Confetti = dynamic(() => import('react-confetti'), { ssr: false })
+const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 export default function PromoPopup() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [showConfetti, setShowConfetti] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
+  const [isOpen, setIsOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   // Mostrar popup 1.5s después de entrar, si no ha participado
   useEffect(() => {
-    if (localStorage.getItem('promoEmailSubmitted') !== 'true') {
-      const timer = setTimeout(() => setIsOpen(true), 1500)
-      return () => clearTimeout(timer)
+    if (localStorage.getItem("promoEmailSubmitted") !== "true") {
+      const timer = setTimeout(() => setIsOpen(true), 1500);
+      return () => clearTimeout(timer);
     }
-  }, [])
+  }, []);
 
   // Hook para capturar tamaño de pantalla (necesario para Confetti)
   useEffect(() => {
     function handleResize() {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const handleClose = () => setIsOpen(false)
+  const handleClose = () => setIsOpen(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitted(true)
+    e.preventDefault();
+    setIsSubmitted(true);
 
     try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
-      })
+      });
 
       if (response.ok) {
-        setShowConfetti(true)
-        localStorage.setItem('promoEmailSubmitted', 'true')
+        setShowConfetti(true);
+        localStorage.setItem("promoEmailSubmitted", "true");
       }
     } catch (error) {
-      console.error('Error al enviar el email:', error)
-      setIsSubmitted(false)
+      console.error("Error al enviar el email:", error);
+      setIsSubmitted(false);
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex justify-center items-center p-4">
@@ -135,13 +135,13 @@ export default function PromoPopup() {
           ) : (
             <div className="py-8">
               <p className="text-xl md:text-2xl font-semibold text-[#2a2c38] leading-relaxed">
-                ¡Hemos recibido tu email! 🎉  
-                Revisa tu bandeja de entrada para ver los detalles del vale.
+                ¡Hemos recibido tu email! 🎉 Revisa tu bandeja de entrada para ver los detalles del
+                vale.
               </p>
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

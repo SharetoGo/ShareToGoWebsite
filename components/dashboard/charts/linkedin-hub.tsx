@@ -5,7 +5,7 @@ import { on } from "events";
 import { Share2, Sparkles, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function LinkedInHub({ data, onViewContent }: { data: any , onViewContent: () => void; }) {
+export function LinkedInHub({ data, onViewContent }: { data: any; onViewContent: () => void }) {
   const router = useRouter();
 
   return (
@@ -27,31 +27,26 @@ export function LinkedInHub({ data, onViewContent }: { data: any , onViewContent
         </div>
 
         {/* Title */}
-        <h4 className="text-xl font-bold mb-2 text-white">
-          Comunicamos tu sostenibilidad
-        </h4>
-        
-        <p className="text-sm font-semibold text-white/90 mb-1">
-          Presume de impacto
-        </p>
+        <h4 className="text-xl font-bold mb-2 text-white">Comunicamos tu sostenibilidad</h4>
+
+        <p className="text-sm font-semibold text-white/90 mb-1">Presume de impacto</p>
 
         <p className="text-sm text-white/80 mb-6 leading-relaxed">
-          Genera contenido automático con todos tus datos de movilidad sostenible 
-          gracias al coche compartido.
+          Genera contenido automático con todos tus datos de movilidad sostenible gracias al coche
+          compartido.
         </p>
 
         {/* Action Buttons */}
         <div className="space-y-2">
-          <button 
+          <button
             onClick={() => onViewContent()}
             className="w-full bg-white text-[#5A9642] font-bold py-3 px-4 rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <Sparkles size={18} />
-              Ver o generar contenido
+            Ver o generar contenido
           </button>
         </div>
       </div>
     </div>
   );
 }
-

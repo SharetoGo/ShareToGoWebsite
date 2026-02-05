@@ -14,9 +14,7 @@ export function QuickStatsCompact({
   participationRate,
   totalTravelsMonthly,
 }: QuickStatsCompactProps) {
-
-  const displayValue = (value: number, suffix = "") =>
-    value === 0 ? "-" : `${value}${suffix}`;
+  const displayValue = (value: number, suffix = "") => (value === 0 ? "-" : `${value}${suffix}`);
 
   return (
     <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
@@ -27,14 +25,11 @@ export function QuickStatsCompact({
         </h5>
         <div className="flex items-center gap-1 text-gray-400">
           <Calendar className="w-3 h-3" />
-          <span className="text-[9px] font-semibold">
-            Mes actual
-          </span>
+          <span className="text-[9px] font-semibold">Mes actual</span>
         </div>
       </div>
 
       <div className="grid grid-cols-4 divide-x divide-gray-100">
-
         {/* Trayectos */}
         <div className="px-4 text-center">
           <div className="flex justify-center mb-2">
@@ -48,9 +43,7 @@ export function QuickStatsCompact({
           <p className="text-[10px] text-gray-500 uppercase font-semibold tracking-wider">
             Trayectos
           </p>
-          <p className="text-[9px] text-gray-400 mt-1">
-            este mes
-          </p>
+          <p className="text-[9px] text-gray-400 mt-1">este mes</p>
         </div>
 
         {/* Ocupación */}
@@ -66,9 +59,7 @@ export function QuickStatsCompact({
           <p className="text-[10px] text-gray-500 uppercase font-semibold tracking-wider">
             Ocupación
           </p>
-          <p className="text-[9px] text-gray-400 mt-1">
-            plazas utilizadas
-          </p>
+          <p className="text-[9px] text-gray-400 mt-1">plazas utilizadas</p>
         </div>
 
         {/* Participación */}
@@ -84,9 +75,7 @@ export function QuickStatsCompact({
           <p className="text-[10px] text-gray-500 uppercase font-semibold tracking-wider">
             Participación
           </p>
-          <p className="text-[9px] text-gray-400 mt-1">
-            empleados activos
-          </p>
+          <p className="text-[9px] text-gray-400 mt-1">empleados activos</p>
         </div>
 
         {/* CO₂ */}
@@ -102,11 +91,8 @@ export function QuickStatsCompact({
           <p className="text-[10px] text-gray-500 uppercase font-semibold tracking-wider">
             CO₂e evitado
           </p>
-          <p className="text-[9px] text-gray-400 mt-1">
-            kg este mes
-          </p>
+          <p className="text-[9px] text-gray-400 mt-1">kg este mes</p>
         </div>
-
       </div>
     </div>
   );
