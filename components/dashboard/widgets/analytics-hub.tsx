@@ -50,16 +50,6 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
               {totalCo2.toFixed(0)} kg
             </p>
           </div>
-
-          <div className="p-3 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10">
-            <div className="flex items-center gap-2 mb-1">
-              <TrendingUp className="w-4 h-4 text-[#9dd187]" />
-              <span className="text-xs text-gray-400">Evolución</span>
-            </div>
-            <p className="text-lg font-bold text-[#9dd187]">
-              +15%
-            </p>
-          </div>
         </div>
 
         {/* Action Button */}

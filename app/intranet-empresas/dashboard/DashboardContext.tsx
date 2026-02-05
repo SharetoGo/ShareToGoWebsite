@@ -11,7 +11,8 @@ import {
   getDocs,
   doc,
   getDoc,
-  documentId
+  documentId,
+  QueryConstraint
 } from "firebase/firestore";
 
 /* ═══════════════════════════════════════════════════════════
@@ -82,20 +83,22 @@ const DashboardContext = createContext<DashboardContextData | undefined>(undefin
    ═══════════════════════════════════════════════════════════ */
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
-  const { companyData } = useAuth();
+  const { companyData, loading: authLoading } = useAuth();
   
   const [users, setUsers] = useState<User[]>([]);
   const [travels, setTravels] = useState<Travel[]>([]);
   const [monthlyMetrics, setMonthlyMetrics] = useState<MonthlyMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   /* ═══════════════════════════════════════════════════════════
      LOAD ALL DATA
      ═══════════════════════════════════════════════════════════ */
 
   const loadDashboardData = async () => {
-    if (!companyData?.name) {
+    // No cargar si no hay companyData o ya se está cargando
+    if (!companyData?.id || hasLoaded) {
       setLoading(false);
       return;
     }
@@ -104,22 +107,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
 
-      // 1️⃣ Get company ID
-      const companiesQuery = query(
-        collection(db, "companies"),
-        where("name", "==", companyData.name)
-      );
-      const companiesSnap = await getDocs(companiesQuery);
-      
-      if (companiesSnap.empty) {
-        throw new Error("Company not found");
-      }
-
-      const companyId = companiesSnap.docs[0].id;
-
-      // 2️⃣ Load all data in parallel
+      // Cargar datos en paralelo
       const [metricsData, usersData, travelsData] = await Promise.all([
-        loadMonthlyMetrics(companyId),
+        loadMonthlyMetrics(companyData.id),
         loadUsers(companyData.membersIds || []),
         loadTravels(companyData.travels || [])
       ]);
@@ -127,10 +117,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setMonthlyMetrics(metricsData);
       setUsers(usersData);
       setTravels(travelsData);
+      setHasLoaded(true);
 
     } catch (err) {
-      console.error("Error loading dashboard data:", err);
+      console.error("❌ Error loading dashboard data:", err);
       setError(err instanceof Error ? err.message : "Error desconocido");
+      setHasLoaded(true);
     } finally {
       setLoading(false);
     }
@@ -147,21 +139,30 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
       const previousMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, "0")}`;
 
-      // Try current month
-      const currentRef = doc(db, "companies", companyId, "metrics", "metrics", "monthly", currentMonth);
-      const currentSnap = await getDoc(currentRef);
+      // Intenta mes actual
+      try {
+        const currentRef = doc(db, "companies", companyId, "metrics", "metrics", "monthly", currentMonth);
+        const currentSnap = await getDoc(currentRef);
 
-      if (currentSnap.exists()) {
-        return currentSnap.data() as MonthlyMetrics;
+        if (currentSnap.exists()) {
+          return currentSnap.data() as MonthlyMetrics;
+        }
+      } catch (e) {
+        console.warn("Current month metrics not found:", e);
       }
 
-      // Fallback to previous month
-      const prevRef = doc(db, "companies", companyId, "metrics", "metrics", "monthly", previousMonth);
-      const prevSnap = await getDoc(prevRef);
+      // Fallback a mes anterior
+      try {
+        const prevRef = doc(db, "companies", companyId, "metrics", "metrics", "monthly", previousMonth);
+        const prevSnap = await getDoc(prevRef);
 
-      return prevSnap.exists() ? (prevSnap.data() as MonthlyMetrics) : null;
+        return prevSnap.exists() ? (prevSnap.data() as MonthlyMetrics) : null;
+      } catch (e) {
+        console.warn("Previous month metrics not found:", e);
+        return null;
+      }
     } catch (error) {
-      console.error("Error loading monthly metrics:", error);
+      console.error("❌ Error loading monthly metrics:", error);
       return null;
     }
   }
@@ -172,7 +173,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     try {
       const allUsers: User[] = [];
 
-      // Process in batches of 30 (Firestore limit)
+      // Procesar en lotes de 30 (límite de Firestore)
       for (let i = 0; i < memberIds.length; i += 30) {
         const batch = memberIds.slice(i, i + 30);
         const usersQuery = query(
@@ -188,7 +189,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
       return allUsers;
     } catch (error) {
-      console.error("Error loading users:", error);
+      console.error("❌ Error loading users:", error);
       return [];
     }
   }
@@ -199,7 +200,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     try {
       const allTravels: Travel[] = [];
 
-      // Process in batches of 30
+      // Procesar en lotes de 30
       for (let i = 0; i < travelIds.length; i += 30) {
         const batch = travelIds.slice(i, i + 30);
         const travelsQuery = query(
@@ -215,7 +216,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
       return allTravels;
     } catch (error) {
-      console.error("Error loading travels:", error);
+      console.error("❌ Error loading travels:", error);
       return [];
     }
   }
@@ -224,9 +225,21 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
      EFFECTS
      ═══════════════════════════════════════════════════════════ */
 
+  // Solo cargar cuando companyData esté listo y Auth haya terminado
   useEffect(() => {
-    loadDashboardData();
-  }, [companyData?.name]);
+    if (!authLoading && companyData?.id && !hasLoaded) {
+      loadDashboardData();
+    }
+  }, [companyData?.id, authLoading, hasLoaded]);
+
+  /* ═══════════════════════════════════════════════════════════
+     REFRESH FUNCTION
+     ═══════════════════════════════════════════════════════════ */
+
+  const refresh = async () => {
+    setHasLoaded(false);
+    await loadDashboardData();
+  };
 
   /* ═══════════════════════════════════════════════════════════
      CONTEXT VALUE
@@ -238,7 +251,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     monthlyMetrics,
     loading,
     error,
-    refresh: loadDashboardData
+    refresh
   };
 
   return (
