@@ -174,7 +174,7 @@ const employees = useMemo<Employee[]>(() => {
             <div>
               <p className="font-bold text-[#2a2c38] text-lg leading-tight">{emp.name} {emp.lastName}</p>
               <p className="text-[10px] text-[#9dd187] font-black uppercase tracking-widest mt-1">
-                {emp.kmTravelled.toLocaleString()} Km Ahorrados
+                {emp.kmTravelled.toLocaleString()} Km Recorridos
               </p>
             </div>
           </div>

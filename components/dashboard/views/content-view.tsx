@@ -9,6 +9,7 @@ import {
   Copy, CheckCircle, Mail, Linkedin, Globe,
   Send, Plus, Instagram, Trash2, MessageSquare, X, ChevronRight, Sparkles
 } from "lucide-react";
+import { getNextPublicationDay, getCurrentMonthPublicationDates } from "@/lib/utils/nextPublicationDays";
 
 type PostType = 'linkedin' | 'instagram' | 'mail' | 'website' | 'other';
 
@@ -25,12 +26,15 @@ interface SavedPost {
 export function ContentView() {
   const { companyData } = useAuth();
   const [posts, setPosts] = useState<SavedPost[]>([]);
-  // Standardize the initial month format
   const [selectedMonth, setSelectedMonth] = useState("febrero 2026");
   const [activeTab, setActiveTab] = useState<string>("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [formState, setFormState] = useState({ title: "", content: "", type: "linkedin" as PostType });
+
+  // Calcular información de publicación
+  const daysUntilPublication = useMemo(() => getNextPublicationDay(), []);
+  const nextPublicationDate = useMemo(() => getCurrentMonthPublicationDates(), []);
 
   const stats = {
     co2: companyData?.totalCo2 || 0,
@@ -46,12 +50,11 @@ export function ContentView() {
       const fetchedPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as SavedPost[];
       setPosts(fetchedPosts);
 
-      // Auto-select the first available tab if none selected
       if (fetchedPosts.length > 0 && !activeTab) {
         setActiveTab(fetchedPosts[0].id);
       }
     });
-  }, [companyData?.id]);
+  }, [companyData?.id, activeTab]);
 
   // --- LOGIC: ORGANIZE CONTENT ---
   const { suggestedItems, libraryPosts } = useMemo(() => {
@@ -63,7 +66,6 @@ export function ContentView() {
     ];
 
     const suggestions = types.map(config => {
-      // Find the REAL document in the DB for this category
       const realDoc = posts.find(p =>
         p.isAuto === true &&
         p.type === config.type &&
@@ -86,7 +88,6 @@ export function ContentView() {
     return { suggestedItems: suggestions, libraryPosts: library };
   }, [posts, selectedMonth]);
 
-  // Determine what to show in the preview window
   const activeContent = useMemo(() => {
     return [...suggestedItems, ...libraryPosts].find(i => i.id === activeTab) || suggestedItems[0];
   }, [activeTab, suggestedItems, libraryPosts]);
@@ -127,10 +128,30 @@ export function ContentView() {
       <div className="bg-[#2a2c38] p-8 rounded-[2.5rem] shadow-xl text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-5"><Sparkles size={120} /></div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 relative z-10">
-          <StatMiniWhite label="CO2e EVITADO" value={`${formatStats(stats.co2)} kg`} sub={`${stats.trees} Árboles`} />
-          <StatMiniWhite label="DISTANCIA" value={`${formatStats(stats.km)} km`} sub="Ahorrados" />
-          <StatMiniWhite label="VIAJES" value={stats.trips} sub="Registrados" />
-          <StatMiniWhite label="PERIODO" value={selectedMonth.split(' ')[0]} sub="Mes actual" />
+          {/* Posts creados */}
+          <StatMiniWhite 
+            label="Posts Creados" 
+            value={libraryPosts.length} 
+            sub="En tu biblioteca" 
+          />
+          {/* Próxima Publicación */}
+          <StatMiniWhite 
+            label="Próxima Publicación" 
+            value={daysUntilPublication} 
+            sub={`el ${nextPublicationDate}`}
+          />
+          {/* Canales Activos */}
+          <StatMiniWhite 
+            label="Canales Activos" 
+            value={suggestedItems.filter(i => i.exists).length} 
+            sub="de 4 disponibles" 
+          />
+          {/* Período */}
+          <StatMiniWhite 
+            label="PERIODO" 
+            value={selectedMonth.split(' ')[0]} 
+            sub="Mes seleccionado" 
+          />
         </div>
       </div>
 
@@ -149,6 +170,7 @@ export function ContentView() {
           );
         })}
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Navigation Sidebar */}
         <div className="lg:col-span-4 space-y-8">
