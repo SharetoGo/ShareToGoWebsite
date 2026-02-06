@@ -3,14 +3,13 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Reviews from "@/components/ui/reviews";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, TrendingUp, Leaf } from "lucide-react";
 import { ODSSection } from "@/components/ODSSection";
 import { useTranslation } from "react-i18next";
-
 
 export default function QuienesSomos() {
   const { t } = useTranslation();
@@ -23,38 +22,36 @@ export default function QuienesSomos() {
   const [personas, setPersonas] = useState<number>(0);
   const [co2Saved, setCo2Saved] = useState<number>(0);
 
-const fetchGlobalStats = async () => {
-  try {
-    const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
+  const fetchGlobalStats = async () => {
+    try {
+      const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
 
-    if (snap.exists()) {
-      const data = snap.data();
+      if (snap.exists()) {
+        const data = snap.data();
 
-      // totalTravels
-      setTotalTravels(
-        typeof data.totalTravels === "number" ? data.totalTravels : 0
-      );
+        // totalTravels
+        setTotalTravels(
+          typeof data.totalTravels === "number" ? data.totalTravels : 0,
+        );
 
-      // totalPassengers
-      setPersonas(
-        typeof data.totalPassengers === "number" ? data.totalPassengers : 0
-      );
+        // totalPassengers
+        setPersonas(
+          typeof data.totalPassengers === "number" ? data.totalPassengers : 0,
+        );
 
-      // totalCo2 (redondeado)
-      setCo2Saved(
-        typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0
-      );
+        // totalCo2 (redondeado)
+        setCo2Saved(
+          typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0,
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching global stats:", error);
     }
-  } catch (error) {
-    console.error("Error fetching global stats:", error);
-  }
-};
+  };
 
-
-useEffect(() => {
-  fetchGlobalStats();
-}, []);
-
+  useEffect(() => {
+    fetchGlobalStats();
+  }, []);
 
   return (
     <main className="scroll-smooth">

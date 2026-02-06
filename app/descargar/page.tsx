@@ -20,7 +20,7 @@ export default function DownloadSection() {
         </span>
       ) : (
         part
-      )
+      ),
     );
   };
   const tBold = (key: string) => formatBold(t(key));
@@ -85,9 +85,7 @@ export default function DownloadSection() {
               <h2 className="mt-6 text-2xl font-semibold text-white">
                 {t("dl_qr_title")}
               </h2>
-              <p className="mt-2 text-white max-w-sm">
-                {t("dl_qr_text")}
-              </p>
+              <p className="mt-2 text-white max-w-sm">{t("dl_qr_text")}</p>
             </div>
 
             {/* RIGHT SIDE */}
@@ -141,7 +139,11 @@ export default function DownloadSection() {
             {t("dl_zones_section_title")}
           </h2>
           <ul className="space-y-4 text-lg text-[#2a2c38] text-center">
-            {[tBold("dl_zones_b1"), tBold("dl_zones_b2"), tBold("dl_zones_b3")].map((item) => (
+            {[
+              tBold("dl_zones_b1"),
+              tBold("dl_zones_b2"),
+              tBold("dl_zones_b3"),
+            ].map((item) => (
               <li
                 key={item as unknown as string}
                 className="flex flex-col items-center gap-3 md:flex-row md:justify-center md:text-left"
@@ -154,7 +156,10 @@ export default function DownloadSection() {
               <FaCheckCircle className="text-[#9dd187]" />
               <span>
                 {t("dl_zones_b4_prefix")}{" "}
-                <Link href="/contratar" className="text-[#4d7c41] underline underline-offset-4 font-semibold">
+                <Link
+                  href="/contratar"
+                  className="text-[#4d7c41] underline underline-offset-4 font-semibold"
+                >
                   {t("dl_zones_b4_link")}
                 </Link>
                 .
@@ -170,9 +175,7 @@ export default function DownloadSection() {
           <h3 className="text-3xl md:text-4xl font-bold text-[#2a2c38]">
             {t("dl_individual_title")}
           </h3>
-          <p className="text-lg text-[#2a2c38]">
-            {t("dl_individual_text")}
-          </p>
+          <p className="text-lg text-[#2a2c38]">{t("dl_individual_text")}</p>
           <Button
             className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475] rounded-full px-8"
             asChild
@@ -188,7 +191,7 @@ export default function DownloadSection() {
               style={{
                 backgroundImage: card.image
                   ? `url(${card.image})`
-                  : card.bgFallback ?? undefined,
+                  : (card.bgFallback ?? undefined),
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundColor: card.bgFallback ? undefined : "#0f172a",
@@ -201,9 +204,7 @@ export default function DownloadSection() {
                 <h3 className="text-2xl sm:text-3xl font-bold mb-3">
                   {t(card.titleKey)}
                 </h3>
-                <p className="text-base mb-4 max-w-xs">
-                  {t(card.textKey)}
-                </p>
+                <p className="text-base mb-4 max-w-xs">{t(card.textKey)}</p>
                 <Button
                   variant="secondary"
                   className="bg-[#9dd187] text-[#2a2c38] font-semibold hover:bg-[#8bc475]"

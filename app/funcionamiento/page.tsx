@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { InteractiveCard } from "@/components/ui/interactive-card";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, MapPin, Users, CheckCircle, Play } from "lucide-react";
+import { UserPlus, MapPin, Users, CheckCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Funcionamiento() {

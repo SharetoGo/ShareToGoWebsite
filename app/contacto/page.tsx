@@ -17,14 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import {
-  MapPin,
-  Phone,
-  Mail,
-  MessageSquare,
-  Users,
-  Building,
-} from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
@@ -50,7 +43,7 @@ export default function Contacto() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { id, value } = e.target;
     setFormData((prev) => ({
@@ -316,7 +309,6 @@ export default function Contacto() {
                       {t("co_form_privacy")}
                     </p>
                   </form>
-
                 </CardContent>
               </Card>
             </div>

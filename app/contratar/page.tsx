@@ -194,9 +194,7 @@ export default function Contratar() {
                             }
                           >
                             <SelectTrigger>
-                              <SelectValue
-                                placeholder={t("ct_emp_ph")}
-                              />
+                              <SelectValue placeholder={t("ct_emp_ph")} />
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="10-50">
@@ -264,9 +262,7 @@ export default function Contratar() {
                       <h3 className="font-semibold text-[#2a2c38] mb-1">
                         {t("ct_demo_b1_title")}
                       </h3>
-                      <p className="text-gray-600">
-                        {t("ct_demo_b1_text")}
-                      </p>
+                      <p className="text-gray-600">{t("ct_demo_b1_text")}</p>
                     </div>
                   </div>
 
@@ -280,9 +276,7 @@ export default function Contratar() {
                       <h3 className="font-semibold text-[#2a2c38] mb-1">
                         {t("ct_demo_b2_title")}
                       </h3>
-                      <p className="text-gray-600">
-                        {t("ct_demo_b2_text")}
-                      </p>
+                      <p className="text-gray-600">{t("ct_demo_b2_text")}</p>
                     </div>
                   </div>
 
@@ -296,9 +290,7 @@ export default function Contratar() {
                       <h3 className="font-semibold text-[#2a2c38] mb-1">
                         {t("ct_demo_b3_title")}
                       </h3>
-                      <p className="text-gray-600">
-                        {t("ct_demo_b3_text")}
-                      </p>
+                      <p className="text-gray-600">{t("ct_demo_b3_text")}</p>
                     </div>
                   </div>
                 </div>
@@ -353,9 +345,7 @@ export default function Contratar() {
                 <h3 className="font-semibold text-[#2a2c38] mb-2">
                   {t("ct_faq1_q")}
                 </h3>
-                <p className="text-gray-600">
-                  {t("ct_faq1_a")}
-                </p>
+                <p className="text-gray-600">{t("ct_faq1_a")}</p>
               </CardContent>
             </Card>
 
@@ -364,9 +354,7 @@ export default function Contratar() {
                 <h3 className="font-semibold text-[#2a2c38] mb-2">
                   {t("ct_faq2_q")}
                 </h3>
-                <p className="text-gray-600">
-                  {t("ct_faq2_a")}
-                </p>
+                <p className="text-gray-600">{t("ct_faq2_a")}</p>
               </CardContent>
             </Card>
 
@@ -375,9 +363,7 @@ export default function Contratar() {
                 <h3 className="font-semibold text-[#2a2c38] mb-2">
                   {t("ct_faq3_q")}
                 </h3>
-                <p className="text-gray-600">
-                  {t("ct_faq3_a")}
-                </p>
+                <p className="text-gray-600">{t("ct_faq3_a")}</p>
               </CardContent>
             </Card>
           </div>

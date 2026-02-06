@@ -232,7 +232,7 @@ export default function Footer() {
               </svg>
               {t("footer_descargar_app")}
             </a>
-            
+
             <section aria-label="Partners" className="w-full mt-3">
               <h6 className="text-[#9dd187] font-semibold mb-3 text-base">
                 Partners

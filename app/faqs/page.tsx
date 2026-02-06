@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState, ReactNode } from "react";
-import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 type Faq = {
@@ -98,7 +97,7 @@ export default function Faqs() {
   ];
 
   const [open, setOpen] = useState<boolean[]>(
-    Array(faqData.length).fill(false)
+    Array(faqData.length).fill(false),
   );
 
   const handleToggle = (idx: number) => {

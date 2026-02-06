@@ -69,7 +69,6 @@ const SectionHeader = ({
   </div>
 );
 
-
 const Benefit = ({
   icon,
   title,
