@@ -27,7 +27,7 @@ const fadeInUp = {
 };
 
 export default function ConsultoriaSostenibilidad() {
-  const { t } = useTranslation('');
+  const { t } = useTranslation('common');
 
   const getTranslatedList = (key: string): string[] => {
     const list = t(key, { returnObjects: true });
