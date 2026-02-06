@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import WhiteLogo from "./ui/whiteLogo";
@@ -14,11 +14,16 @@ export default function Footer() {
       href: "https://techbarcelona.com/",
       logo: "/images/TECH-BARCELONA_logo.webp",
     },
-        {
+    {
       name: "EAE Emprende Barcelona",
       href: "https://www.eae.es/carreras-profesionales/eae-emprendedores",
       logo: "/images/EAEemprende-logo.png",
-        },
+    },
+    {
+      name: "European Sustainability Consulting",
+      href: "https://www.linkedin.com/company/esc-eu/",
+      logo: "/images/ESC-Logo-White.png",
+    },
   ];
 
   return (
@@ -72,7 +77,7 @@ export default function Footer() {
                   className="hover:text-[#9dd187] transition"
                 >
                   <svg className="w-7 h-7 fill-current" viewBox="0 0 32 32">
-                    <path d="M18.244 2H21l-6.54 7.48L22.5 22h-6.87l-4.78-6.06L4.5 22H2l7.02-8.03L1.5 2h6.87l4.3 5.45L18.244 2Zm-1.2 18h1.58L7.2 4h-1.6l11.444 16Z"/>
+                    <path d="M18.244 2H21l-6.54 7.48L22.5 22h-6.87l-4.78-6.06L4.5 22H2l7.02-8.03L1.5 2h6.87l4.3 5.45L18.244 2Zm-1.2 18h1.58L7.2 4h-1.6l11.444 16Z" />
                   </svg>
                 </a>
               </li>
@@ -86,7 +91,7 @@ export default function Footer() {
                   className="hover:text-[#9dd187] transition"
                 >
                   <svg className="w-7 h-7 fill-current" viewBox="0 0 32 32">
-                    <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM0 22h5V7H0v15Zm7.5 0h5v-8.2c0-2.18 2.85-2.36 2.85 0V22h5v-9.77c0-6.07-6.62-5.85-7.85-2.86V7h-5V22Z"/>
+                    <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5ZM0 22h5V7H0v15Zm7.5 0h5v-8.2c0-2.18 2.85-2.36 2.85 0V22h5v-9.77c0-6.07-6.62-5.85-7.85-2.86V7h-5V22Z" />
                   </svg>
                 </a>
               </li>
@@ -95,71 +100,165 @@ export default function Footer() {
 
           {/* SharetoGo */}
           <nav className="lg:col-span-2" aria-label="SharetoGo">
-            <h6 className="text-[#9dd187] font-semibold mb-3">{t("nombre_sharetogo")}</h6>
+            <h6 className="text-[#9dd187] font-semibold mb-3">
+              {t("nombre_sharetogo")}
+            </h6>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/" className="hover:text-[#9dd187] transition">{t("nav_inicio")}</Link></li>
-              <li><Link href="/quienes-somos" className="hover:text-[#9dd187] transition">{t("nav_quienes")}</Link></li>
-              <li><Link href="/funcionamiento" className="hover:text-[#9dd187] transition">{t("nav_funcionamiento")}</Link></li>
-              <li><Link href="/contratar" className="hover:text-[#9dd187] transition">{t("nav_contratar")}</Link></li>
+              <li>
+                <Link href="/" className="hover:text-[#9dd187] transition">
+                  {t("nav_inicio")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/quienes-somos"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_quienes")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/funcionamiento"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_funcionamiento")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contratar"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_contratar")}
+                </Link>
+              </li>
             </ul>
           </nav>
 
           {/* Espacios */}
           <nav className="lg:col-span-2" aria-label="Espacios">
-            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_espacios")}</h6>
+            <h6 className="text-[#9dd187] font-semibold mb-3">
+              {t("footer_espacios")}
+            </h6>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/espacio-empresas" className="hover:text-[#9dd187] transition">{t("nav_empresas_simple")}</Link></li>
-              <li><Link href="/espacio-eventos" className="hover:text-[#9dd187] transition">{t("nav_eventos_simple")}</Link></li>
+              <li>
+                <Link
+                  href="/espacio-empresas"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_empresas_simple")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/espacio-empresas/consultoria-de-sostenibilidad"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_consultoria_sostenibilidad")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/espacio-eventos"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_eventos_simple")}
+                </Link>
+              </li>
             </ul>
           </nav>
 
           {/* Ayuda */}
           <nav className="lg:col-span-2" aria-label="Ayuda">
-            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_ayuda")}</h6>
+            <h6 className="text-[#9dd187] font-semibold mb-3">
+              {t("footer_ayuda")}
+            </h6>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/faqs" className="hover:text-[#9dd187] transition">{t("nav_faqs")}</Link></li>
-              <li><Link href="/contacto" className="hover:text-[#9dd187] transition">{t("nav_contacto")}</Link></li>
-              <li><Link href="/privacidad" className="hover:text-[#9dd187] transition">{t("footer_privacidad")}</Link></li>
+              <li>
+                <Link href="/faqs" className="hover:text-[#9dd187] transition">
+                  {t("nav_faqs")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contacto"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_contacto")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacidad"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("footer_privacidad")}
+                </Link>
+              </li>
             </ul>
           </nav>
 
           {/* CTAs */}
-          <div className="lg:col-span-3 flex flex-col items-start gap-4">
+          <div className="lg:col-span-3 flex flex-wrap items-start gap-3">
             <a
               href="https://apps.apple.com/us/app/sharetogo-carpooling/id6746420222"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-5 py-3 rounded-lg border border-white/60 hover:border-white hover:bg-[#E8F6DF] hover:text-[#2a2c38] transition"
+              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-white/60 hover:border-white hover:bg-[#E8F6DF] hover:text-[#2a2c38] transition text-sm flex-1 sm:flex-none whitespace-nowrap"
             >
               {/* Apple icon */}
-              <svg className="w-5 h-5" viewBox="0 0 384 512"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+              <svg className="w-5 h-5 mr-2" viewBox="0 0 384 512">
+                <path
+                  fill="currentColor"
+                  d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"
+                />
+              </svg>
               {t("footer_descargar_app")}
             </a>
-         <section aria-label="Partners" className="w-full mt-3">
-            <h6 className="text-[#9dd187] font-semibold mb-3 text-base">Partners</h6>
 
-            <ul className="flex flex-col items-center space-y-4">
-              {partners.map((p) => (
-                <li key={p.name} className="w-full flex justify-center">
-                  <a
-                    href={p.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex flex-col items-center justify-center w-full max-w-xs rounded-lg bg-white/5 px-2 py-2 ring-1 ring-white/10 hover:ring-white/30 transition text-center"
-                    aria-label={p.name}
-                    title={p.name}
-                  >
-                    <img
-                      src={p.logo}
-                      alt={p.name}
-                      className="h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition"
-                    />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.sharetogo.carpool&hl=es"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-white/60 hover:border-white hover:bg-[#E8F6DF] hover:text-[#2a2c38] transition text-sm flex-1 sm:flex-none whitespace-nowrap"
+            >
+              {/* Play Store icon */}
+              <svg className="w-5 h-5 mr-2" viewBox="0 0 512 512">
+                <path
+                  fill="currentColor"
+                  d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"
+                />
+              </svg>
+              {t("footer_descargar_app")}
+            </a>
+            
+            <section aria-label="Partners" className="w-full mt-3">
+              <h6 className="text-[#9dd187] font-semibold mb-3 text-base">
+                Partners
+              </h6>
 
+              <ul className="flex flex-col items-center space-y-4">
+                {partners.map((p) => (
+                  <li key={p.name} className="w-full flex justify-center">
+                    <a
+                      href={p.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex flex-col items-center justify-center w-full max-w-xs rounded-lg bg-white/5 px-2 py-2 ring-1 ring-white/10 hover:ring-white/30 transition text-center"
+                      aria-label={p.name}
+                      title={p.name}
+                    >
+                      <img
+                        src={p.logo}
+                        alt={p.name}
+                        className="h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
 
@@ -169,11 +268,32 @@ export default function Footer() {
         {/* Bottom */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between py-6 gap-6">
           <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80 underline decoration-white/30 underline-offset-4">
-            <li><Link href="/privacidad#derechos" className="hover:text-[#9dd187]">{t("footer_derechos")}</Link></li>
-            <li><Link href="/privacidad" className="hover:text-[#9dd187]">{t("footer_privacidad")}</Link></li>
-            <li><Link href="/privacidad#términos" className="hover:text-[#9dd187]">{t("footer_terminos")}</Link></li>
-            <li><Link href="/privacidad#cookies" className="hover:text-[#9dd187]">{t("footer_cookies")}</Link></li>
-
+            <li>
+              <Link
+                href="/privacidad#derechos"
+                className="hover:text-[#9dd187]"
+              >
+                {t("footer_derechos")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacidad" className="hover:text-[#9dd187]">
+                {t("footer_privacidad")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/privacidad#términos"
+                className="hover:text-[#9dd187]"
+              >
+                {t("footer_terminos")}
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacidad#cookies" className="hover:text-[#9dd187]">
+                {t("footer_cookies")}
+              </Link>
+            </li>
           </ul>
 
           <div className="text-sm text-white/70">
