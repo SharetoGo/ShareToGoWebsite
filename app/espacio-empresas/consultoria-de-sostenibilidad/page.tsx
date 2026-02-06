@@ -27,7 +27,11 @@ const fadeInUp = {
 };
 
 export default function ConsultoriaSostenibilidad() {
-  const { t } = useTranslation('common');
+  const { t, i18n: i18nInstance } = useTranslation('common');
+
+  if (!i18nInstance || !i18nInstance.isInitialized) {
+    return <div className="min-h-screen bg-white" />; 
+  }
 
   const getTranslatedList = (key: string): string[] => {
     const list = t(key, { returnObjects: true });

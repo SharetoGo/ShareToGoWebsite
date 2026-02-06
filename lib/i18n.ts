@@ -18,6 +18,7 @@ if (!i18n.isInitialized) {
         es: { common: es },
         fr: { common: fr },
       },
+      ns: ['common'],        // Add this line
       defaultNS: 'common',
       fallbackLng: 'es',
       lng: 'es',
