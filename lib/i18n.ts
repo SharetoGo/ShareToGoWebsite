@@ -14,12 +14,10 @@ if (!i18n.isInitialized) {
     .use(LanguageDetector)
     .init({
       resources: {
-        en: { common: en },
-        es: { common: es },
-        fr: { common: fr },
+        en: { translation: en },
+        es: { translation: es },
+        fr: { translation: fr },
       },
-      ns: ['common'],        // Add this line
-      defaultNS: 'common',
       fallbackLng: 'es',
       lng: 'es',
       interpolation: {

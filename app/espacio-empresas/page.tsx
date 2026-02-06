@@ -268,7 +268,7 @@ export default function EspacioEmpresas() {
                 {[1, 2, 3, 4].map((num) => (
                   <Link
                     key={num}
-                    href={`/espacio-empresas/consultoria-de-sostenibilidad#service-${num}`}
+                    href={`/consultoria-de-sostenibilidad#service-${num}`}
                     className="group flex items-center justify-between p-6 bg-white rounded-2xl border border-transparent hover:border-[#9dd187] hover:shadow-lg transition-all duration-300"
                   >
                     <div className="flex items-center gap-4">
@@ -328,7 +328,7 @@ export default function EspacioEmpresas() {
                       WALMART
                     </span>
                   </div>
-                  <Link href="/espacio-empresas/consultoria-de-sostenibilidad/#strategic-partner-esc">
+                  <Link href="/consultoria-de-sostenibilidad/#strategic-partner-esc">
                     <Button className="mt-10 w-full bg-[#9dd187] hover:bg-[#8bc475] text-[#1a1c24] font-bold py-6 rounded-2xl">
                       {t("see_technical_details") ||
                         "Ver detalles técnicos y equipo"}
