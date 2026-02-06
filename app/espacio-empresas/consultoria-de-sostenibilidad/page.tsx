@@ -29,10 +29,9 @@ const fadeInUp = {
 export default function ConsultoriaSostenibilidad() {
   const { t } = useTranslation();
 
-  // Helper function to safely handle translated lists
-  const getTranslatedList = (key: string): any[] => {
+  const getTranslatedList = (key: string): string[] => {
     const list = t(key, { returnObjects: true });
-    return Array.isArray(list) ? (list as any[]) : [];
+    return Array.isArray(list) ? (list as string[]) : [];
   };
 
   return (
@@ -45,8 +44,7 @@ export default function ConsultoriaSostenibilidad() {
             href="/espacio-empresas"
             className="inline-flex items-center text-[#9dd187] mb-12 hover:-translate-x-2 transition-all"
           >
-            <ArrowLeft size={20} className="mr-2" />{" "}
-            {t("back_to_empresas")}
+            <ArrowLeft size={20} className="mr-2" /> {t("back_to_empresas")}
           </Link>
           <div className="max-w-3xl">
             <Badge className="bg-[#9dd187] text-[#1a1c24] mb-6 px-4 py-1 font-bold text-sm">
@@ -206,7 +204,10 @@ export default function ConsultoriaSostenibilidad() {
       </section>
 
       {/* --- STRATEGIC PARTNER ESC --- */}
-      <section id="strategic-partner-esc" className="py-24 bg-white overflow-hidden">
+      <section
+        id="strategic-partner-esc"
+        className="py-24 bg-white overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
           <div className="text-center mb-16">
@@ -335,11 +336,17 @@ export default function ConsultoriaSostenibilidad() {
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { name: "Stadler Rail", url: "https://www.stadlerrail.com/" },
+                    {
+                      name: "Stadler Rail",
+                      url: "https://www.stadlerrail.com/",
+                    },
                     { name: "Veolia", url: "https://www.veolia.com/" },
                     { name: "Grupo Agbar", url: "https://www.agbar.es/" },
                     { name: "Roca", url: "https://www.roca.es/" },
-                    { name: "Boehringer Ingelheim", url: "https://www.boehringer-ingelheim.com/" },
+                    {
+                      name: "Boehringer Ingelheim",
+                      url: "https://www.boehringer-ingelheim.com/",
+                    },
                     { name: "Walmart", url: "https://www.walmart.com/" },
                   ].map((client) => (
                     <a
@@ -350,7 +357,10 @@ export default function ConsultoriaSostenibilidad() {
                       className="group flex items-center justify-center gap-2 bg-white/5 px-6 py-4 rounded-xl border border-white/10 text-center font-bold text-gray-300 hover:bg-white/10 hover:text-[#9dd187] hover:border-[#9dd187]/50 transition-all"
                     >
                       {client.name}
-                      <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <ExternalLink
+                        size={14}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      />
                     </a>
                   ))}
                 </div>
@@ -383,11 +393,11 @@ export default function ConsultoriaSostenibilidad() {
             {/* What you receive */}
             <div className="bg-[#1a1c24] rounded-[2.5rem] p-10 text-white shadow-xl">
               <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                <Package className="text-[#9dd187]" /> 
+                <Package className="text-[#9dd187]" />
                 {t("deliverables_title")}
               </h3>
               <ul className="space-y-5">
-               {getTranslatedList("deliverables_list").map((item, i) => (
+                {getTranslatedList("deliverables_list").map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <div className="w-5 h-5 rounded-full bg-[#9dd187] flex items-center justify-center shrink-0 mt-1">
                       <CheckCircle className="text-[#1a1c24]" size={12} />

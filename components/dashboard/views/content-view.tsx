@@ -233,7 +233,7 @@ export function ContentView() {
               <textarea
                 placeholder="Contenido..."
                 rows={10}
-                className="w-full border-none focus:ring-0 bg-gray-50 rounded-[2rem] p-8 text-gray-600 leading-relaxed"
+                className="w-full border-none focus:ring-0 bg-gray-50 rounded-4xl p-8 text-gray-600 leading-relaxed"
                 value={formState.content}
                 onChange={e => setFormState({ ...formState, content: e.target.value })}
               />
@@ -274,13 +274,13 @@ function TabButton({ active, onClick, icon, label, disabled }: any) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center justify-between p-5 rounded-3xl transition-all border ${active
+      className={`w-full flex item  s-center justify-between p-5 rounded-3xl transition-all border ${active
           ? "bg-[#2a2c38] text-white border-[#2a2c38] shadow-xl translate-x-2"
-          : "bg-white text-gray-500 border-gray-50 hover:border-[#9dd187]/30"
+          : "bg-white text-black border-gray-50 hover:border-[#9dd187]/30"
         } ${disabled && !active ? "opacity-50 italic" : ""}`}
     >
       <div className="flex items-center gap-4">
-        <span className={active ? "text-[#9dd187]" : "text-gray-300"}>{icon}</span>
+        <span className={active ? "text-[#9dd187]" : "text-black"}>{icon}</span>
         <span className="font-black text-xs uppercase tracking-tighter">{label}</span>
       </div>
       {disabled && !active && <span className="text-[8px] font-bold text-gray-300 uppercase">Vacío</span>}

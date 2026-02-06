@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import {
@@ -21,18 +21,10 @@ import {
   Clock,
   Award,
   Target,
-  Zap,
   Sparkles,
-  CheckCircle,
   Handshake,
   ArrowRight,
-  FileText,
-  ChevronDown, // Added for accordion functionality
-  LineChart,
-  FileCheck,
   Globe,
-  Briefcase,
-  ExternalLink,
   LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -77,31 +69,12 @@ const SectionHeader = ({
   </div>
 );
 
-const ConsultancyItem = ({ number, title, text, items, icon: Icon }: any) => (
-  <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-    <div className="flex items-center gap-4 mb-6">
-      <div className="w-12 h-12 rounded-full bg-[#9dd187] text-white flex items-center justify-center font-bold text-xl">
-        <Icon className="text-white w-8 h-8" />
-      </div>
-      <h3 className="text-xl font-bold text-[#1a1c24] mb-4">{title}</h3>
-    </div>
-    <p className="text-gray-600 mb-6 text-sm leading-relaxed">{text}</p>
-    <ul className="space-y-3">
-      {items.map((item: string, idx: number) => (
-        <li key={idx} className="flex items-start gap-3 text-sm text-gray-700">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#9dd187] mt-2 shrink-0" />
-          {item}
-        </li>
-      ))}
-    </ul>
-  </div>
-);
 
 const Benefit = ({
   icon,
   title,
   text,
-  index, // We add index for the background number
+  index,
 }: {
   icon: React.ReactNode;
   title: string;
@@ -145,93 +118,14 @@ const Benefit = ({
  * MAIN COMPONENT
  */
 export default function EspacioEmpresas() {
-  const { t } = useTranslation(); // Assuming t is already defined
+  const { t } = useTranslation();
   const [openAccordionItem, setOpenAccordionItem] = React.useState<
     number | null
   >(null);
 
-  // Helper function to safely handle translated lists
   const getTranslatedList = (key: string): string[] => {
     const list = t(key, { returnObjects: true });
     return Array.isArray(list) ? (list as string[]) : [];
-  };
-
-  // New AccordionItem component for the features section
-  const AccordionItem = ({
-    id,
-    title,
-    text,
-    listItems,
-    icon: Icon,
-  }: {
-    id: number;
-    title: string;
-    text: string;
-    listItems?: string[];
-    icon: LucideIcon;
-  }) => {
-    const isOpen = openAccordionItem === id;
-
-    return (
-      <div className="border-b border-gray-200 last:border-b-0">
-        <button
-          className="flex items-center justify-between w-full py-6 text-left focus:outline-none"
-          onClick={() => setOpenAccordionItem(isOpen ? null : id)}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#9dd187]/10 flex items-center justify-center shrink-0">
-              <Icon className="text-[#4d7c41] w-6 h-6" />
-            </div>
-            <h4 className="text-xl font-bold text-[#1a1c24]">{title}</h4>
-          </div>
-          <ChevronDown
-            className={`w-6 h-6 text-gray-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
-          />
-        </button>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="pb-6 pl-16 pr-4" // Adjust padding to align with icon
-          >
-            <p className="text-gray-600 text-base leading-relaxed mb-4">
-              {text}
-            </p>
-            {listItems && listItems.length > 0 && (
-              <ul className="space-y-2">
-                {listItems.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-2 text-gray-700 text-sm"
-                  >
-                    <CheckCircle className="text-[#9dd187] w-4 h-4 mt-1 shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {/* Additional notes for specific features */}
-            {id === 1 && (
-              <p className="text-gray-600 text-base leading-relaxed mt-4">
-                {t("comm_feat1_note")}
-              </p>
-            )}
-            {id === 2 && (
-              <p className="text-gray-600 text-base leading-relaxed mt-4">
-                {t("comm_feat2_note")}
-              </p>
-            )}
-            {id === 3 && (
-              <p className="text-gray-600 text-base leading-relaxed mt-4">
-                {t("comm_feat3_note")}
-              </p>
-            )}
-          </motion.div>
-        )}
-      </div>
-    );
   };
 
   return (
