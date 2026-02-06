@@ -101,20 +101,44 @@ const Benefit = ({
   icon,
   title,
   text,
+  index, // We add index for the background number
 }: {
   icon: React.ReactNode;
   title: string;
   text: string;
+  index: number;
 }) => (
-  <div className="text-center p-8 bg-white rounded-4xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-[#9dd187]/10 transition-all duration-300 group">
-    <div className="w-16 h-16 bg-[#f4f9eb] rounded-2xl flex items-center justify-center mx-auto mb-6 transition-colors duration-300">
-      <div className="group-hover:scale-110 transition-transform duration-300">
-        {icon}
+  <motion.div
+    variants={{
+      hidden: { opacity: 0, y: 20 },
+      visible: { opacity: 1, y: 0 },
+    }}
+    className="relative group p-8 bg-white rounded-[2.5rem] border-t-4 border-t-[#9dd187] border-x border-b border-gray-100 shadow-sm hover:shadow-[0_20px_40px_-15px_rgba(157,209,135,0.2)] transition-all duration-500 overflow-hidden"
+  >
+    {/* Large Background Number for Impact */}
+    <span className="absolute -bottom-4 -right-2 text-9xl font-black text-gray-50 group-hover:text-[#9dd187]/5 transition-colors duration-500 pointer-events-none select-none">
+      0{index + 1}
+    </span>
+
+    <div className="relative z-10">
+      <div className="flex items-center gap-4 mb-6">
+        <div className="w-14 h-14 bg-[#f4f9eb] rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-[#9dd187] transition-all duration-500">
+          <div className="group-hover:text-white transition-colors duration-500">
+            {icon}
+          </div>
+        </div>
+        <h3 className="text-xl font-bold text-[#1a1c24] group-hover:text-[#4d7c41] transition-colors">
+          {title}
+        </h3>
       </div>
+      <p className="text-gray-500 text-lg leading-relaxed group-hover:text-gray-700 transition-colors">
+        {text}
+      </p>
     </div>
-    <h3 className="text-xl font-bold text-[#1a1c24] mb-3">{title}</h3>
-    <p className="text-gray-600 leading-relaxed">{text}</p>
-  </div>
+
+    {/* Subtle bottom accent line */}
+    <div className="absolute bottom-0 left-0 h-1 bg-[#9dd187] w-0 group-hover:w-full transition-all duration-700" />
+  </motion.div>
 );
 
 /**
@@ -256,6 +280,78 @@ export default function EspacioEmpresas() {
         </div>
       </motion.section>
 
+      {/* Benefits section */}
+      <section className="py-24 bg-gray-50 relative overflow-hidden">
+        {/* Abstract Background Decoration */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none opacity-40">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-[#9dd187]/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <SectionHeader
+            badge={t("beneficios_badge")}
+            title={t("ee_ben_title")}
+            icon={Award}
+          />
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {[
+              {
+                icon: <BarChart3 size={28} />,
+                title: "ee_ben1_title",
+                text: "ee_ben1_text",
+              },
+              {
+                icon: <Shield size={28} />,
+                title: "ee_ben2_title",
+                text: "ee_ben2_text",
+              },
+              {
+                icon: <Leaf size={28} />,
+                title: "ee_ben3_title",
+                text: "ee_ben3_text",
+              },
+              {
+                icon: <Award size={28} />,
+                title: "ee_ben4_title",
+                text: "ee_ben4_text",
+              },
+              {
+                icon: <Clock size={28} />,
+                title: "ee_ben5_title",
+                text: "ee_ben5_text",
+              },
+              {
+                icon: <Users size={28} />,
+                title: "ee_ben6_title",
+                text: "ee_ben6_text",
+              },
+            ].map((ben, idx) => (
+              <Benefit
+                key={idx}
+                index={idx}
+                icon={ben.icon}
+                title={t(ben.title)}
+                text={t(ben.text)}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* NEW: Sustainability Consultancy Section */}
       <motion.section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -395,7 +491,7 @@ export default function EspacioEmpresas() {
                         className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
                           openAccordionItem === item.id
                             ? "bg-[#9dd187] text-white"
-                            : "bg-white text-gray-400"
+                            : "bg-[#9dd187] text-white"
                         }`}
                       >
                         <item.icon size={22} />
@@ -404,7 +500,7 @@ export default function EspacioEmpresas() {
                         className={`text-lg font-bold transition-colors ${
                           openAccordionItem === item.id
                             ? "text-[#1a1c24]"
-                            : "text-gray-500"
+                            : "text-[#1a1c24]"
                         }`}
                       >
                         {t(`comm_${item.key}_title`)}
@@ -561,56 +657,6 @@ export default function EspacioEmpresas() {
             <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mb-4">
               {t("ee_part_p1")}
             </p>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Benefits section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        transition={{ duration: 0.4, delay: 0.3 }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="py-16 md:py-24 bg-gray-50"
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <SectionHeader
-            badge={t("beneficios_badge")}
-            title={t("ee_ben_title")}
-            icon={Award}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Benefit
-              icon={<BarChart3 className="text-[#9dd187] w-8 h-8" />}
-              title={t("ee_ben1_title")}
-              text={t("ee_ben1_text")}
-            />
-            <Benefit
-              icon={<Shield className="text-[#9dd187] w-8 h-8" />}
-              title={t("ee_ben2_title")}
-              text={t("ee_ben2_text")}
-            />
-            <Benefit
-              icon={<Users className="text-[#9dd187] w-8 h-8" />}
-              title={t("ee_ben3_title")}
-              text={t("ee_ben3_text")}
-            />
-            <Benefit
-              icon={<Leaf className="text-[#9dd187] w-8 h-8" />}
-              title={t("ee_ben4_title")}
-              text={t("ee_ben4_text")}
-            />
-            <Benefit
-              icon={<Clock className="text-[#9dd187] w-8 h-8" />}
-              title={t("ee_ben5_title")}
-              text={t("ee_ben5_text")}
-            />
-            <Benefit
-              icon={<Award className="text-[#9dd187] w-8 h-8" />}
-              title={t("ee_ben6_title")}
-              text={t("ee_ben6_text")}
-            />
           </div>
         </div>
       </motion.section>

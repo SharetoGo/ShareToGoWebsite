@@ -152,6 +152,14 @@ export default function Footer() {
               </li>
               <li>
                 <Link
+                  href="/espacio-empresas/consultoria-de-sostenibilidad"
+                  className="hover:text-[#9dd187] transition"
+                >
+                  {t("nav_consultoria_sostenibilidad")}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/espacio-eventos"
                   className="hover:text-[#9dd187] transition"
                 >

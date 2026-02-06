@@ -9,7 +9,8 @@ import {
   Award,
   FileText,
   ArrowLeft,
-  Microscope,
+  Sparkle,
+  ExternalLink,
   Landmark,
   GraduationCap,
   Recycle,
@@ -45,18 +46,16 @@ export default function ConsultoriaSostenibilidad() {
             className="inline-flex items-center text-[#9dd187] mb-12 hover:-translate-x-2 transition-all"
           >
             <ArrowLeft size={20} className="mr-2" />{" "}
-            {t("back_to_empresas") || "Volver"}
+            {t("back_to_empresas")}
           </Link>
           <div className="max-w-3xl">
-            <Badge className="bg-[#9dd187] text-[#1a1c24] mb-6 px-4 py-1 font-bold">
-              SOLUCIONES TÉCNICAS
+            <Badge className="bg-[#9dd187] text-[#1a1c24] mb-6 px-4 py-1 font-bold text-sm">
+              <Sparkle size={16} className="inline-block mr-1" />
+              {t("consultancy_page_badge")}
             </Badge>
             <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-8 leading-tight">
               {t("consultancy_full_title")}
             </h1>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              {t("consultancy_full_sub")}
-            </p>
           </div>
         </div>
       </section>
@@ -178,10 +177,10 @@ export default function ConsultoriaSostenibilidad() {
                 <FileText size={32} />
               </div>
               <h3 className="text-xl font-bold text-[#1a1c24] mb-2">
-                Normativa estatal y europea
+                {t("methodology_norm")}
               </h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Ley 11/2018, CSRD, Ley 9/2025, RD 214/2025
+                {t("methodology_norm_sub")}
               </p>
             </motion.div>
           </div>
@@ -336,19 +335,23 @@ export default function ConsultoriaSostenibilidad() {
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    "Stadler Rail",
-                    "Veolia",
-                    "Grupo Agbar",
-                    "Roca",
-                    "Boehringer Ingelheim",
-                    "Walmart",
+                    { name: "Stadler Rail", url: "https://www.stadlerrail.com/" },
+                    { name: "Veolia", url: "https://www.veolia.com/" },
+                    { name: "Grupo Agbar", url: "https://www.agbar.es/" },
+                    { name: "Roca", url: "https://www.roca.es/" },
+                    { name: "Boehringer Ingelheim", url: "https://www.boehringer-ingelheim.com/" },
+                    { name: "Walmart", url: "https://www.walmart.com/" },
                   ].map((client) => (
-                    <div
-                      key={client}
-                      className="bg-white/5 px-6 py-4 rounded-xl border border-white/10 text-center font-bold text-gray-300 hover:bg-white/10 transition-colors"
+                    <a
+                      key={client.name}
+                      href={client.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center justify-center gap-2 bg-white/5 px-6 py-4 rounded-xl border border-white/10 text-center font-bold text-gray-300 hover:bg-white/10 hover:text-[#9dd187] hover:border-[#9dd187]/50 transition-all"
                     >
-                      {client}
-                    </div>
+                      {client.name}
+                      <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </a>
                   ))}
                 </div>
               </div>
