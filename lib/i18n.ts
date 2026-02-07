@@ -8,7 +8,6 @@ import fr from '@/public/locales/fr/common.json';
 
 const isServer = typeof window === 'undefined';
 
-if (!i18n.isInitialized) {
   i18n
     .use(initReactI18next)
     .use(LanguageDetector)
@@ -29,6 +28,6 @@ if (!i18n.isInitialized) {
       },
       supportedLngs: ['es', 'en', 'fr'],
     });
-}
+
 
 export default i18n;
