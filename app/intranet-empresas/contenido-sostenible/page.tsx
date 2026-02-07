@@ -12,9 +12,7 @@ import {
   addDoc,
   doc,
   deleteDoc,
-  updateDoc,
 } from "firebase/firestore";
-import { formatStats } from "@/lib/utils/format";
 import {
   Copy,
   CheckCircle,
@@ -53,6 +51,7 @@ export default function ContentPage() {
   const [activeTab, setActiveTab] = useState<string>("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formState, setFormState] = useState({
     title: "",
     content: "",
@@ -65,6 +64,13 @@ export default function ContentPage() {
     () => getCurrentMonthPublicationDates(),
     [],
   );
+
+  const stats = {
+    co2: companyData?.totalCo2 || 0,
+    km: companyData?.totalKm || 0,
+    trips: companyData?.totalTrips || 0,
+    trees: Math.floor((companyData?.totalCo2 || 0) / 50),
+  };
 
   useEffect(() => {
     if (!companyData?.id) return;
@@ -136,7 +142,11 @@ export default function ContentPage() {
   }, [activeTab, suggestedItems, libraryPosts]);
 
   const handleSave = async () => {
-    if (!companyData?.id || !formState.title || !formState.content) return;
+    if (!formState.title.trim() || !formState.content.trim()) {
+      setError("Por favor, rellena el título y el contenido del post.");
+      return;
+    }
+    if (!companyData?.id) return;
     try {
       const docRef = await addDoc(
         collection(db, "companies", companyData.id, "contentPosts"),
@@ -147,6 +157,7 @@ export default function ContentPage() {
           createdAt: Timestamp.now(),
         },
       );
+      setError(null);
       setActiveTab(docRef.id);
       setFormState({ title: "", content: "", type: "linkedin" });
       setIsCreating(false);
@@ -317,28 +328,38 @@ export default function ContentPage() {
                   Nuevo Post
                 </h2>
                 <button
-                  onClick={() => setIsCreating(false)}
+                  onClick={() => {
+                    setIsCreating(false);
+                    setError(null);
+                  }}
                   className="p-2 bg-gray-50 rounded-xl"
                 >
                   <X />
                 </button>
               </div>
+              {error && (
+                <p className="text-red-500 text-sm font-bold bg-red-50 p-4 rounded-2xl animate-in fade-in slide-in-from-top-1">
+                  {error}
+                </p>
+              )}
               <input
                 placeholder="Título del post..."
                 className="w-full text-2xl font-bold border-none focus:ring-0"
                 value={formState.title}
-                onChange={(e) =>
-                  setFormState({ ...formState, title: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormState({ ...formState, title: e.target.value });
+                  if (error) setError(null);
+                }}
               />
               <textarea
                 placeholder="Contenido..."
                 rows={10}
                 className="w-full border-none focus:ring-0 bg-gray-50 rounded-4xl p-8 text-gray-600 leading-relaxed"
                 value={formState.content}
-                onChange={(e) =>
-                  setFormState({ ...formState, content: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormState({ ...formState, content: e.target.value });
+                  if (error) setError(null);
+                }}
               />
               <button
                 onClick={handleSave}

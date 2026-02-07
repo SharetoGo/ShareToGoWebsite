@@ -30,6 +30,7 @@ export function ContentView() {
   const [activeTab, setActiveTab] = useState<string>("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formState, setFormState] = useState({ title: "", content: "", type: "linkedin" as PostType });
 
   // Calcular información de publicación
@@ -93,7 +94,11 @@ export function ContentView() {
   }, [activeTab, suggestedItems, libraryPosts]);
 
   const handleSave = async () => {
-    if (!companyData?.id || !formState.title || !formState.content) return;
+    if (!formState.title.trim() || !formState.content.trim()) {
+      setError("Por favor, rellena el título y el contenido del post.");
+      return;
+    }
+    if (!companyData?.id) return;
     try {
       const docRef = await addDoc(collection(db, "companies", companyData.id, "contentPosts"), {
         ...formState,
@@ -101,6 +106,7 @@ export function ContentView() {
         isAuto: false,
         createdAt: Timestamp.now()
       });
+      setError(null);
       setActiveTab(docRef.id);
       setFormState({ title: "", content: "", type: "linkedin" });
       setIsCreating(false);
@@ -222,27 +228,30 @@ export function ContentView() {
             <div className="bg-white rounded-[3rem] border border-gray-100 shadow-2xl p-10 space-y-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-black text-[#2a2c38]">Nuevo Post</h2>
-                <button onClick={() => setIsCreating(false)} className="p-2 bg-gray-50 rounded-xl"><X /></button>
+                <button onClick={() => { setIsCreating(false); setError(null); }} className="p-2 bg-gray-50 rounded-xl"><X /></button>
               </div>
+              {error && (
+                <p className="text-red-500 text-sm font-bold bg-red-50 p-4 rounded-2xl animate-in fade-in slide-in-from-top-1">{error}</p>
+              )}
               <input
                 placeholder="Título del post..."
                 className="w-full text-2xl font-bold border-none focus:ring-0"
                 value={formState.title}
-                onChange={e => setFormState({ ...formState, title: e.target.value })}
+                onChange={e => { setFormState({ ...formState, title: e.target.value }); if(error) setError(null); }}
               />
               <textarea
                 placeholder="Contenido..."
                 rows={10}
                 className="w-full border-none focus:ring-0 bg-gray-50 rounded-4xl p-8 text-gray-600 leading-relaxed"
                 value={formState.content}
-                onChange={e => setFormState({ ...formState, content: e.target.value })}
+                onChange={e => { setFormState({ ...formState, content: e.target.value }); if(error) setError(null); }}
               />
               <button onClick={handleSave} className="w-full bg-[#9dd187] text-[#2a2c38] py-5 rounded-2xl font-black uppercase shadow-lg shadow-[#9dd187]/20">
                 Guardar en Biblioteca
               </button>
             </div>
           ) : (
-            <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+            <div className="bg-white rounded-[3rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col min-h-150">
               <div className="p-8 border-b border-gray-50 flex justify-between items-center">
                 <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Vista Previa</span>
                 <button
