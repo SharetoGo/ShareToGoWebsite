@@ -145,6 +145,9 @@ export default function Navigation() {
                     <Link href="/espacio-empresas">{t("nav_empresas_simple")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
+                    <Link href="/consultoria-de-sostenibilidad">{t("nav_consultoria_sostenibilidad")}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <Link href="/zonas-favoritas">{t("nav_eventos_simple")}</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -272,6 +275,9 @@ export default function Navigation() {
                 <div className="ml-4">
                   <Link href="/espacio-empresas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_empresas_simple")}
+                  </Link>
+                  <Link href="/consultoria-de-sostenibilidad" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                    {t("nav_consultoria_sostenibilidad")}
                   </Link>
                   <Link href="/zonas-favoritas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_eventos_simple")}

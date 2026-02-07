@@ -380,7 +380,9 @@ export default function EspacioEmpresas() {
               ].map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => setOpenAccordionItem(item.id)}
+                  onClick={() =>
+                    setOpenAccordionItem(openAccordionItem === item.id ? null : item.id)
+                  }
                   className={`cursor-pointer rounded-3xl border-2 transition-all duration-500 p-6 ${
                     openAccordionItem === item.id
                       ? "bg-white border-[#9dd187] shadow-xl shadow-[#9dd187]/10"
