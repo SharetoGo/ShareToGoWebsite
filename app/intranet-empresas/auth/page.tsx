@@ -80,7 +80,7 @@ const handleLogin = async (e: React.FormEvent) => {
       {/* Fondo con mesh blur */}
       <div className="absolute inset-0 bg-linear-to-br from-[#eef6ee] via-[#e7f3e6] to-[#dcecd9]" />
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#9dd187]/40 blur-3xl rounded-full" />
-      <div className="absolute bottom-[-100px] right-[-60px] w-[400px] h-[400px] bg-[#2a2c38]/20 blur-[140px] rounded-full" />
+      <div className="absolute -bottom-25 -right-15 w-100 h-100 bg-[#2a2c38]/20 blur-[140px] rounded-full" />
 
       {/* Tarjeta principal */}
       <div className="relative z-10 w-full max-w-lg bg-white/90 backdrop-blur-sm shadow-2xl rounded-3xl overflow-hidden border border-gray-100">
