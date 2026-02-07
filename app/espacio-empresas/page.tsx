@@ -160,6 +160,15 @@ export default function EspacioEmpresas() {
                     {t("ee_hero_cta_demo")}
                   </Button>
                 </Link>
+                <Link href="/contacto">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-transparent text-white hover:bg-[#9dd187] hover:text-[#1a1c24] rounded-full px-8 h-12 transition-all"
+                  >
+                    {t("ee_hero_cta_contact")}
+                  </Button>
+                </Link>
               </div>
             </div>
             <div>
@@ -526,6 +535,41 @@ export default function EspacioEmpresas() {
           </div>
         </div>
       </motion.section>
+
+      {/* CTA Section: Contact Us */}
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden bg-[#1a1c24] rounded-[3rem] p-8 md:p-20">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-[#9dd187]/10 skew-x-12 transform translate-x-20" />
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#9dd187]/5 rounded-full blur-3xl" />
+            
+            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <Badge className="bg-[#9dd187] text-[#1a1c24] mb-6 px-4 py-1 font-bold">
+                  {t("cta_contact_badge") || "Hablemos de movilidad"}
+                </Badge>
+                <h2 className="text-4xl md:text-2xl font-bold text-white mb-6 leading-tight">
+                  {t("cta_contact_title") || "¿Listo para transformar la movilidad de tu empresa?"}
+                </h2>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 lg:justify-end">
+                <Link href="/contacto">
+                  <Button size="lg" className="w-full sm:w-auto bg-[#9dd187] text-[#1a1c24] hover:bg-[#8bc475] font-bold py-7 px-10 rounded-2xl text-lg transition-transform hover:scale-105">
+                    {t("cta_contact_button") || "Contactar ahora"}
+                  </Button>
+                </Link>
+                <Link href="/contratar">
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/20 text-white bg-transparent hover:bg-white/10 font-bold py-7 px-10 rounded-2xl text-lg">
+                    {t("cta_demo_button") || "Solicitar Demo"}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Partnership section (Original) */}
       <motion.section
