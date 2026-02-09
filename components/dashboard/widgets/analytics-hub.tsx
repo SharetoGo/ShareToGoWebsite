@@ -54,7 +54,7 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
 
         {/* Action Button */}
         <button 
-          onClick={onViewAnalytics}
+          onClick={() => router.push("/intranet-empresas/analiticas")}
           className="w-full bg-[#9dd187] text-[#2a2c38] font-bold py-3 px-4 rounded-xl hover:bg-[#8bc175] transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group/btn"
         >
           Ver análisis completo

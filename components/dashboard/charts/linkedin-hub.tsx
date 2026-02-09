@@ -43,7 +43,7 @@ export function LinkedInHub({ data, onViewContent }: { data: any , onViewContent
         {/* Action Buttons */}
         <div className="space-y-2">
           <button 
-            onClick={() => onViewContent()}
+            onClick={() => router.push("/intranet-empresas/contenido-sostenible")}
             className="w-full bg-white text-[#5A9642] font-bold py-3 px-4 rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
           >
             <Sparkles size={18} />
@@ -54,4 +54,3 @@ export function LinkedInHub({ data, onViewContent }: { data: any , onViewContent
     </div>
   );
 }
-
