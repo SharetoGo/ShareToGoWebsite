@@ -27,6 +27,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function SettingsPage() {
   const { companyData } = useAuth();
@@ -183,10 +184,13 @@ export default function SettingsPage() {
                 {isUploading ? (
                   <Loader2 className="animate-spin text-[#9dd187]" size={30} />
                 ) : formData.logoUrl ? (
-                  <img
+                  <Image
                     src={formData.logoUrl}
                     alt="Logo"
+                    width={320}
+                    height={640}
                     className="w-full h-full object-cover"
+                    priority
                   />
                 ) : (
                   <Users size={40} className="text-gray-300" />

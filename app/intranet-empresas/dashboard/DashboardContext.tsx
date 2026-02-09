@@ -1,7 +1,7 @@
 // app/intranet-empresas/dashboard/DashboardContext.tsx
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useAuth } from '../auth/AuthContext'
 import { db } from "@/lib/firebase";
 import {
@@ -12,7 +12,6 @@ import {
   doc,
   getDoc,
   documentId,
-  QueryConstraint
 } from "firebase/firestore";
 
 /* ═══════════════════════════════════════════════════════════
@@ -96,7 +95,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
      LOAD ALL DATA
      ═══════════════════════════════════════════════════════════ */
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     // No cargar si no hay companyData o ya se está cargando
     if (!companyData?.id || hasLoaded) {
       setLoading(false);
@@ -126,7 +125,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [companyData?.id, companyData?.membersIds, companyData?.travels, hasLoaded]);
 
   /* ═══════════════════════════════════════════════════════════
      DATA LOADERS
@@ -230,9 +229,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     if (!authLoading && companyData?.id && !hasLoaded) {
       loadDashboardData();
     }
-  }, [companyData?.id, authLoading, hasLoaded]);
+  }, [authLoading, companyData?.id, hasLoaded, loadDashboardData]);
 
-  /* ═══════════════════════════════════════════════════════════
+  /* ══════════════════════════════════════════════════════════
      REFRESH FUNCTION
      ═══════════════════════════════════════════════════════════ */
 

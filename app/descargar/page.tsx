@@ -7,6 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { FaCheckCircle } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 export default function DownloadSection() {
   const { t } = useTranslation();
@@ -90,10 +91,13 @@ export default function DownloadSection() {
 
             {/* RIGHT SIDE */}
             <div className="md:w-1/2 flex justify-center">
-              <img
+              <Image
                 src="/images/descargar/inicio.jpeg"
                 alt={t("dl_qr_mock_alt")}
+                width={320}
+                height={640}
                 className="max-w-xs w-full drop-shadow-lg rounded-xl"
+                priority
               />
             </div>
           </div>
@@ -111,10 +115,13 @@ export default function DownloadSection() {
             <div className="flex flex-col md:flex-row items-center gap-12">
               {/* LEFT SIDE - Photo */}
               <div className="md:w-1/2 flex justify-center">
-                <img
+                <Image
                   src="/images/descargar/movil.png"
                   alt={t("dl_mid_phone_alt")}
+                  width={320}
+                  height={640}
                   className="max-w-xs w-full h-120 object-cover object-top drop-shadow-lg rounded-xl"
+                  priority
                 />
               </div>
 

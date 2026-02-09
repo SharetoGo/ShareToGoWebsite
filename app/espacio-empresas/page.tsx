@@ -28,7 +28,7 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
+import Image from "next/image";
 /**
  * ANIMATION CONSTANTS
  */
@@ -172,10 +172,13 @@ export default function EspacioEmpresas() {
               </div>
             </div>
             <div>
-              <img
+              <Image
                 src="/images/empresas/hero-image.jpg"
                 alt="Espacio Empresas Hero"
+                width={320}
+                height={640}
                 className="w-full h-auto rounded-3xl shadow-xl shadow-black/20"
+                priority
               />
             </div>
           </div>
@@ -298,10 +301,13 @@ export default function EspacioEmpresas() {
               <div className="relative z-10">
                 <div className="flex items-center gap-4 mb-8">
                   <div className="bg-white rounded-xl">
-                    <img
+                    <Image
                       src="/images/empresas/esc-logo.jpg"
                       alt="ESC Logo"
+                      width={320}
+                      height={640}
                       className="w-20 h-20 object-contain"
+                      priority
                     />
                   </div>
                   <div>
@@ -472,12 +478,14 @@ export default function EspacioEmpresas() {
                   <div className="bg-gray-100">
                     {/* Dashboard content visual */}
                     <div className="relative aspect-video rounded-2xl overflow-hidden shadow-inner border border-white">
-                      <img
+                      <Image
                         src="/images/empresas/contenido-sostenible.png"
                         alt="Sustainable Content Preview"
+                        width={320}
+                        height={640}
                         className="object-cover w-full h-full"
+                        priority
                       />
-
                       {/* Overlay UI elements based on toggle state */}
                       <AnimatePresence mode="wait">
                         {openAccordionItem === 2 && (

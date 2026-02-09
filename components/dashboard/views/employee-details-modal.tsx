@@ -93,7 +93,9 @@ export function EmployeeDetailsModal({ employee, onClose }: EmployeeDetailsModal
                           ))}
                         </div>
                       </div>
-                      <p className="text-xs text-gray-500 italic leading-relaxed">"{rev.comment}"</p>
+                      <p className="text-xs text-gray-500 italic leading-relaxed">
+                        “{rev.comment}”
+                      </p>
                     </div>
                   ))
                 ) : (

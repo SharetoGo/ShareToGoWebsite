@@ -10,6 +10,7 @@ import {
   Settings, Globe, Users, 
   Camera, Save, Loader2, CheckCircle2, Plus, X, Eye, EyeOff, Copy, Check
 } from "lucide-react";
+import Image from "next/image";
 
 export function SettingsView() {
   const { companyData } = useAuth();
@@ -142,7 +143,14 @@ export function SettingsView() {
                 {isUploading ? (
                   <Loader2 className="animate-spin text-[#9dd187]" size={30} />
                 ) : formData.logoUrl ? (
-                   <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                  <Image
+                    src={formData.logoUrl}
+                    alt="Logo"
+                    width={320}
+                    height={640}
+                    className="w-full h-full object-cover"
+                    priority
+                  />
                 ) : (
                   <Users size={40} className="text-gray-300" />
                 )}

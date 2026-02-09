@@ -10,6 +10,7 @@ import {
   LogOut, LayoutDashboard, Users, Leaf, 
   BarChart3, Settings, AppWindow, UserCircle 
 } from 'lucide-react'
+import Image from 'next/image'
 
 const NAV_ITEMS = [
   { href: "/intranet-empresas", label: "Dashboard", icon: LayoutDashboard },
@@ -35,7 +36,14 @@ export function DashboardSidebar() {
       <div className="p-6 pb-2 flex items-center gap-3">
         <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
           {companyData?.logoUrl ? (
-            <img src={companyData.logoUrl} alt="Logo" className="w-full h-full object-contain" />
+            <Image
+              src={companyData.logoUrl}
+              alt="Logo"
+              width={320}
+              height={640}
+              className="w-full h-full object-contain"
+              priority
+            />
           ) : (
             <span className="text-lg font-bold text-white">
               {companyData?.name?.substring(0, 2).toUpperCase()}

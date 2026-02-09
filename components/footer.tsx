@@ -3,6 +3,7 @@
 import Link from "next/link";
 import WhiteLogo from "./ui/whiteLogo";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -249,10 +250,13 @@ export default function Footer() {
                       aria-label={p.name}
                       title={p.name}
                     >
-                      <img
+                      <Image
                         src={p.logo}
                         alt={p.name}
+                        width={320}
+                        height={640}
                         className="h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition"
+                        priority
                       />
                     </a>
                   </li>

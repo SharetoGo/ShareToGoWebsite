@@ -320,7 +320,7 @@ export default function ConsultoriaSostenibilidad() {
                 </ul>
                 <div className="p-6 bg-[#9dd187]/10 rounded-2xl border border-[#9dd187]/20">
                   <p className="text-[#9dd187] font-medium italic">
-                    "{t("partner_help")}"
+                    “{t("partner_help")}”
                   </p>
                 </div>
               </div>

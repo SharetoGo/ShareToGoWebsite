@@ -6,6 +6,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Search } from "lucide-react";
 import ReviewCarousel from "@/components/intranet/ReviewCarousel";
+import Image from "next/image";
 
 function MetricCard({ label, value }: { label: string; value: any }) {
   return (
@@ -135,12 +136,14 @@ export default function UsersPage() {
             className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all p-6 flex flex-col gap-5 border border-gray-100"
           >
             {/* AVATAR */}
-            <img
+            <Image
               src={
                 user.profilePicture ||
                 "https://firebasestorage.googleapis.com/v0/b/share-to-go-db.appspot.com/o/profile_images%2FsharetoGo_greenBG.png?alt=media"
               }
               alt="avatar"
+              width={96}
+              height={96}
               className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-[#9DD187]"
             />
 

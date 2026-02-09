@@ -41,12 +41,6 @@ export default function Navigation() {
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  useEffect(() => {
-    if (isMobile && showQR) {
-      setShowQR(false)
-    }
-  }, [isMobile, showQR])
-
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
 

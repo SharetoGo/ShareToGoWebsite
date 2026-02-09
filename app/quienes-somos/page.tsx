@@ -22,36 +22,34 @@ export default function QuienesSomos() {
   const [personas, setPersonas] = useState<number>(0);
   const [co2Saved, setCo2Saved] = useState<number>(0);
 
-  const fetchGlobalStats = async () => {
-    try {
-      const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
-
-      if (snap.exists()) {
-        const data = snap.data();
-
-        // totalTravels
-        setTotalTravels(
-          typeof data.totalTravels === "number" ? data.totalTravels : 0,
-        );
-
-        // totalPassengers
-        setPersonas(
-          typeof data.totalPassengers === "number" ? data.totalPassengers : 0,
-        );
-
-        // totalCo2 (redondeado)
-        setCo2Saved(
-          typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0,
-        );
-      }
-    } catch (error) {
-      console.error("Error fetching global stats:", error);
-    }
-  };
-
   useEffect(() => {
+    const fetchGlobalStats = async () => {
+      try {
+        const snap = await getDoc(doc(db, "generalInfo", "globalStats"));
+
+        if (snap.exists()) {
+          const data = snap.data();
+
+          setTotalTravels(
+            typeof data.totalTravels === "number" ? data.totalTravels : 0
+          );
+
+          setPersonas(
+            typeof data.totalPassengers === "number" ? data.totalPassengers : 0
+          );
+
+          setCo2Saved(
+            typeof data.totalCo2 === "number" ? Math.round(data.totalCo2) : 0
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching global stats:", error);
+      }
+    };
+
     fetchGlobalStats();
   }, []);
+
 
   return (
     <main className="scroll-smooth">

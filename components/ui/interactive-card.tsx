@@ -59,7 +59,7 @@ export function InteractiveCard({ title, subtitle, slides, isDriver = false }: I
       <CardHeader className={cn("p-8", isDriver ? cardVariants.driver : cardVariants.passenger)}>
         <CardTitle className="text-3xl font-bold">{title}</CardTitle>
         <p className={cn("text-xl font-semibold italic pt-2", isDriver ? "text-[#2a2c38]/90" : "text-gray-300")}>
-          "{subtitle}"
+          <span>{'"'}{subtitle}{'"'}</span>
         </p>
       </CardHeader>
       <CardContent className="p-8 bg-white">

@@ -1039,7 +1039,7 @@ export default function AnalyticsPage({
             </p>
             <p className="text-xs text-gray-600 leading-relaxed">
               Todas las métricas mostradas provienen de cálculos mensuales
-              automáticos. Los valores "-" indican ausencia de datos. Puedes
+              automáticos. Los valores &quot;-&quot; indican ausencia de datos. Puedes
               seleccionar meses anteriores y compararlos para ver la evolución
               de tu programa de carpooling.
             </p>

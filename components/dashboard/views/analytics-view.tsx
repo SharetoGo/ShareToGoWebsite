@@ -792,8 +792,8 @@ export function AnalyticsView({ setActiveTab }: { setActiveTab: (tab: string) =>
               Acerca de estos datos
             </p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              Todas las métricas mostradas provienen de cálculos mensuales automáticos. 
-              Los valores "-" indican ausencia de datos. Puedes seleccionar meses anteriores 
+              Todas las métricas mostradas provienen de cálculos mensuales automáticos.
+              Los valores &quot;-&quot; indican ausencia de datos. Puedes seleccionar meses anteriores
               y compararlos para ver la evolución de tu programa de carpooling.
             </p>
           </div>
