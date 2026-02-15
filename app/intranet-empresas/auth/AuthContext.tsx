@@ -38,6 +38,7 @@ export interface CompanyData {
   zones: Zone[];
   adminIds: string[];
   membersIds: string[];
+  blockedIds: string[];
 }
 
 interface AuthContextType {
@@ -45,6 +46,7 @@ interface AuthContextType {
   companyData: CompanyData | null;
   loading: boolean;
   error: string | null;
+  switchCompany: (companyId: string) => Promise<void>;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -63,83 +65,87 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    let unsubscribe: (() => void) | null = null;
-    let isMounted = true;
-
+  const switchCompany = async (companyId: string) => {
+    if (!user) return;
     try {
-      unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-        try {
-          if (!isMounted) return;
+      setLoading(true);
+      const docRef = doc(db, 'companies', companyId);
+      const docSnap = await getDoc(docRef);
+      
+      if (docSnap.exists()) {
+        const data = { id: docSnap.id, ...docSnap.data() } as CompanyData;
+        // Verify user is still an admin of this company
+        if (data.adminIds.includes(user.uid)) {
+          localStorage.setItem('selectedCompanyId', companyId);
+          setCompanyData(data);
+        }
+      }
+    } catch (err) {
+      console.error("Error switching company:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      try {
+        if (firebaseUser) {
           setUser(firebaseUser);
           setError(null);
 
-          if (firebaseUser?.uid) {
-            // Fetch company data
-            const companiesRef = collection(db, 'companies');
-            const q = query(
-              companiesRef,
-              where("adminIds", "array-contains", firebaseUser.uid)
-            );
+          // 1. Check if we have a specific company selected in this session
+          const selectedId = localStorage.getItem('selectedCompanyId');
 
-            const querySnapshot = await getDocs(q);
+          // 2. Fetch companies for the user
+          const companiesRef = collection(db, 'companies');
+          const q = query(
+            companiesRef,
+            where("adminIds", "array-contains", firebaseUser.uid)
+          );
 
-            if (!isMounted) return;
+          const querySnapshot = await getDocs(q);
 
-            if (!querySnapshot.empty) {
-              const companyDoc = querySnapshot.docs[0];
-              const docData = {
-                id: companyDoc.id,
-                ...companyDoc.data()
-              } as CompanyData;
+          if (!querySnapshot.empty) {
+            // 3. If no ID in storage, or the ID is no longer valid, default to the first one
+            const userCompanies = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            })) as CompanyData[];
 
-              setCompanyData(docData);
-              console.log("✅ Acceso concedido a la empresa:", docData.name);
-            } else {
-              console.warn("⚠️ El usuario no es administrador de ninguna empresa");
-              setCompanyData(null);
-              setError("No autorizado para acceder a ninguna empresa");
-            }
+            const activeCompany =
+              userCompanies.find((c) => c.id === selectedId) || userCompanies[0];
+
+            setCompanyData(activeCompany);
           } else {
+            console.warn("⚠️ El usuario no es administrador de ninguna empresa");
             setCompanyData(null);
+            setError("No autorizado para acceder a ninguna empresa");
           }
-        } catch (err) {
-          if (!isMounted) return;
-
-          const errorMessage = err instanceof Error ? err.message : "Error desconocido";
-          console.error("❌ Error en autenticación:", errorMessage);
-          setError(errorMessage);
+        } else {
+          setUser(null);
           setCompanyData(null);
-        } finally {
-          if (isMounted) {
-            setLoading(false);
-          }
         }
-      });
-    } catch (err) {
-      if (isMounted) {
-        const errorMessage = err instanceof Error ? err.message : "Error desconocido";
-        console.error("❌ Error inicializando AuthProvider:", errorMessage);
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Error desconocido";
+        console.error("❌ Error en autenticación:", errorMessage);
         setError(errorMessage);
+        setCompanyData(null);
+      } finally {
         setLoading(false);
       }
-    }
+    });
 
-    // Cleanup function
-    return () => {
-      isMounted = false;
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    return () => unsubscribe();
   }, []);
 
   const value: AuthContextType = {
     user,
     companyData,
     loading,
-    error
+    error,
+    switchCompany,
   };
 
   return (

@@ -7,11 +7,12 @@ import { collection, query, where, getDocs } from "firebase/firestore"
 import { auth, db } from "@/lib/firebase"
 import Image from "next/image"
 import Link from "next/link"
-import { Mail, Lock } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff } from "lucide-react"
 
 export default function AuthPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [showForgotForm, setShowForgotForm] = useState(false)
@@ -20,6 +21,7 @@ export default function AuthPage() {
   const [sending, setSending] = useState(false)
   const router = useRouter()
 
+// Inside handleLogin function
 const handleLogin = async (e: React.FormEvent) => {
   e.preventDefault();
   setError("");
@@ -29,14 +31,28 @@ const handleLogin = async (e: React.FormEvent) => {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Optional: Pre-verify admin status to show a specific error
+    // Find all companies where this user is an admin
     const q = query(collection(db, 'companies'), where("adminIds", "array-contains", user.uid));
     const snap = await getDocs(q);
 
     if (snap.empty) {
-      setError("No tienes permisos de administrador para acceder.");
+      setError("No tienes permisos de administrador.");
       await auth.signOut();
+      return;
+    }
+
+    const companies = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+    // Logic: If user is admin of "SharetoGo" (SuperAdmin) OR has multiple companies
+    const isSuperAdmin = companies.some((c: any) => c.name === "SharetoGo");
+
+    if (isSuperAdmin || companies.length > 1) {
+      // Redirect to the new selection bubble page
+      router.push("/intranet-empresas/seleccion");
     } else {
+      // Just one company, go straight to dashboard
+      // We'll store the companyId in localStorage so the Layout knows which one to load
+      localStorage.setItem('selectedCompanyId', companies[0].id);
       router.push("/intranet-empresas");
     }
   } catch (err) {
@@ -124,13 +140,24 @@ const handleLogin = async (e: React.FormEvent) => {
             <div className="relative">
               <Lock className="absolute left-3 top-3.5 text-gray-400 h-4 w-4" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9dd187]/70 focus:border-[#9dd187] transition"
+                className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9dd187]/70 focus:border-[#9dd187] transition"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3.5 text-gray-400 hover:text-gray-600 focus:outline-none"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
 
             {error && (

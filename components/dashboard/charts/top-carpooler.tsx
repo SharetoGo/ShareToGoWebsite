@@ -84,7 +84,7 @@ export function TopCarpoolers({ users }: TopCarpoolersProps) {
                       )}
                     </div>
                     <p className="text-[10px] text-gray-500 font-medium">
-                      {person.trips} viajes
+                      {person.trips || 0} viajes
                     </p>
                   </div>
                 </div>
