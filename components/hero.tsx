@@ -1,6 +1,6 @@
 import Image from "next/image";
-import AppPreview1 from "@/public/images/movil1.png";
-import AppPreview2 from "@/public/images/movil2.png";
+import AppPreview1 from "@/public/images/bookScreen.png";
+import AppPreview2 from "@/public/images/publishScreen.png";
 import LogoApple from "@/public/images/logo-apple.png";
 import LogoGooglePlay from "@/public/images/logo-google-play.png";
 import { Sparkles } from "lucide-react";
@@ -10,7 +10,7 @@ export default function Hero() {
   const { t } = useTranslation();
 
   return (
-    <section className="relative bg-background py-16 md:py-24 lg:py-32 min-h-screen">
+    <section className="relative py-16 md:py-24 lg:py-32 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Content */}
