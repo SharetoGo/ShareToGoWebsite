@@ -33,7 +33,6 @@ export default function Navigation() {
 
   const qrLink = "https://sharetogo.es/downloads"
 
-  // Detect mobile size
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768)
     checkMobile()
@@ -44,11 +43,14 @@ export default function Navigation() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
 
+  // Rutas hijas del dropdown Espacios
+  const isEspaciosActive =
+    isActive("/consultoria-de-sostenibilidad") || isActive("/zonas-favoritas")
+
   const linkBase =
     "font-medium text-xs xl:text-sm transition-colors duration-200 whitespace-nowrap text-[#2a2c38] hover:text-[#9dd187]"
   const linkActive = "text-[#9dd187] font-semibold"
 
-  // Language options
   const languageOptions = [
     { code: "es", label: "Español" },
     { code: "en", label: "English" },
@@ -70,7 +72,6 @@ export default function Navigation() {
       ? { width: 120, height: 50 }
       : { width: 160, height: 50 }
 
-  // Hover helpers
   const openWithHover = (
     setter: (value: boolean) => void,
     toRef: React.MutableRefObject<NodeJS.Timeout | null>
@@ -90,7 +91,7 @@ export default function Navigation() {
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* TOP BAR */}
         <div className="flex justify-between items-center h-16 gap-4">
 
@@ -113,12 +114,12 @@ export default function Navigation() {
               {t("nav_inicio")}
             </Link>
 
-            <Link href="/funcionamiento" className={`${linkBase} ${isActive("/funcionamiento") ? linkActive : ""}`}>
-              {t("nav_funcionamiento")}
-            </Link>
-
             <Link href="/quienes-somos" className={`${linkBase} ${isActive("/quienes-somos") ? linkActive : ""}`}>
               {t("nav_quienes")}
+            </Link>
+
+            <Link href="/espacio-empresas" className={`${linkBase} ${isActive("/espacio-empresas") ? linkActive : ""}`}>
+              {t("nav_empresas_simple")}
             </Link>
 
             {/* ESPACIOS */}
@@ -129,15 +130,12 @@ export default function Navigation() {
             >
               <DropdownMenu open={openEspacios} onOpenChange={setOpenEspacios} modal={false}>
                 <DropdownMenuTrigger
-                  className={`${linkBase} inline-flex items-center gap-1 ${isActive("/espacio") ? linkActive : ""}`}
+                  className={`${linkBase} inline-flex items-center gap-1 ${isEspaciosActive ? linkActive : ""}`}
                 >
                   {t("nav_espacios")} <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start">
-                  <DropdownMenuItem asChild>
-                    <Link href="/espacio-empresas">{t("nav_empresas_simple")}</Link>
-                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/consultoria-de-sostenibilidad">{t("nav_consultoria_sostenibilidad")}</Link>
                   </DropdownMenuItem>
@@ -156,12 +154,17 @@ export default function Navigation() {
             >
               <DropdownMenu open={openAyuda} onOpenChange={setOpenAyuda} modal={false}>
                 <DropdownMenuTrigger
-                  className={`${linkBase} inline-flex items-center gap-1 ${isActive("/faqs") || isActive("/contacto") ? linkActive : ""}`}
+                  className={`${linkBase} inline-flex items-center gap-1 ${
+                    isActive("/faqs") || isActive("/contacto") || isActive("/funcionamiento")
+                      ? linkActive
+                      : ""
+                  }`}
                 >
                   {t("nav_ayuda")} <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start">
+                  <DropdownMenuItem asChild><Link href="/funcionamiento">{t("nav_funcionamiento")}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link href="/faqs">{t("nav_faqs")}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link href="/contacto">{t("nav_contacto")}</Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link href="/contratar">{t("nav_contratar")}</Link></DropdownMenuItem>
@@ -169,7 +172,7 @@ export default function Navigation() {
               </DropdownMenu>
             </div>
 
-            {/* 🌐 IDIOMA (ES/EN/FR compacto) */}
+            {/* IDIOMA */}
             <DropdownMenu>
               <DropdownMenuTrigger className="inline-flex items-center gap-1 rounded-full border border-gray-300 px-2 py-1 text-sm">
                 <MdLanguage className="w-4 h-4" />
@@ -248,17 +251,17 @@ export default function Navigation() {
                 {t("nav_inicio")}
               </Link>
 
-              <Link href="/funcionamiento" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
-                {t("nav_funcionamiento")}
-              </Link>
-
               <Link href="/quienes-somos" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
                 {t("nav_quienes")}
               </Link>
 
+              <Link href="/espacio-empresas" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
+                {t("nav_empresas_simple")}
+              </Link>
+
               {/* ESPACIOS MOBILE */}
               <button
-                className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium"
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium ${isEspaciosActive ? linkActive : ""}`}
                 onClick={() => setMobileEspaciosOpen(v => !v)}
               >
                 {t("nav_espacios")}
@@ -267,13 +270,18 @@ export default function Navigation() {
 
               {mobileEspaciosOpen && (
                 <div className="ml-4">
-                  <Link href="/espacio-empresas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
-                    {t("nav_empresas_simple")}
-                  </Link>
-                  <Link href="/consultoria-de-sostenibilidad" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/consultoria-de-sostenibilidad"
+                    className={`block px-3 py-2 text-sm ${isActive("/consultoria-de-sostenibilidad") ? linkActive : ""}`}
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_consultoria_sostenibilidad")}
                   </Link>
-                  <Link href="/zonas-favoritas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                  <Link
+                    href="/zonas-favoritas"
+                    className={`block px-3 py-2 text-sm ${isActive("/zonas-favoritas") ? linkActive : ""}`}
+                    onClick={() => setIsOpen(false)}
+                  >
                     {t("nav_eventos_simple")}
                   </Link>
                 </div>
@@ -281,7 +289,9 @@ export default function Navigation() {
 
               {/* AYUDA MOBILE */}
               <button
-                className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium"
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium ${
+                  isActive("/faqs") || isActive("/contacto") || isActive("/funcionamiento") ? linkActive : ""
+                }`}
                 onClick={() => setMobileAyudaOpen(v => !v)}
               >
                 {t("nav_ayuda")}
@@ -290,6 +300,9 @@ export default function Navigation() {
 
               {mobileAyudaOpen && (
                 <div className="ml-4">
+                  <Link href="/funcionamiento" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
+                    {t("nav_funcionamiento")}
+                  </Link>
                   <Link href="/faqs" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                     {t("nav_faqs")}
                   </Link>
@@ -302,12 +315,7 @@ export default function Navigation() {
                 </div>
               )}
 
-              {/* LOGIN MOBILE (CORREGIDO) */}
-              <Link
-                href="/intranet-empresas"
-                className="block px-3 py-2 text-sm"
-                onClick={() => setIsOpen(false)}
-              >
+              <Link href="/intranet-empresas" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                 {t("nav_login")}
               </Link>
 
@@ -331,14 +339,12 @@ export default function Navigation() {
                 </div>
               </div>
 
-              {/* DESCARGA */}
               <Link href="/descargar" className="block px-3 py-2 text-sm" onClick={() => setIsOpen(false)}>
                 <Button className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white">
                   {t("nav_descarga")}
                 </Button>
               </Link>
 
-              {/* QR MOBILE */}
               <div className="flex justify-center mt-3">
                 <QRCodeCanvas value={qrLink} size={120} />
               </div>

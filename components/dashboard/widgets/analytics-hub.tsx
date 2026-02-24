@@ -1,14 +1,19 @@
-// components/dashboard/widgets/analytics-hub.tsx
 "use client";
 
-import { BarChart3, ArrowRight, Leaf, TrendingUp } from "lucide-react";
+import { BarChart3, ArrowRight, Leaf } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, onViewAnalytics: () => void; }) {
+export function AnalyticsHub({
+  totalCo2,
+  onViewAnalytics,
+}: {
+  totalCo2: number;
+  onViewAnalytics: () => void;
+}) {
   const router = useRouter();
 
   return (
-    <div className="bg-gradient-to-br from-[#2a2c38] to-[#3a3d48] text-white p-6 rounded-3xl shadow-lg relative overflow-hidden group hover:shadow-xl transition-all">
+    <div className="bg-linear-to-br from-[#2a2c38] to-[#3a3d48] text-white p-6 rounded-3xl shadow-lg relative overflow-hidden group hover:shadow-xl transition-all">
       {/* Background decoration */}
       <div className="absolute -bottom-10 -left-10 opacity-10 group-hover:opacity-20 transition-opacity">
         <BarChart3 size={150} className="-rotate-12" />
@@ -29,13 +34,13 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
         <h4 className="text-xl font-bold mb-2 text-white">
           Información detallada
         </h4>
-        
+
         <p className="text-sm font-semibold text-gray-300 mb-1">
           Visualiza tu impacto mes a mes
         </p>
 
         <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-          Accede a gráficos detallados de CO₂e evitado, tendencias de uso, 
+          Accede a gráficos detallados de CO₂e evitado, tendencias de uso,
           ocupación y análisis completo de tu programa de carpooling.
         </p>
 
@@ -53,12 +58,15 @@ export function AnalyticsHub({ totalCo2, onViewAnalytics }: { totalCo2: number, 
         </div>
 
         {/* Action Button */}
-        <button 
+        <button
           onClick={() => router.push("/intranet-empresas/analiticas")}
           className="w-full bg-[#9dd187] text-[#2a2c38] font-bold py-3 px-4 rounded-xl hover:bg-[#8bc175] transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg group/btn"
         >
           Ver análisis completo
-          <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+          <ArrowRight
+            size={18}
+            className="group-hover/btn:translate-x-1 transition-transform"
+          />
         </button>
       </div>
     </div>
