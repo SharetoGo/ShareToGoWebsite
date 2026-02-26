@@ -195,7 +195,7 @@ export default function EmployeesPage() {
           placeholder="Buscar por nombre o apellido..." 
           value={searchTerm} 
           onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }} 
-          className="w-full pl-16 pr-6 py-4 bg-white border border-transparent rounded-[2rem] shadow-xl shadow-[#2a2c38]/5 focus:ring-2 focus:ring-[#9dd187] outline-none transition-all font-medium" 
+          className="w-full pl-16 pr-6 py-4 bg-white border border-transparent rounded-4xl shadow-xl shadow-[#2a2c38]/5 focus:ring-2 focus:ring-[#9dd187] outline-none transition-all font-medium" 
         />
       </div>
 
@@ -294,7 +294,7 @@ export default function EmployeesPage() {
 
       {/* --- CONFIRMATION MODAL --- */}
       {pendingAction && (
-        <div className="fixed inset-0 bg-[#2a2c38]/80 backdrop-blur-md z-[110] flex items-center justify-center p-6">
+        <div className="fixed inset-0 bg-[#2a2c38]/80 backdrop-blur-md z-110 flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-md rounded-[2.5rem] p-10 text-center shadow-2xl animate-in zoom-in-95 duration-300">
             <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-6 
               ${pendingAction.type === 'block' ? 'bg-orange-100 text-orange-500' : 
@@ -327,7 +327,7 @@ export default function EmployeesPage() {
 
       {/* --- EDIT MODAL --- */}
       {editingEmployee && (
-        <div className="fixed inset-0 bg-[#2a2c38]/80 backdrop-blur-md z-[110] flex items-center justify-center p-6">
+        <div className="fixed inset-0 bg-[#2a2c38]/80 backdrop-blur-md z-110 flex items-center justify-center p-6">
           <div className="bg-white w-full max-w-lg rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="p-10 border-b border-gray-50 flex justify-between items-center">
               <h3 className="text-2xl font-black text-[#2a2c38]">Editar Perfil</h3>

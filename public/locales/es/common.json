@@ -31,13 +31,17 @@
   "contacta_nosotros": "Contacta con nosotros",
   "como_funciona_titulo": "Cómo funciona SharetoGo",
   "carpooling_sencillo": "Implementar carpooling corporativo nunca fue tan sencillo",
-  "paso_registro": "1. Registro",
+  "paso_registro": "1. Publica o reserva tu trayecto",
+  "desc_paso_registro": "Encuentra rutas compatibles o publica tu trayecto en segundos.",
   "registro_usuarios": "Los usuarios se registran con su email y configuran sus preferencias de viaje",
-  "paso_matching": "2. Matching",
+  "paso_matching": "2. Ahorra tiempo y dinero",
+  "desc_paso_matching": "Comparte trayecto y optimiza tu desplazamiento diario.",
   "matching_algoritmo": "Nuestro algoritmo conecta automáticamente empleados con rutas y horarios compatibles",
-  "paso_trayecto": "3. Trayecto",
-  "trayecto_seguro": "Comparten el trayecto de forma segura con sistemas de valoracioness y opiniones de otros usuarios",
-
+  "paso_trayecto": "3. Comparte tu experiencia",
+  "trayecto_seguro": "Valora el viaje y ayuda a crear una comunidad segura y de confianza.",
+    
+  "desc_paso_trayecto": "Valora el trayecto y ayuda a crear una comunidad segura.",
+  
   "_header": "navegacion",
   "nav_inicio": "Inicio",
   "nav_funcionamiento": "Cómo funciona",
@@ -577,5 +581,80 @@
   "dl_card_uni_text": "Sugiere una solución de movilidad sostenible para tu comunidad universitaria.",
   "dl_card_workers_title": "¿Eres representante de trabajadores?",
   "dl_card_workers_text": "Mejora la movilidad de tu equipo y promueve el coche compartido en tu empresa o polígono.",
-  "dl_card_cta": "Agenda reunión"
+  "dl_card_cta": "Agenda reunión",
+
+  "porque_sharetogo": "¿Por qué empezar a usar SharetoGo?",
+  "razon_principal": "Descubre los beneficios de compartir coche y cómo impacta positivamente en tu vida",
+  
+  "razon_ambiente": "Cuida el ambiente",
+  "desc_ambiente": "Reduce emisiones de CO₂ compartiendo trayectos y ayudando a crear ciudades más verdes",
+  
+  "razon_social": "Conecta con personas",
+  "desc_social": "Conoce gente nueva, expande tu red y construye comunidad mientras te desplazas",
+  
+  "razon_ahorro": "Ahorra dinero",
+  "desc_ahorro": "Divide gastos de gasolina, peajes y mantenimiento con otros pasajeros",
+  
+  "razon_seguridad": "Seguridad garantizada",
+  "desc_seguridad": "Todos nuestros usuarios están verificados para viajes confiables y tranquilos",
+  
+  "razon_tiempo": "Aprovecha tu tiempo",
+  "desc_tiempo": "Usa el viaje para trabajar, estudiar, relajarte o simplemente disfrutar la compañía",
+  
+  "razon_facilidad": "Súper fácil de usar",
+  "desc_facilidad": "Interfaz intuitiva que te permite encontrar viajes en segundos",
+
+  "como_funciona_desc": "En 3 simples pasos, estás listo para compartir tus primeros viajes",
+
+  "ver_como_funciona": "Ver cómo funciona",
+
+  "empresa_titulo": "Ponlo en marcha en tu empresa",
+  "empresa_subtitulo": "Transforma la movilidad de tu equipo con una solución moderna, sostenible e impactante",
+  "soluciones_empresas": "Soluciones para empresas",
+
+  "que_ofrecemos": "QUÉ OFRECEMOS",
+  "movility_tag": "Movilidad Corporativa",
+  "impact_tag": "Impacto y sostenibilidad",
+
+  "espacio_movilidad": "Un espacio de movilidad exclusivo para tu empresa",
+  
+  "espacio_privado": "Espacio privado solo para tus empleados",
+  
+  "conectamos_trayectos": "Conectamos trayectos y horarios compatibles",
+  
+  "activacion_facil": "Activación fácil y uso real desde el día 1",
+
+  "medimos_comunicamos": "Medimos y comunicamos tu impacto real",
+  
+  "panel_control": "Panel de control con movilidad y CO₂ evitado",
+  
+  "datos_esg": "Datos listos para ESG y sostenibilidad",
+  
+  "insights_contenidos": "Insights y contenidos para comunicar impacto",
+
+  "descubre_bytheway": "¿Eres estudiante? Descubre BytheWay",
+  
+  "bytheway_comunidad": "Comunidad estudiante",
+  "bytheway_comunidad_desc": "Conecta con otros estudiantes, ahorra en transporte y conoce gente de tu universidad",
+  
+  "bytheway_ambiental": "Impacto ambiental",
+  "bytheway_ambiental_desc": "Reduce tu huella de carbono mientras contribuyes a un futuro más sostenible",
+  
+  "descubrir_bytheway": "Descubrir BytheWay",
+
+  "bytheway_titulo_1": "¿Eres estudiante?",
+  "bytheway_titulo_2": "Descubre BytheWay",
+  "bytheway_desc": "Nuestra plataforma asociada para compartir coche entre estudiantes.",
+
+  "bytheway_stat_1": "Ahorro medio mensual",
+  "bytheway_stat_2": "CO₂ evitado al mes",
+  "bytheway_stat_3": "Menos en tráfico",
+
+  "bytheway_benefit_1": "Llega antes evitando buscar aparcamiento",
+  "bytheway_benefit_2": "Paga menos dividiendo gasolina",
+  "bytheway_benefit_3": "Conoce gente nueva de tu universidad",
+  "bytheway_benefit_4": "Contribuye a un campus más sostenible",
+
+  "bytheway_cta": "Empieza a Ahorrar",
+  "company_intro_tag": "Impulsa la movilidad sostenible en tu empresa"
 }
