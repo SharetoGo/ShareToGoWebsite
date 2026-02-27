@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Phone, Mail, MailCheck, X } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
@@ -41,6 +41,7 @@ export default function Contacto() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -75,11 +76,7 @@ export default function Contacto() {
       });
 
       if (response.ok) {
-        toast({
-          title: t("co_toast_success_title"),
-          description: t("co_toast_success_desc"),
-        });
-
+        setShowSuccess(true);
         setFormData({
           nombre: "",
           apellido: "",
@@ -89,9 +86,19 @@ export default function Contacto() {
           mensaje: "",
         });
       } else {
+        toast({
+          variant: "destructive",
+          title: "Error al enviar",
+          description: "No se pudo enviar tu mensaje. Por favor, inténtalo de nuevo.",
+        });
         console.error("Failed to send email.");
       }
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Ocurrió un error. Por favor, inténtalo de nuevo.",
+      });
       console.error("Error sending email:", error);
     }
 
@@ -315,6 +322,38 @@ export default function Contacto() {
           </div>
         </div>
       </motion.section>
+
+      {/* Success Modal */}
+      {showSuccess && (
+        <div className="fixed inset-0 bg-[#2a2c38]/80 backdrop-blur-md z-110 flex items-center justify-center p-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white w-full max-w-md rounded-[2.5rem] p-10 text-center shadow-2xl relative"
+          >
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="absolute top-4 right-4 p-2 bg-gray-100 text-gray-500 hover:text-red-500 rounded-full transition-all"
+            >
+              <X size={20} />
+            </button>
+            <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-green-100 text-[#9dd187]">
+              <MailCheck size={40} />
+            </div>
+
+            <h3 className="text-3xl font-black text-[#2a2c38] mb-3">
+              {t("co_toast_success_title")}
+            </h3>
+
+            <p className="text-gray-500 text-base mb-8 leading-relaxed">
+              {t("co_toast_success_desc")}
+            </p>
+
+            <Button onClick={() => setShowSuccess(false)} className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-white py-3 text-lg">Cerrar</Button>
+          </motion.div>
+        </div>
+      )}
     </main>
   );
 }

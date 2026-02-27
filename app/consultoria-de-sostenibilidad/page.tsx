@@ -449,7 +449,9 @@ export default function ConsultoriaSostenibilidad() {
                   variants={scaleIn}
                   className="p-6 bg-[#9dd187]/10 rounded-2xl border border-[#9dd187]/20"
                 >
-                  <p className="text-[#9dd187] font-medium italic">&quot{t("partner_help")}&quot</p>
+                  <p className="text-[#9dd187] font-medium italic">
+                    &quot;{t("partner_help")}&quot;
+                  </p>
                 </motion.div>
               </motion.div>
 

@@ -117,70 +117,7 @@ export default function QuienesSomos() {
           </div>
         </div>
       </motion.section>
-
-      {/* Statistics Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        variants={fadeInUp}
-        transition={{ duration: 0.4, delay: 0.3 }}
-        viewport={{ once: true, amount: 0.2 }}
-        className="py-16 md:py-20 bg-[#2a2c38]"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center">
-            {t("qs_impacto_titulo")}
-          </h2>
-          <p className="text-xl text-gray-300 mb-16 text-center">
-            {t("qs_impacto_texto")}
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center p-8 bg-white border-2 hover:border-[#9dd187] transition-all duration-300 hover:shadow-lg">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#9dd187] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <TrendingUp className="text-white text-2xl" />
-                </div>
-                <div className="text-4xl md:text-6xl font-extrabold text-[#2a2c38] mb-4">
-                  {totalTravels.toLocaleString()}
-                </div>
-                <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
-                  {t("qs_trayectos_label")}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center p-8 bg-white border-2 hover:border-[#9dd187] transition-all duration-300 hover:shadow-lg">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#2a2c38] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Users className="text-white text-2xl" />
-                </div>
-                <div className="text-4xl md:text-6xl font-extrabold text-[#2a2c38] mb-4">
-                  {personas.toLocaleString()}
-                </div>
-                <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
-                  {t("qs_personas_label")}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center p-8 bg-white border-2 hover:border-[#9dd187] transition-all duration-300 hover:shadow-lg">
-              <CardContent className="pt-6">
-                <div className="w-16 h-16 bg-[#9dd187] rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Leaf className="text-white text-2xl" />
-                </div>
-                <div className="text-4xl md:text-6xl font-extrabold text-[#2a2c38] mb-4">
-                  {co2Saved}
-                </div>
-                <div className="text-base md:text-lg font-semibold text-[#2a2c38] uppercase tracking-wide">
-                  {t("qs_co2_label")}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </motion.section>
-
+       
       {/* Who We Are Section */}
       <motion.section
         initial="hidden"
