@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import WhiteLogo from "./ui/whiteLogo";
+import TreeNationWidget from "./TreeNationWidget";
+
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
@@ -19,12 +21,21 @@ export default function Footer() {
       name: "EAE Emprende Barcelona",
       href: "https://www.eae.es/carreras-profesionales/eae-emprendedores",
       logo: "/images/EAEemprende-logo.png",
+<<<<<<< HEAD
     },
     {
       name: "European Sustainability Consulting",
       href: "https://www.linkedin.com/company/esc-eu/",
       logo: "/images/ESC-Logo-White.png",
     },
+=======
+        },
+        {
+      name: "Ayuntament de Castelldefels",
+      href: "https://www.castelldefels.org/",
+      logo: "/images/aytoCastefa.png",
+        },
+>>>>>>> 1f9029da55224c855d2c25f254ce4baaf0b997f5
   ];
 
   return (
@@ -218,6 +229,7 @@ export default function Footer() {
               {t("footer_descargar_app")}
             </a>
 
+<<<<<<< HEAD
             <a
               href="https://play.google.com/store/apps/details?id=com.sharetogo.carpool&hl=es"
               target="_blank"
@@ -263,6 +275,39 @@ export default function Footer() {
                 ))}
               </ul>
             </section>
+=======
+            <ul className="flex flex-col items-center space-y-4">
+              {partners.map((p) => (
+                <li key={p.name} className="w-full flex justify-center">
+                  <a
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center justify-center w-full max-w-xs rounded-lg bg-white/5 px-2 py-2 ring-1 ring-white/10 hover:ring-white/30 transition text-center"
+                    aria-label={p.name}
+                    title={p.name}
+                  >
+                    <img
+                      src={p.logo}
+                      alt={p.name}
+                      className={`h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition
+                        ${p.name === "Ayuntament de Castelldefels" ? "scale-125 sm:scale-275" : ""}
+                      `}
+                    />
+
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* TreeNation */}
+          <nav className="lg:col-span-2" aria-label="Espacios">
+            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_tree")}</h6>
+              <TreeNationWidget />
+          </nav>
+
+>>>>>>> 1f9029da55224c855d2c25f254ce4baaf0b997f5
           </div>
         </div>
 
