@@ -227,6 +227,7 @@ export default function EmployeesPage() {
         onConfirmUpdate={handleUpdateUser}
       />
 
+      {/* --- DETAILS MODAL --- */}
       {selectedEmployee && !editingEmployee && (
         <EmployeeDetailsModal
           employee={selectedEmployee}
