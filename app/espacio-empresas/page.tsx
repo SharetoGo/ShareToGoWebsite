@@ -334,7 +334,7 @@ export default function EspacioEmpresas() {
         </div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <SectionHeader
-            badge={t("beneficios_badge")}
+            badge={t("ee_beneficios_badge")}
             title={t("ee_ben_title")}
             icon={Award}
           />
