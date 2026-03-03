@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import WhiteLogo from "./ui/whiteLogo";
+import TreeNationWidget from "./TreeNationWidget";
+
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 
@@ -25,6 +27,11 @@ export default function Footer() {
       href: "https://www.linkedin.com/company/esc-eu/",
       logo: "/images/ESC-Logo-White.png",
     },
+        {
+      name: "Ayuntament de Castelldefels",
+      href: "https://www.castelldefels.org/",
+      logo: "/images/aytoCastefa.png",
+        },
   ];
 
   return (
@@ -218,51 +225,36 @@ export default function Footer() {
               {t("footer_descargar_app")}
             </a>
 
-            <a
-              href="https://play.google.com/store/apps/details?id=com.sharetogo.carpool&hl=es"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-white/60 hover:border-white hover:bg-[#E8F6DF] hover:text-[#2a2c38] transition text-sm flex-1 sm:flex-none whitespace-nowrap"
-            >
-              {/* Play Store icon */}
-              <svg className="w-5 h-5 mr-2" viewBox="0 0 512 512">
-                <path
-                  fill="currentColor"
-                  d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"
-                />
-              </svg>
-              {t("footer_descargar_app")}
-            </a>
+            <ul className="flex flex-col items-center space-y-4">
+              {partners.map((p) => (
+                <li key={p.name} className="w-full flex justify-center">
+                  <a
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center justify-center w-full max-w-xs rounded-lg bg-white/5 px-2 py-2 ring-1 ring-white/10 hover:ring-white/30 transition text-center"
+                    aria-label={p.name}
+                    title={p.name}
+                  >
+                    <img
+                      src={p.logo}
+                      alt={p.name}
+                      className={`h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition
+                        ${p.name === "Ayuntament de Castelldefels" ? "scale-125 sm:scale-275" : ""}
+                      `}
+                    />
 
-            <section aria-label="Partners" className="w-full mt-3">
-              <h6 className="text-[#9dd187] font-semibold mb-3 text-base">
-                Partners
-              </h6>
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-              <ul className="flex flex-col items-center space-y-4">
-                {partners.map((p) => (
-                  <li key={p.name} className="w-full flex justify-center">
-                    <a
-                      href={p.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex flex-col items-center justify-center w-full max-w-xs rounded-lg bg-white/5 px-2 py-2 ring-1 ring-white/10 hover:ring-white/30 transition text-center"
-                      aria-label={p.name}
-                      title={p.name}
-                    >
-                      <Image
-                        src={p.logo}
-                        alt={p.name}
-                        width={320}
-                        height={640}
-                        className="h-6 sm:h-8 w-auto object-contain mb-1 opacity-80 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition"
-                        priority
-                      />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
+          {/* TreeNation */}
+          <nav className="lg:col-span-2" aria-label="Espacios">
+            <h6 className="text-[#9dd187] font-semibold mb-3">{t("footer_tree")}</h6>
+              <TreeNationWidget />
+          </nav>
+
           </div>
         </div>
 
