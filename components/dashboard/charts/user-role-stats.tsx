@@ -11,16 +11,19 @@ interface UserRoleStatsProps {
   users: any[];
 }
 
-export function UserRoleStats({ companyName, totalMembers, travels, users }: UserRoleStatsProps) {
-  
-  // ✨ CAMBIO CLAVE: En lugar de useEffect con queries, usamos useMemo con datos pre-cargados
+export function UserRoleStats({
+  companyName,
+  totalMembers,
+  travels,
+  users,
+}: UserRoleStatsProps) {
   const stats = useMemo(() => {
     if (!travels || travels.length === 0) {
       return {
         drivers: 0,
         passengers: 0,
         driversPercentage: 0,
-        passengersPercentage: 0
+        passengersPercentage: 0,
       };
     }
 
@@ -28,7 +31,7 @@ export function UserRoleStats({ companyName, totalMembers, travels, users }: Use
     const passengerIds = new Set<string>();
 
     // Procesar travels (ya pre-cargados del contexto)
-    travels.forEach(travel => {
+    travels.forEach((travel) => {
       // Conductor
       if (travel.userId) {
         driverIds.add(travel.userId);
@@ -45,23 +48,27 @@ export function UserRoleStats({ companyName, totalMembers, travels, users }: Use
     const companyDrivers = driverIds.size;
     const companyPassengers = passengerIds.size;
 
-    const driversPercentage = totalMembers > 0 
-      ? Math.round((companyDrivers / totalMembers) * 100) 
-      : 0;
-    const passengersPercentage = totalMembers > 0 
-      ? Math.round((companyPassengers / totalMembers) * 100) 
-      : 0;
+    const driversPercentage =
+      totalMembers > 0 ? Math.round((companyDrivers / totalMembers) * 100) : 0;
+    const passengersPercentage =
+      totalMembers > 0
+        ? Math.round((companyPassengers / totalMembers) * 100)
+        : 0;
 
     return {
       drivers: companyDrivers,
       passengers: companyPassengers,
       driversPercentage,
-      passengersPercentage
+      passengersPercentage,
     };
   }, [travels, totalMembers]);
 
   // Sin datos
-  if (!companyName || totalMembers === 0 || (stats.drivers === 0 && stats.passengers === 0)) {
+  if (
+    !companyName ||
+    totalMembers === 0 ||
+    (stats.drivers === 0 && stats.passengers === 0)
+  ) {
     return (
       <div className="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <div className="flex items-center gap-2 mb-6">
@@ -80,7 +87,8 @@ export function UserRoleStats({ companyName, totalMembers, travels, users }: Use
               Sin datos de participación
             </p>
             <p className="text-xs text-gray-300 mt-1 max-w-xs mx-auto">
-              Los datos aparecerán una vez que los empleados publiquen o reserven trayectos.
+              Los datos aparecerán una vez que los empleados publiquen o
+              reserven trayectos.
             </p>
           </div>
         </div>
@@ -124,7 +132,7 @@ export function UserRoleStats({ companyName, totalMembers, travels, users }: Use
           <div className="relative">
             <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-[#9CD186] to-[#7AB86A] rounded-full transition-all duration-500"
+                className="h-full bg-linear-to-r from-[#9CD186] to-[#7AB86A] rounded-full transition-all duration-500"
                 style={{ width: `${stats.driversPercentage}%` }}
               />
             </div>
@@ -160,20 +168,21 @@ export function UserRoleStats({ companyName, totalMembers, travels, users }: Use
           <div className="relative">
             <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-[#9CD186] to-[#7AB86A] rounded-full transition-all duration-500"
+                className="h-full bg-linear-to-r from-[#9CD186] to-[#7AB86A] rounded-full transition-all duration-500"
                 style={{ width: `${stats.passengersPercentage}%` }}
               />
             </div>
           </div>
 
           <p className="text-xs text-gray-500">
-            {stats.passengers} de {totalMembers} usuarios han reservado trayectos
+            {stats.passengers} de {totalMembers} usuarios han reservado
+            trayectos
           </p>
         </div>
       </div>
 
       {/* Insight */}
-      <div className="mt-6 p-4 bg-gradient-to-br from-[#E8F5E0] to-[#F0F8EC] rounded-xl border border-[#9CD186]/20">
+      <div className="mt-6 p-4 bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] rounded-xl border border-[#9CD186]/20">
         <div className="flex items-start gap-3">
           <div className="p-2 bg-white rounded-lg mt-0.5">
             <Users className="w-4 h-4 text-[#5A9642]" />
@@ -183,15 +192,20 @@ export function UserRoleStats({ companyName, totalMembers, travels, users }: Use
               Tasa de Participación Total
             </p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              {Math.round(((stats.drivers + stats.passengers) / totalMembers) * 100)}% de tus 
-              empleados están participando activamente en el programa de carpooling.
+              {Math.round(
+                ((stats.drivers + stats.passengers) / totalMembers) * 100,
+              )}
+              % de tus empleados están participando activamente en el programa
+              de carpooling.
               {stats.drivers > stats.passengers ? (
                 <span className="text-[#5A9642] font-medium">
-                  {" "}Hay más conductores que pasajeros, ¡excelente!
+                  {" "}
+                  Hay más conductores que pasajeros, ¡excelente!
                 </span>
               ) : (
                 <span className="text-[#5A9642] font-medium">
-                  {" "}Considera incentivar a más empleados a ofrecer plazas.
+                  {" "}
+                  Considera incentivar a más empleados a ofrecer plazas.
                 </span>
               )}
             </p>
