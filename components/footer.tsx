@@ -52,7 +52,6 @@ export default function Footer() {
       links: [
         { name: t("nav_empresas_simple"), href: "/espacio-empresas" },
         { name: t("nav_consultoria_sostenibilidad"), href: "/consultoria-de-sostenibilidad" },
-        { name: t("nav_eventos_simple"), href: "/espacio-eventos" },
       ],
     },
     {

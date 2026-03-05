@@ -78,7 +78,7 @@ export function ImpactSection({ t }: { t: any }) {
                     openAccordionItem === item.id ? null : item.id,
                   )
                 }
-                className={`cursor-pointer rounded-3xl border-2 transition-all duration-300 p-6 ${
+                className={`cursor-pointer rounded-3xl border-2 transition-[background-color,border-color,box-shadow] duration-300 p-6 ${
                   openAccordionItem === item.id
                     ? "bg-white border-[#9dd187] shadow-xl shadow-[#9dd187]/10"
                     : "bg-gray-50 border-transparent hover:bg-gray-100"
@@ -155,7 +155,7 @@ export function ImpactSection({ t }: { t: any }) {
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.97 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.65, ease: EASE_OUT }}
+              transition={{ duration: 0.38, ease: EASE_OUT }}
               viewport={{ once: true, margin: "-60px" }}
               className="relative"
             >
@@ -208,7 +208,7 @@ export function ImpactSection({ t }: { t: any }) {
                               <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: "100%" }}
-                                transition={{ duration: 1.2, ease: EASE_OUT }}
+                                transition={{ duration: 0.6, ease: EASE_OUT }}
                                 className="h-full bg-[#9dd187]"
                               />
                             </div>
@@ -235,7 +235,7 @@ export function ImpactSection({ t }: { t: any }) {
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.2, ease: EASE_OUT }}
+              transition={{ duration: 0.38, delay: 0.1, ease: EASE_OUT }}
               viewport={{ once: true }}
               className="mt-10 p-8 bg-[#2a2c38] rounded-4xl text-white"
             >

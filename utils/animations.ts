@@ -12,21 +12,19 @@ export const containerVariants = {
 };
 
 export const fadeSlideUp = {
-  hidden: { opacity: 0, y: 40, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: { duration: 0.38, ease: EASE_OUT },
   },
 };
 
 export const fadeSlideLeft = {
-  hidden: { opacity: 0, x: -30, filter: "blur(4px)" },
+  hidden: { opacity: 0, x: -30 },
   visible: {
     opacity: 1,
     x: 0,
-    filter: "blur(0px)",
     transition: { duration: 0.35, ease: EASE_OUT },
   },
 };
