@@ -92,7 +92,7 @@ export default function DownloadSection() {
             {/* RIGHT SIDE */}
             <div className="md:w-1/2 flex justify-center">
               <Image
-                src="/images/descargar/inicio.jpeg"
+                src="/images/descargar/inicio.png"
                 alt={t("dl_qr_mock_alt")}
                 width={320}
                 height={640}

@@ -18,14 +18,14 @@ import { MdLanguage } from "react-icons/md"
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const [mobileEspaciosOpen, setMobileEspaciosOpen] = useState(false)
+  const [mobileEmpresasOpen, setMobileEmpresasOpen] = useState(false)
   const [mobileAyudaOpen, setMobileAyudaOpen] = useState(false)
-  const [openEspacios, setOpenEspacios] = useState(false)
+  const [openEmpresas, setOpenEmpresas] = useState(false)
   const [openAyuda, setOpenAyuda] = useState(false)
   const [showQR, setShowQR] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
-  const hideEspaciosTO = useRef<NodeJS.Timeout | null>(null)
+  const hideEmpresasTO = useRef<NodeJS.Timeout | null>(null)
   const hideAyudaTO = useRef<NodeJS.Timeout | null>(null)
 
   const pathname = usePathname()
@@ -43,9 +43,9 @@ export default function Navigation() {
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
 
-  // Rutas hijas del dropdown Espacios
-  const isEspaciosActive =
-    isActive("/consultoria-de-sostenibilidad") || isActive("/zonas-favoritas")
+  // Rutas hijas del dropdown Empresas
+  const isEmpresasActive =
+    isActive("/espacio-empresas") || isActive("/consultoria-de-sostenibilidad")
 
   const linkBase =
     "font-medium text-xs xl:text-sm transition-colors duration-200 whitespace-nowrap text-[#2a2c38] hover:text-[#9dd187]"
@@ -55,6 +55,8 @@ export default function Navigation() {
     { code: "es", label: "Español" },
     { code: "en", label: "English" },
     { code: "fr", label: "Français" },
+    { code: "ca", label: "Català" },
+    { code: "pt", label: "Português" },
   ] as const
 
   type LanguageCode = (typeof languageOptions)[number]["code"]
@@ -118,29 +120,25 @@ export default function Navigation() {
               {t("nav_quienes")}
             </Link>
 
-            <Link href="/espacio-empresas" className={`${linkBase} ${isActive("/espacio-empresas") ? linkActive : ""}`}>
-              {t("nav_empresas_simple")}
-            </Link>
-
-            {/* ESPACIOS */}
+            {/* EMPRESAS */}
             <div
               className="relative"
-              onMouseEnter={() => openWithHover(setOpenEspacios, hideEspaciosTO)}
-              onMouseLeave={() => closeWithDelay(setOpenEspacios, hideEspaciosTO)}
+              onMouseEnter={() => openWithHover(setOpenEmpresas, hideEmpresasTO)}
+              onMouseLeave={() => closeWithDelay(setOpenEmpresas, hideEmpresasTO)}
             >
-              <DropdownMenu open={openEspacios} onOpenChange={setOpenEspacios} modal={false}>
+              <DropdownMenu open={openEmpresas} onOpenChange={setOpenEmpresas} modal={false}>
                 <DropdownMenuTrigger
-                  className={`${linkBase} inline-flex items-center gap-1 ${isEspaciosActive ? linkActive : ""}`}
+                  className={`${linkBase} inline-flex items-center gap-1 ${isEmpresasActive ? linkActive : ""}`}
                 >
-                  {t("nav_espacios")} <ChevronDown className="h-4 w-4" />
+                  {t("nav_empresas_simple")} <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start">
                   <DropdownMenuItem asChild>
-                    <Link href="/consultoria-de-sostenibilidad">{t("nav_consultoria_sostenibilidad")}</Link>
+                    <Link href="/espacio-empresas">{t("nav_empresas_simple")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/zonas-favoritas">{t("nav_eventos_simple")}</Link>
+                    <Link href="/consultoria-de-sostenibilidad">{t("nav_consultoria_sostenibilidad")}</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -255,34 +253,30 @@ export default function Navigation() {
                 {t("nav_quienes")}
               </Link>
 
-              <Link href="/espacio-empresas" className={`block px-3 py-2 text-sm ${linkBase}`} onClick={() => setIsOpen(false)}>
-                {t("nav_empresas_simple")}
-              </Link>
-
-              {/* ESPACIOS MOBILE */}
+              {/* EMPRESAS MOBILE */}
               <button
-                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium ${isEspaciosActive ? linkActive : ""}`}
-                onClick={() => setMobileEspaciosOpen(v => !v)}
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium ${isEmpresasActive ? linkActive : ""}`}
+                onClick={() => setMobileEmpresasOpen(v => !v)}
               >
-                {t("nav_espacios")}
-                <ChevronDown className={`h-4 w-4 transition-transform ${mobileEspaciosOpen ? "rotate-180" : ""}`} />
+                {t("nav_empresas_simple")}
+                <ChevronDown className={`h-4 w-4 transition-transform ${mobileEmpresasOpen ? "rotate-180" : ""}`} />
               </button>
 
-              {mobileEspaciosOpen && (
+              {mobileEmpresasOpen && (
                 <div className="ml-4">
+                  <Link
+                    href="/espacio-empresas"
+                    className={`block px-3 py-2 text-sm ${isActive("/espacio-empresas") ? linkActive : ""}`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {t("nav_empresas_simple")}
+                  </Link>
                   <Link
                     href="/consultoria-de-sostenibilidad"
                     className={`block px-3 py-2 text-sm ${isActive("/consultoria-de-sostenibilidad") ? linkActive : ""}`}
                     onClick={() => setIsOpen(false)}
                   >
                     {t("nav_consultoria_sostenibilidad")}
-                  </Link>
-                  <Link
-                    href="/zonas-favoritas"
-                    className={`block px-3 py-2 text-sm ${isActive("/zonas-favoritas") ? linkActive : ""}`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {t("nav_eventos_simple")}
                   </Link>
                 </div>
               )}
