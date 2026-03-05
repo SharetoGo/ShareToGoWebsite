@@ -32,6 +32,9 @@ export default function Footer() {
     { name: "EAE Emprende Barcelona", href: "https://www.eae.es/carreras-profesionales/eae-emprendedores", logo: "/images/EAEemprende-logo.png" },
     { name: "European Sustainability Consulting", href: "https://www.linkedin.com/company/esc-eu/", logo: "/images/ESC-Logo-White.png" },
     { name: "Ayuntament de Castelldefels", href: "https://www.castelldefels.org/", logo: "/images/aytoCastefa.png" },
+    { name: "In Move", href: "https://www.railgrup.net", logo: "/images/in_move_logo.png" },
+    { name: "BCN Global", href: "http://www.bcnglobal.es", logo: "/images/bcn_global_logo.png" },
+
   ];
 
   const sections = [

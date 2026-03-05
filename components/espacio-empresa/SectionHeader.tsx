@@ -26,7 +26,7 @@ const SectionHeader = ({
     <motion.div variants={scaleIn}>
       <Badge
         variant="outline"
-        className="bg-[#9dd187]/10 text-[#4d7c41] border-[#9dd187]/20 pl-3 pr-4 py-1.5 mb-6 rounded-full text-sm font-semibold tracking-wide uppercase flex w-fit mx-auto items-center gap-2 shadow-sm"
+        className="bg-[#9dd187]/10 text-[#4d7c41] border-[#9dd187]/20 pl-3 pr-4 py-1.5 mb-6 rounded-full text-sm font-semibold tracking-wide flex w-fit mx-auto items-center gap-2 shadow-sm"
       >
         {Icon && <Icon className="w-4 h-4" />}
         {badge}
