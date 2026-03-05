@@ -15,14 +15,14 @@ export function CTASection({ t }: { t: any }) {
         <motion.div
           initial={{ opacity: 0, y: 50, scale: 0.97 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.75, ease: EASE_OUT }}
+          transition={{ duration: 0.4, ease: EASE_OUT }}
           viewport={{ once: true }}
           className="relative overflow-hidden bg-[#1a1c24] rounded-[3rem] p-8 md:p-20"
         >
           <motion.div
             initial={{ opacity: 0, x: 80 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.1, ease: EASE_OUT }}
+            transition={{ duration: 0.6, ease: EASE_OUT }}
             viewport={{ once: true }}
             className="absolute top-0 right-0 w-1/3 h-full skew-x-12 transform translate-x-20 pointer-events-none"
           />

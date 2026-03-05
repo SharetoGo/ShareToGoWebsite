@@ -15,7 +15,7 @@ export function HeroSection({ t }: { t: any }) {
       <motion.div
         initial={{ opacity: 0, x: 80 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1.2, ease: EASE_OUT }}
+        transition={{ duration: 0.7, ease: EASE_OUT }}
         className="absolute top-0 right-0 w-1/2 h-full skew-x-12 transform translate-x-32 pointer-events-none"
       />
 
@@ -47,7 +47,7 @@ export function HeroSection({ t }: { t: any }) {
             <motion.h1
               initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, delay: 0.15, ease: EASE_OUT }}
+              transition={{ duration: 0.45, delay: 0.1, ease: EASE_OUT }}
               className="text-4xl md:text-5xl font-bold mb-6 text-balance"
             >
               {t("ee_hero_title")}
@@ -56,7 +56,7 @@ export function HeroSection({ t }: { t: any }) {
             <motion.p
               initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.7, delay: 0.3, ease: EASE_OUT }}
+              transition={{ duration: 0.4, delay: 0.18, ease: EASE_OUT }}
               className="text-xl text-gray-300 mb-8 text-pretty"
             >
               {t("ee_hero_sub")}
@@ -65,7 +65,7 @@ export function HeroSection({ t }: { t: any }) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.45, ease: EASE_OUT }}
+              transition={{ duration: 0.35, delay: 0.25, ease: EASE_OUT }}
               className="flex flex-col sm:flex-row gap-4"
             >
               <Link href="/contratar">
@@ -91,7 +91,7 @@ export function HeroSection({ t }: { t: any }) {
           <motion.div
             initial={{ opacity: 0, x: 60 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.85, delay: 0.25, ease: EASE_OUT }}
+            transition={{ duration: 0.5, delay: 0.15, ease: EASE_OUT }}
           >
             <Image
               src="/images/empresas/hero-image.jpg"

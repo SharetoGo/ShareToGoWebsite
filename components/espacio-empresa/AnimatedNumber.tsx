@@ -13,8 +13,8 @@ interface AnimatedNumberProps {
 
 export function AnimatedNumber({ 
   value, 
-  duration = 1.4, 
-  delay = 0.2,
+  duration = 0.8,
+  delay = 0.1,
   format = (v) => String(Math.round(v)).padStart(2, "0") 
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);

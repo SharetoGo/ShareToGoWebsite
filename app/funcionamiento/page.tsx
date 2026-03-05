@@ -20,17 +20,17 @@ export default function Funcionamiento() {
 
   const driverSlides = [
     {
-      image: "/images/publishScreen2.jpg",
+      image: "/images/driver-1.png",
       title: t("driver1_titulo"),
       description: t("driver1_texto"),
     },
     {
-      image: "/images/publishScreen2.jpg",
+      image: "/images/driver-2.png",
       title: t("driver2_titulo"),
       description: t("driver2_texto"),
     },
     {
-      image: "/images/publishScreen2.jpg",
+      image: "/images/driver-3.png",
       title: t("driver3_titulo"),
       description: t("driver3_texto"),
     },
@@ -38,7 +38,7 @@ export default function Funcionamiento() {
 
   const passengerSlides = [
     {
-      image: "/images/movil2.png",
+      image: "/images/reservar.png",
       title: t("pass1_titulo"),
       description: t("pass1_texto"),
     },
@@ -79,7 +79,7 @@ export default function Funcionamiento() {
       title: t("paso3_titulo"),
       description: t("paso3_texto"),
       bullets: [t("paso3_b1"), t("paso3_b2"), t("paso3_b3"), t("paso3_b4")],
-      image: "/images/descargar/evento.jpg",
+      image: "/images/about-us-2.png",
       imageAlt: t("paso3_img_alt"),
     },
     {
@@ -104,23 +104,42 @@ export default function Funcionamiento() {
         viewport={{ once: true, amount: 0.2 }}
         className="space-y-16"
       >
-        <section className="py-16 md:py-24 bg-linear-to-br from-[#eaf6e4] via-[#dff0d7] to-[#f5faf2] text-[#2a2c38]">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <Badge
-              variant="secondary"
-              className="bg-[#2a2c38]/10 text-[#2a2c38] border border-[#2a2c38]/20 mb-6"
-            >
-              {t("func_app")}
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              {t("hero_titulo")}
-            </h1>
-            <h2 className="text-2xl md:text-3xl font-medium text-[#2a2c38]/80 italic mb-8">
-              {t("hero_sub")}
-            </h2>
-            <p className="text-xl text-[#2a2c38]/80 mb-8 text-balance">
-              {t("hero_texto")}
-            </p>
+        <section className="relative overflow-hidden bg-[#2a2c38]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-center gap-8 py-20 md:py-28">
+              {/* Left: text */}
+              <div className="md:w-1/2 text-center md:text-left">
+                <Badge className="bg-[#9dd187]/15 text-[#9dd187] border border-[#9dd187]/30 mb-6 px-4 py-1.5 text-sm font-medium">
+                  {t("func_app")}
+                </Badge>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white leading-tight tracking-tight">
+                  {t("hero_titulo")}
+                </h1>
+                <h2 className="text-lg md:text-xl font-medium text-[#9dd187] italic mb-5">
+                  {t("hero_sub")}
+                </h2>
+                <p className="text-base text-white/60 mb-8 max-w-lg leading-relaxed">
+                  {t("hero_texto")}
+                </p>
+                <Button
+                  asChild
+                  className="bg-[#9dd187] text-[#2a2c38] hover:bg-[#8fd07a] font-semibold rounded-full px-8 py-3 text-base"
+                >
+                  <Link href="/contratar">{t("hero_boton")}</Link>
+                </Button>
+              </div>
+              {/* Right: image */}
+              <div className="md:w-1/2 flex justify-center">
+                <Image
+                  src="/images/carpool-people.jpg"
+                  alt={t("hero_titulo")}
+                  width={600}
+                  height={420}
+                  className="w-full max-w-md md:max-w-full rounded-2xl object-cover shadow-2xl"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </section>
 
@@ -235,19 +254,19 @@ export default function Funcionamiento() {
         </div>
       </motion.section>
 
-      <section className="py-16 md:py-20 bg-gray-50">
+      <section className="py-16 md:py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="rounded-3xl border border-[#9dd187]/40 bg-white shadow-sm">
-            <div className="px-8 py-10 md:px-12 md:py-12 text-center space-y-4">
+          <Card className="rounded-3xl overflow-hidden border-0 shadow-xl">
+            <div className="bg-[#9dd187] px-8 py-12 md:px-14 md:py-14 text-center space-y-5">
               <h3 className="text-3xl md:text-4xl font-bold text-[#2a2c38]">
                 {t("func_contact_title")}
               </h3>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              <p className="text-lg text-[#2a2c38]/80 max-w-2xl mx-auto leading-relaxed">
                 {t("func_contact_text")}
               </p>
               <Button
                 asChild
-                className="bg-[#2a2c38] text-white hover:bg-[#1e2029] rounded-full px-8"
+                className="bg-[#2a2c38] text-white hover:bg-[#1e2030] font-semibold rounded-full px-8 shadow-md"
               >
                 <Link href="/contacto">{t("func_contact_cta")}</Link>
               </Button>
