@@ -15,7 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MapPin, Phone, Mail, MailCheck, X, Send, Sparkles } from "lucide-react";
+import { MapPin, Phone, Mail, MailCheck, X, Send, Sparkles, BadgeEuro } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslation } from "react-i18next";
 
@@ -160,6 +160,15 @@ export default function Contacto() {
                 </div>
               </div>
 
+              <div className="bg-[#9dd187] text-[#2a2c38] p-8 rounded-[2.5rem] shadow-xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                  <BadgeEuro size={120} />
+                </div>
+                <p className="text-[#2a2c38]/70 leading-relaxed mb-4 text-md">
+                  {t("co_hero_sub_payments")}
+                </p>
+              </div>
+
               <div className="p-8 rounded-[2.5rem] border-2 border-dashed border-gray-200 flex flex-col items-center text-center space-y-4">
                 <div className="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center">
                   <MailCheck size={32} />
@@ -228,7 +237,7 @@ export default function Contacto() {
                           {t("co_form_subject_label")}
                         </Label>
                         <Select value={formData.asunto} onValueChange={(val) => handleSelectChange("asunto", val)}>
-                          <SelectTrigger className="h-14 rounded-xl border-gray-100 bg-gray-50/50">
+                          <SelectTrigger className="h-14 rounded-xl border-gray-100 bg-gray-50/50 w-full">
                             <SelectValue placeholder={t("co_form_subject_placeholder")} />
                           </SelectTrigger>
                           <SelectContent>
