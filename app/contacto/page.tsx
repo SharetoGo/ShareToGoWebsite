@@ -76,7 +76,7 @@ export default function Contacto() {
       {/* Hero Section */}
       <section className="relative pt-20 pb-12 md:pt-28">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
@@ -91,7 +91,7 @@ export default function Contacto() {
             <p className="text-xl text-gray-600 max-w-lg leading-relaxed">
               {t("co_hero_sub")}
             </p>
-            
+
             {/* Quick Contact Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">
@@ -116,14 +116,14 @@ export default function Contacto() {
           </motion.div>
 
           {/* Right side: Visual/Image */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="relative hidden lg:block"
           >
             <div className="relative rounded-[3rem] overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700">
-              <Image 
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200" 
+              <Image
+                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200"
                 alt="SharetoGo Team"
                 width={600}
                 height={700}
@@ -143,7 +143,7 @@ export default function Contacto() {
       <section className="py-12 pb-24">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-12">
-            
+
             {/* Left: Extra Info */}
             <div className="lg:col-span-4 space-y-8">
               <div className="bg-[#2a2c38] text-white p-10 rounded-[2.5rem] shadow-xl relative overflow-hidden">
@@ -184,27 +184,27 @@ export default function Contacto() {
                         <Label htmlFor="nombre" className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">
                           {t("co_form_name_label")}
                         </Label>
-                        <Input 
-                          id="nombre" 
-                          value={formData.nombre} 
+                        <Input
+                          id="nombre"
+                          value={formData.nombre}
                           onChange={handleChange}
-                          className="h-14 rounded-xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg" 
+                          className="h-14 rounded-xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg"
                           placeholder={t("co_form_name_placeholder")}
-                          required 
+                          required
                         />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">
                           {t("co_form_email_label")}
                         </Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          value={formData.email} 
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
                           onChange={handleChange}
-                          className="h-14 rounded-xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg" 
+                          className="h-14 rounded-xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg"
                           placeholder={t("co_form_email_placeholder")}
-                          required 
+                          required
                         />
                       </div>
                     </div>
@@ -214,12 +214,12 @@ export default function Contacto() {
                         <Label htmlFor="telefono" className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">
                           {t("co_form_phone_label")}
                         </Label>
-                        <Input 
-                          id="telefono" 
-                          type="tel" 
-                          value={formData.telefono} 
+                        <Input
+                          id="telefono"
+                          type="tel"
+                          value={formData.telefono}
                           onChange={handleChange}
-                          className="h-14 rounded-xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg" 
+                          className="h-14 rounded-xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg"
                           placeholder="+34 000 000 000"
                         />
                       </div>
@@ -246,17 +246,17 @@ export default function Contacto() {
                       <Label htmlFor="mensaje" className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">
                         {t("co_form_message_label")}
                       </Label>
-                      <Textarea 
-                        id="mensaje" 
-                        value={formData.mensaje} 
+                      <Textarea
+                        id="mensaje"
+                        value={formData.mensaje}
                         onChange={handleChange}
-                        className="min-h-37.5 rounded-2xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg p-4" 
+                        className="min-h-37.5 rounded-2xl border-gray-100 bg-gray-50/50 focus:bg-white transition-all text-lg p-4"
                         placeholder={t("co_form_message_placeholder")}
-                        required 
+                        required
                       />
                     </div>
 
-                    <Button 
+                    <Button
                       disabled={isSubmitting}
                       className="group w-full h-16 bg-[#9dd187] hover:bg-[#2a2c38] text-white rounded-2xl text-xl font-bold transition-all shadow-lg hover:shadow-[#9dd187]/20 flex gap-3"
                     >
