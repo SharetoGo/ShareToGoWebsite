@@ -145,12 +145,12 @@ export default function Contacto() {
           <div className="grid lg:grid-cols-12 gap-12">
 
             {/* Left: Extra Info */}
-            <div className="lg:col-span-4 space-y-8">
+            <div className="lg:col-span-4 space-y-4">
               <div className="bg-[#2a2c38] text-white p-10 rounded-[2.5rem] shadow-xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <MapPin size={120} />
                 </div>
-                <h2 className="text-2xl font-bold mb-6">{t("co_info_office_label")}</h2>
+                <h2 className="text-2xl font-bold mb-3">{t("co_info_office_label")}</h2>
                 <p className="text-white/70 leading-relaxed mb-8 text-lg">
                   {t("co_info_office_value")}
                 </p>
@@ -164,6 +164,7 @@ export default function Contacto() {
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                   <BadgeEuro size={120} />
                 </div>
+                <h2 className="text-2xl font-bold mb-3">{t("co_hero_sub_payments_title")}</h2>
                 <p className="text-[#2a2c38]/70 leading-relaxed mb-4 text-md">
                   {t("co_hero_sub_payments")}
                 </p>
@@ -174,7 +175,7 @@ export default function Contacto() {
                   <MailCheck size={32} />
                 </div>
                 <h3 className="font-bold text-[#2a2c38]">{t("co_info_response_time")}</h3>
-                <p className="text-sm text-gray-500">Nuestro equipo de soporte suele responder en menos de 24 horas laborables.</p>
+                <p className="text-sm text-gray-500">{t("co_info_response_time_desc")}</p>
               </div>
             </div>
 
@@ -241,11 +242,12 @@ export default function Contacto() {
                             <SelectValue placeholder={t("co_form_subject_placeholder")} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="demo">Solicitar Demo</SelectItem>
-                            <SelectItem value="pricing">Tarifas y Planes</SelectItem>
-                            <SelectItem value="support">Soporte Técnico</SelectItem>
-                            <SelectItem value="partnership">Alianzas</SelectItem>
-                            <SelectItem value="other">Otros</SelectItem>
+                            <SelectItem value="demo">{t("co_form_subject_demo")}</SelectItem>
+                            <SelectItem value="pricing">{t("co_form_subject_pricing")}</SelectItem>
+                            <SelectItem value="reclamar_pagos">{t("co_form_subject_reclamar_pagos")}</SelectItem>
+                            <SelectItem value="support">{t("co_form_subject_support")}</SelectItem>
+                            <SelectItem value="partner">{t("co_form_subject_partner")}</SelectItem>
+                            <SelectItem value="other">{t("co_form_subject_other")}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
