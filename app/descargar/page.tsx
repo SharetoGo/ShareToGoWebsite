@@ -46,20 +46,20 @@ export default function DownloadSection() {
     {
       titleKey: "dl_card_event_title",
       textKey: "dl_card_event_text",
-      image: "/images/descargar/empresa-descargar.jpg",
+      image: "/images/descargar/law-card.jpg",
       link: "/contratar",
     },
     {
       titleKey: "dl_card_uni_title",
       textKey: "dl_card_uni_text",
-      image: "/images/descargar/uni.jpg",
+      image: "/images/descargar/poligono-card.jpg",
       bgFallback: "linear-gradient(135deg,#0f172a,#1e293b)",
       link: "/contratar",
     },
     {
       titleKey: "dl_card_workers_title",
       textKey: "dl_card_workers_text",
-      image: "/images/descargar/charla.jpg",
+      image: "/images/descargar/eoliene-card.jpg",
       bgFallback: "linear-gradient(135deg,#142c1b,#1f4428)",
       link: "/contratar",
     },
@@ -104,75 +104,126 @@ export default function DownloadSection() {
         </section>
 
         {/* Middle Section */}
-        <section className="bg-gray-50 py-16 flex flex-col justify-center gap-4">
-          <h1 className="text-4xl md:text-4xl font-extrabold leading-tight text-[#2a2c38] text-center">
-            {t("dl_mid_title")}
-          </h1>
-          <h2 className="text-4xl md:text-2xl font-medium leading-tight text-[#2a2c38] text-center pb-12">
-            {t("dl_mid_subtitle")}
-          </h2>
-          <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row items-center gap-12">
+        <section className="bg-linear-to-b from-gray-50 to-white py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-bl from-[#9dd187]/5 to-transparent pointer-events-none" />
+
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 flex flex-col gap-3">
+            <div className="text-center space-y-4 max-w-4xl mx-auto">
+              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-[#2a2c38]">
+                {t("dl_mid_title")}
+              </h1>
+              <h2 className="text-xl md:text-2xl font-medium text-gray-600">
+                {t("dl_mid_subtitle")}
+              </h2>
+            </div>
+
+            <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20 mt-4">
               {/* LEFT SIDE - Photo */}
-              <div className="md:w-1/2 flex justify-center">
-                <Image
-                  src="/images/descargar/movil.png"
-                  alt={t("dl_mid_phone_alt")}
-                  width={320}
-                  height={640}
-                  className="max-w-xs w-full h-120 object-cover object-top drop-shadow-lg rounded-xl"
-                  priority
-                />
+              <div className="md:w-1/2 flex justify-center relative">
+                <div className="absolute inset-0 bg-[#9dd187]/20 blur-[60px] rounded-full transform scale-75" />
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.8 }}
+                  viewport={{ once: true }}
+                  className="relative"
+                >
+                  <Image
+                    src="/images/descargar/movil.png"
+                    alt={t("dl_mid_phone_alt")}
+                    width={320}
+                    height={640}
+                    className="max-w-70 sm:max-w-xs w-full h-auto drop-shadow-2xl rounded-3xl border-6 border-white"
+                    priority
+                  />
+                </motion.div>
               </div>
 
-              {/* RIGHT SIDE - Content */}
+              {/* RIGHT SIDE - Impactful Content */}
               <div className="md:w-1/2 space-y-6">
-                <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] text-center">
-                  {t("dl_mid_block_title")}
-                </h2>
-                <ul className="text-[#2a2c38] text-lg leading-relaxed list-disc list-inside space-y-2">
-                  <li>{tBold("dl_mid_b1")}</li>
-                  <li>{tBold("dl_mid_b2")}</li>
-                </ul>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="space-y-6"
+                >
+                  <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] leading-tight">
+                    {t("dl_mid_block_title")}
+                  </h2>
+                  <div className="prose prose-lg text-gray-600 space-y-4">
+                    <p>{tBold("dl_mid_b1")}</p>
+                    <p>{tBold("dl_mid_b2")}</p>
+                    <p className="bg-[#9dd187]/10 p-4 rounded-xl border-l-4 border-[#9dd187] text-[#2a2c38]">
+                      {t("dl_mid_b3")}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 space-y-6">
+                    <div className="p-6 rounded-2xl bg-[#2a2c38] text-white shadow-xl">
+                      <p className="text-sm font-medium opacity-80 mb-3">
+                        {t("dl_mid_b4_title")}
+                      </p>
+                      <p className="text-lg font-semibold mb-4">
+                        {t("dl_mid_b4_text")}
+                      </p>
+                      <Button
+                        asChild
+                        className="w-full bg-[#9dd187] hover:bg-[#8bc475] text-[#2a2c38] font-bold py-6 rounded-xl transition-all"
+                      >
+                        <Link href="/contacto">{t("dl_mid_b4_link")}</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </div>
         </section>
       </motion.section>
 
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-[#2a2c38]">
+      <section className="py-10 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <h2 className="text-4xl md:text-5xl font-black text-center text-[#2a2c38] mb-16">
             {t("dl_zones_section_title")}
           </h2>
-          <ul className="space-y-4 text-lg text-[#2a2c38] text-center">
-            {[
-              tBold("dl_zones_b1"),
-              tBold("dl_zones_b2"),
-              tBold("dl_zones_b3"),
-            ].map((item) => (
-              <li
-                key={item as unknown as string}
-                className="flex flex-col items-center gap-3 md:flex-row md:justify-center md:text-left"
-              >
-                <FaCheckCircle className="text-[#9dd187]" />
-                <span>{item}</span>
-              </li>
-            ))}
-            <li className="flex flex-col items-center gap-3 md:flex-row md:justify-center md:text-left">
-              <FaCheckCircle className="text-[#9dd187]" />
-              <span>
-                {t("dl_zones_b4_prefix")}{" "}
-                <Link
-                  href="/contratar"
-                  className="text-[#4d7c41] underline underline-offset-4 font-semibold"
+
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-10">
+              {[1, 2, 3, 4].map((num) => (
+                <div key={num} className="flex gap-6 group">
+                  <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#9dd187]/10 flex items-center justify-center text-[#9dd187] group-hover:bg-[#9dd187] group-hover:text-white transition-colors duration-300">
+                    <FaCheckCircle size={24} />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-[#2a2c38]">
+                      {t(`dl_zones_b${num}_title`)}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {t(`dl_zones_b${num}_text`)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              <div className="pt-2 border-t border-gray-100">
+                <Button
+                  asChild
+                  className="w-full bg-[#2a2c38] hover:bg-[#9dd187] text-white font-bold px-8 h-14 rounded-2xl transition-all shadow-lg hover:shadow-[#9dd187]/20"
                 >
-                  {t("dl_zones_b4_link")}
-                </Link>
-                .
-              </span>
-            </li>
-          </ul>
+                  <Link href="/contratar">{t("dl_zones_b4_link")}</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl aspect-square lg:aspect-auto lg:h-125">
+              <Image
+                src="/images/descargar/map-zonas.png"
+                alt="Zonas de cobertura ShareToGo"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -223,7 +274,7 @@ export default function DownloadSection() {
 
               {/* Desktop (hover) */}
               <div className="relative z-10 hidden md:flex flex-col items-center justify-center transition-all duration-500">
-                <h3 className="text-white text-3xl font-bold transition-transform duration-500 group-hover:-translate-y-12">
+                <h3 className="text-white text-2xl font-bold transition-transform duration-500 group-hover:-translate-y-12">
                   {t(card.titleKey)}
                 </h3>
                 <ArrowRight
@@ -234,7 +285,7 @@ export default function DownloadSection() {
 
               {/* Hover content (desktop only) */}
               <div className="absolute inset-0 hidden md:flex flex-col items-center justify-center text-center text-white opacity-0 translate-y-6 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0 z-10 px-4">
-                <p className="text-lg mb-4 max-w-sm text-center">
+                <p className="text-md mt-6 mb-2 max-w-sm text-center">
                   {t(card.textKey)}
                 </p>
                 <Button
