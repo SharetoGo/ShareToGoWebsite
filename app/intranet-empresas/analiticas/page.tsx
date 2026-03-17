@@ -18,6 +18,7 @@ import {
   Line,
   AreaChart,
   Area,
+  Legend,
 } from "recharts";
 import {
   Users,
@@ -30,6 +31,9 @@ import {
   Info,
   ArrowUpRight,
   ArrowDownRight,
+  UserCheck,
+  Percent,
+  Zap,
 } from "lucide-react";
 
 /* ───────────────── TYPES ───────────────── */
@@ -42,6 +46,12 @@ interface MonthlyMetric {
   occupancy: number;
   participationRate: number;
   totalTravels: number;
+  // New driver/vehicle activation fields
+  activeDrivers: number;   // employees who posted at least one trip
+  totalUsers: number;      // total registered users
+  availableSeats: number;  // free seats made available
+  reservedSeats: number;   // seats that were booked
+  newDrivers: number;      // drivers enabling for the first time this month
 }
 
 /* ───────────────── COMPONENT ───────────────── */
@@ -59,7 +69,6 @@ export default function AnalyticsPage({
   const [compareMonth, setCompareMonth] = useState<string>("");
   const [heroTooltip, setHeroTooltip] = useState(false);
 
-  // Totales acumulados
   const [totalCo2Accumulated, setTotalCo2Accumulated] = useState(0);
   const [totalTripsAccumulated, setTotalTripsAccumulated] = useState(0);
 
@@ -72,28 +81,18 @@ export default function AnalyticsPage({
       try {
         setLoading(true);
 
-        // Buscar empresa por name
         const q = query(
           collection(db, "companies"),
           where("name", "==", companyData.name),
         );
 
         const snap = await getDocs(q);
-        if (snap.empty) {
-          setLoading(false);
-          return;
-        }
+        if (snap.empty) { setLoading(false); return; }
 
         const companyId = snap.docs[0].id;
 
-        // Leer métricas mensuales
         const monthlyRef = collection(
-          db,
-          "companies",
-          companyId,
-          "metrics",
-          "metrics",
-          "monthly",
+          db, "companies", companyId, "metrics", "metrics", "monthly",
         );
 
         const monthlySnap = await getDocs(monthlyRef);
@@ -104,23 +103,12 @@ export default function AnalyticsPage({
 
         monthlySnap.forEach((doc) => {
           const m = doc.data();
-          const monthId = doc.id; // "2026-01"
+          const monthId = doc.id;
 
-          // Formatear mes
           const [year, month] = monthId.split("-");
           const monthNames = [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre",
+            "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+            "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",
           ];
           const monthLabel = `${monthNames[parseInt(month) - 1]} ${year}`;
 
@@ -136,24 +124,24 @@ export default function AnalyticsPage({
             occupancy: m.seatOccupancyRate || 0,
             participationRate: m.participationRate || 0,
             totalTravels: travels,
+            activeDrivers: m.activeDrivers || 0,
+            totalUsers: m.totalUsers || 0,
+            availableSeats: m.availableSeats || 0,
+            reservedSeats: m.reservedSeats || 0,
+            newDrivers: m.newDrivers || 0,
           });
 
-          // Acumular totales
           totalCo2 += co2;
           totalTrips += trips;
         });
 
-        // Ordenar por mes (más reciente primero para el selector)
         data.sort((a, b) => b.month.localeCompare(a.month));
 
         setAllMonthlyData(data);
         setTotalCo2Accumulated(totalCo2);
         setTotalTripsAccumulated(totalTrips);
 
-        // Seleccionar el mes más reciente por defecto
-        if (data.length > 0) {
-          setSelectedMonth(data[0].monthLabel);
-        }
+        if (data.length > 0) setSelectedMonth(data[0].monthLabel);
       } catch (err) {
         console.error("Error loading analytics:", err);
       } finally {
@@ -173,40 +161,60 @@ export default function AnalyticsPage({
     return numValue === 0 ? "-" : `${value}${suffix}`;
   };
 
-  // Obtener datos del mes seleccionado
-  const currentMonthData = allMonthlyData.find(
-    (d) => d.monthLabel === selectedMonth,
-  );
-
-  // Obtener datos del mes a comparar
+  const currentMonthData = allMonthlyData.find((d) => d.monthLabel === selectedMonth);
   const compareMonthData = compareMonth
     ? allMonthlyData.find((d) => d.monthLabel === compareMonth)
     : null;
 
-  // Calcular tendencias (comparación con mes anterior)
   const calculateTrend = (current: number, previous: number) => {
     if (previous === 0) return { value: 0, isPositive: true };
     const change = ((current - previous) / previous) * 100;
     return { value: Math.abs(change).toFixed(1), isPositive: change >= 0 };
   };
 
-  // Calcular tendencia de actividad (trayectos publicados del mes)
-  const activityTrendData = allMonthlyData
-    .slice()
-    .reverse()
-    .map((m) => ({
-      monthLabel: m.monthLabel,
-      actividad: m.totalTravels,
-    }));
+  const activityTrendData = allMonthlyData.slice().reverse().map((m) => ({
+    monthLabel: m.monthLabel,
+    actividad: m.totalTravels,
+  }));
 
-  // Datos para gráficos (ordenados cronológicamente)
   const chartData = allMonthlyData.slice().reverse();
+
+  // Driver activation ratio for selected month
+  const activationRatio =
+    currentMonthData && currentMonthData.totalUsers > 0
+      ? ((currentMonthData.activeDrivers / currentMonthData.totalUsers) * 100).toFixed(1)
+      : "0";
+
+  // Chart: vehicle activation (horizontal bar)
+  const activationChartData = currentMonthData
+    ? [
+        { name: "Conductores activos", value: currentMonthData.activeDrivers, fill: "#9dd187" },
+        { name: "Usuarios registrados", value: currentMonthData.totalUsers, fill: "#e5e7eb" },
+      ]
+    : [];
+
+  // Chart: carpooling capacity (horizontal bar)
+  const capacityChartData = currentMonthData
+    ? [
+        { name: "Trayectos publicados", value: currentMonthData.totalTravels, fill: "#9dd187" },
+        { name: "Plazas reservadas",    value: currentMonthData.reservedSeats, fill: "#93c5fd" },
+        { name: "Plazas disponibles",   value: currentMonthData.availableSeats, fill: "#fcd34d" },
+      ]
+    : [];
+
+  // Chart: driver growth (line, chronological)
+  const driverGrowthData = allMonthlyData.slice().reverse().map((m) => ({
+    monthLabel: m.monthLabel,
+    conductores: m.activeDrivers,
+    nuevos: m.newDrivers,
+  }));
 
   /* ───────────────── RENDER ───────────────── */
 
   return (
     <div className="space-y-8 pb-20 animate-in fade-in duration-700">
-      {/* ───────── Month Selector (Horizontal Style) ───────── */}
+
+      {/* ───────── Month Selector ───────── */}
       <div className="space-y-4">
         <div className="bg-linear-to-r from-[#9dd187]/10 to-[#E8F5E0] p-4 rounded-2xl border border-[#9dd187]/30">
           <div className="flex items-center gap-3">
@@ -214,27 +222,16 @@ export default function AnalyticsPage({
               <Calendar className="w-5 h-5 text-[#5A9642]" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-bold text-[#2a2c38]">
-                Datos actualizados mensualmente
-              </p>
+              <p className="text-sm font-bold text-[#2a2c38]">Datos actualizados mensualmente</p>
               <p className="text-xs text-gray-600">
-                Selecciona un mes para ver métricas · Compara con otro mes
-                opcional
+                Selecciona un mes para ver métricas · Compara con otro mes opcional
               </p>
             </div>
           </div>
         </div>
 
-        {/* Month Pills */}
-        <div
-          className="flex gap-2 overflow-x-auto pb-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          <style jsx>{`
-            div::-webkit-scrollbar {
-              display: none;
-            }
-          `}</style>
+        <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+          <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
           {allMonthlyData.map((m) => (
             <button
               key={m.month}
@@ -250,7 +247,6 @@ export default function AnalyticsPage({
           ))}
         </div>
 
-        {/* Compare Selector */}
         {selectedMonth && (
           <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex items-center gap-3">
@@ -259,10 +255,7 @@ export default function AnalyticsPage({
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
                   Comparar con otro mes (opcional)
                 </label>
-                <div
-                  className="flex gap-2 overflow-x-auto"
-                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-                >
+                <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
                   <button
                     onClick={() => setCompareMonth("")}
                     className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${
@@ -300,7 +293,6 @@ export default function AnalyticsPage({
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Leaf size={120} className="text-[#9dd187]" />
         </div>
-
         <div className="relative z-10">
           <div className="flex items-center gap-3 text-[#9dd187] mb-4">
             <div className="h-px w-8 bg-[#9dd187]" />
@@ -308,61 +300,44 @@ export default function AnalyticsPage({
               {currentMonthData?.monthLabel || "Análisis"} · Impacto Acumulado
             </span>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* CO2 Mensual */}
             <div>
-              <p className="text-gray-400 text-sm mb-2">
-                CO₂e evitado este mes
-              </p>
+              <p className="text-gray-400 text-sm mb-2">CO₂e evitado este mes</p>
               <p className="text-4xl font-black text-white">
                 {displayValue(currentMonthData?.co2.toFixed(0) || 0, " kg")}
               </p>
             </div>
-
-            {/* CO2 Total */}
             <div>
               <p className="text-gray-400 text-sm mb-2">CO₂e acumulado total</p>
               <p className="text-4xl font-black text-[#9dd187]">
                 {displayValue(totalCo2Accumulated.toFixed(0), " kg")}
               </p>
             </div>
-
-            {/* Meta */}
             <div>
               <p className="text-gray-400 text-sm mb-2">Progreso hacia meta</p>
               <p className="text-4xl font-black text-white">
-                {companyData.co2Target && companyData.co2Target > 0 ? (
-                  `${((totalCo2Accumulated / companyData.co2Target) * 100).toFixed(0)}%`
-                ) : (
-                  <span className="text-sm text-gray-500">Sin meta</span>
-                )}
+                {companyData.co2Target && companyData.co2Target > 0
+                  ? `${((totalCo2Accumulated / companyData.co2Target) * 100).toFixed(0)}%`
+                  : <span className="text-sm text-gray-500">Sin meta</span>}
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ───────── Comparison Panel (if comparing) ───────── */}
+      {/* ───────── Comparison Panel ───────── */}
       {compareMonthData && currentMonthData && (
         <div className="bg-linear-to-br from-blue-50 via-purple-50 to-pink-50 p-6 md:p-8 rounded-3xl border-2 border-blue-200/50 shadow-lg">
-          {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="w-6 h-6 text-blue-600" />
-                <h3 className="text-lg md:text-xl font-bold text-[#2a2c38]">
-                  Comparación de Meses
-                </h3>
+                <h3 className="text-lg md:text-xl font-bold text-[#2a2c38]">Comparación de Meses</h3>
               </div>
               <p className="text-sm text-gray-600">
-                <span className="font-semibold text-blue-600">
-                  {currentMonthData.monthLabel}
-                </span>
+                <span className="font-semibold text-blue-600">{currentMonthData.monthLabel}</span>
                 {" vs "}
-                <span className="font-semibold text-purple-600">
-                  {compareMonthData.monthLabel}
-                </span>
+                <span className="font-semibold text-purple-600">{compareMonthData.monthLabel}</span>
               </p>
             </div>
             <button
@@ -373,255 +348,77 @@ export default function AnalyticsPage({
             </button>
           </div>
 
-          {/* Comparison Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {/* CO2 */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
-                <Leaf className="w-4 h-4 text-green-600" />
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  CO₂e Evitado
-                </p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-black text-[#2a2c38]">
-                    {currentMonthData.co2.toFixed(0)}
-                  </p>
-                  <span className="text-sm text-gray-400">kg</span>
+            {[
+              { label: "CO₂e Evitado", icon: <Leaf className="w-4 h-4 text-green-600" />, curr: currentMonthData.co2.toFixed(0), prev: compareMonthData.co2.toFixed(0), suffix: "kg", trend: calculateTrend(currentMonthData.co2, compareMonthData.co2) },
+              { label: "Trayectos",    icon: <Route className="w-4 h-4 text-orange-600" />, curr: currentMonthData.totalTravels, prev: compareMonthData.totalTravels, suffix: "", trend: calculateTrend(currentMonthData.totalTravels, compareMonthData.totalTravels) },
+              { label: "Ocupación",    icon: <Car className="w-4 h-4 text-blue-600" />, curr: `${currentMonthData.occupancy.toFixed(1)}`, prev: `${compareMonthData.occupancy.toFixed(1)}`, suffix: "%", trend: calculateTrend(currentMonthData.occupancy, compareMonthData.occupancy) },
+              { label: "Participación",icon: <Users className="w-4 h-4 text-green-600" />, curr: `${currentMonthData.participationRate.toFixed(1)}`, prev: `${compareMonthData.participationRate.toFixed(1)}`, suffix: "%", trend: calculateTrend(currentMonthData.participationRate, compareMonthData.participationRate) },
+            ].map((item) => (
+              <div key={item.label} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                <div className="flex items-center gap-2 mb-3">
+                  {item.icon}
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{item.label}</p>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">
-                    vs {compareMonthData.co2.toFixed(0)} kg
-                  </span>
-                  {(() => {
-                    const trend = calculateTrend(
-                      currentMonthData.co2,
-                      compareMonthData.co2,
-                    );
-                    return (
-                      <div
-                        className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
-                          trend.isPositive
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {trend.isPositive ? (
-                          <ArrowUpRight className="w-3 h-3" />
-                        ) : (
-                          <ArrowDownRight className="w-3 h-3" />
-                        )}
-                        {trend.value}%
-                      </div>
-                    );
-                  })()}
+                <div className="space-y-2">
+                  <div className="flex items-baseline gap-2">
+                    <p className="text-3xl font-black text-[#2a2c38]">{item.curr}</p>
+                    {item.suffix && <span className="text-sm text-gray-400">{item.suffix}</span>}
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                    <span className="text-xs text-gray-400">vs {item.prev}{item.suffix}</span>
+                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${item.trend.isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                      {item.trend.isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                      {item.trend.value}%
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Trayectos */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
-                <Route className="w-4 h-4 text-orange-600" />
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Trayectos
-                </p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-black text-[#2a2c38]">
-                    {currentMonthData.totalTravels}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">
-                    vs {compareMonthData.totalTravels}
-                  </span>
-                  {(() => {
-                    const trend = calculateTrend(
-                      currentMonthData.totalTravels,
-                      compareMonthData.totalTravels,
-                    );
-                    return (
-                      <div
-                        className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
-                          trend.isPositive
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {trend.isPositive ? (
-                          <ArrowUpRight className="w-3 h-3" />
-                        ) : (
-                          <ArrowDownRight className="w-3 h-3" />
-                        )}
-                        {trend.value}%
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-            </div>
-
-            {/* Ocupación */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
-                <Car className="w-4 h-4 text-blue-600" />
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Ocupación
-                </p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-black text-[#2a2c38]">
-                    {currentMonthData.occupancy.toFixed(1)}
-                  </p>
-                  <span className="text-sm text-gray-400">%</span>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">
-                    vs {compareMonthData.occupancy.toFixed(1)}%
-                  </span>
-                  {(() => {
-                    const trend = calculateTrend(
-                      currentMonthData.occupancy,
-                      compareMonthData.occupancy,
-                    );
-                    return (
-                      <div
-                        className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
-                          trend.isPositive
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {trend.isPositive ? (
-                          <ArrowUpRight className="w-3 h-3" />
-                        ) : (
-                          <ArrowDownRight className="w-3 h-3" />
-                        )}
-                        {trend.value}%
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-            </div>
-
-            {/* Participación */}
-            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-              <div className="flex items-center gap-2 mb-3">
-                <Users className="w-4 h-4 text-green-600" />
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Participación
-                </p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-black text-[#2a2c38]">
-                    {currentMonthData.participationRate.toFixed(1)}
-                  </p>
-                  <span className="text-sm text-gray-400">%</span>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">
-                    vs {compareMonthData.participationRate.toFixed(1)}%
-                  </span>
-                  {(() => {
-                    const trend = calculateTrend(
-                      currentMonthData.participationRate,
-                      compareMonthData.participationRate,
-                    );
-                    return (
-                      <div
-                        className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${
-                          trend.isPositive
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {trend.isPositive ? (
-                          <ArrowUpRight className="w-3 h-3" />
-                        ) : (
-                          <ArrowDownRight className="w-3 h-3" />
-                        )}
-                        {trend.value}%
-                      </div>
-                    );
-                  })()}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       )}
 
-      {/* ───────── Current Month Metrics ───────── */}
+      {/* ───────── Current Month KPIs ───────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        {/* Participación */}
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-green-50 rounded-2xl text-[#9dd187]">
-              <Users size={24} />
-            </div>
+            <div className="p-3 bg-green-50 rounded-2xl text-[#9dd187]"><Users size={24} /></div>
           </div>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-            Participación
-          </p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Participación</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
-            {displayValue(
-              currentMonthData?.participationRate.toFixed(1) || 0,
-              "%",
-            )}
+            {displayValue(currentMonthData?.participationRate.toFixed(1) || 0, "%")}
           </h3>
-          <p className="text-xs text-gray-400 mt-2 truncate">
-            {currentMonthData?.monthLabel || "-"}
-          </p>
+          <p className="text-xs text-gray-400 mt-2 truncate">{currentMonthData?.monthLabel || "-"}</p>
         </Card>
 
-        {/* Ocupación */}
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-blue-50 rounded-2xl text-blue-500">
-              <Car size={24} />
-            </div>
+            <div className="p-3 bg-blue-50 rounded-2xl text-blue-500"><Car size={24} /></div>
           </div>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-            Ocupación
-          </p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Ocupación</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
             {displayValue(currentMonthData?.occupancy.toFixed(1) || 0, "%")}
           </h3>
           <p className="text-xs text-gray-400 mt-2">Plazas ocupadas</p>
         </Card>
 
-        {/* Trayectos Publicados */}
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-orange-50 rounded-2xl text-orange-500">
-              <Route size={24} />
-            </div>
+            <div className="p-3 bg-orange-50 rounded-2xl text-orange-500"><Route size={24} /></div>
           </div>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-            Trayectos
-          </p>
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Trayectos</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
             {displayValue(currentMonthData?.totalTravels || 0)}
           </h3>
           <p className="text-xs text-gray-400 mt-2">Publicados</p>
         </Card>
 
-        {/* CO2 Mensual */}
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] border-[#9dd187]/20">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-white/80 rounded-2xl text-[#5A9642]">
-              <Leaf size={24} />
-            </div>
+            <div className="p-3 bg-white/80 rounded-2xl text-[#5A9642]"><Leaf size={24} /></div>
           </div>
-          <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">
-            CO₂e Evitado
-          </p>
+          <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">CO₂e Evitado</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
             {displayValue(currentMonthData?.co2.toFixed(0) || 0)}
           </h3>
@@ -630,10 +427,9 @@ export default function AnalyticsPage({
       </div>
 
       {/* ═══════════════════════════════════════════════════════════
-      CO₂ HERO — ancho completo, impactante
+          CO₂ HERO
       ═══════════════════════════════════════════════════════════ */}
       <div className="bg-[#1a1c26] rounded-[3rem] overflow-hidden shadow-2xl">
-        {/* Stats arriba del gráfico */}
         <div className="px-8 pt-8 pb-2">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
@@ -642,46 +438,31 @@ export default function AnalyticsPage({
                   <Leaf className="w-6 h-6 text-[#9dd187]" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-[0.3em]">
-                    Impacto Climático
-                  </p>
-                  <h3 className="text-2xl font-black text-white mt-0.5">
-                    CO₂e Evitado
-                  </h3>
+                  <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-[0.3em]">Impacto Climático</p>
+                  <h3 className="text-2xl font-black text-white mt-0.5">CO₂e Evitado</h3>
                 </div>
               </div>
             </div>
             <div className="flex gap-6">
               <div className="text-right">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">
-                  Este mes
-                </p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Este mes</p>
                 <p className="text-2xl font-black text-white">
                   {displayValue(currentMonthData?.co2.toFixed(0) || 0)}
-                  <span className="text-sm font-medium text-gray-500 ml-1">
-                    kg
-                  </span>
+                  <span className="text-sm font-medium text-gray-500 ml-1">kg</span>
                 </p>
               </div>
               <div className="w-px bg-gray-700" />
               <div className="text-right">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">
-                  Acumulado
-                </p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Acumulado</p>
                 <p className="text-2xl font-black text-[#9dd187]">
                   {displayValue(totalCo2Accumulated.toFixed(0))}
-                  <span className="text-sm font-medium text-gray-500 ml-1">
-                    kg
-                  </span>
+                  <span className="text-sm font-medium text-gray-500 ml-1">kg</span>
                 </p>
               </div>
               <div className="w-px bg-gray-700" />
               <div className="text-right relative">
                 <div className="flex items-center justify-end gap-1.5 mb-1">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">
-                    Equivale a
-                  </p>
-                  {/* Info tooltip trigger */}
+                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Equivale a</p>
                   <div
                     className="relative"
                     onMouseEnter={() => setHeroTooltip(true)}
@@ -693,40 +474,20 @@ export default function AnalyticsPage({
                         <div className="flex items-start gap-2">
                           <Car className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
                           <div>
-                            <p className="font-semibold text-white mb-1">
-                              ¿Cómo se calcula?
-                            </p>
+                            <p className="font-semibold text-white mb-1">¿Cómo se calcula?</p>
                             <p className="text-gray-400 leading-relaxed">
                               Un coche medio emite ≈{" "}
-                              <span className="text-[#9dd187] font-bold">
-                                2.300 kg CO₂/año
-                              </span>
-                              , es decir{" "}
-                              <span className="text-[#9dd187] font-bold">
-                                192 kg/mes
-                              </span>
-                              .<br />
-                              <span className="text-white font-semibold">
-                                {totalCo2Accumulated.toFixed(0)} kg
-                              </span>{" "}
+                              <span className="text-[#9dd187] font-bold">2.300 kg CO₂/año</span>, es decir{" "}
+                              <span className="text-[#9dd187] font-bold">192 kg/mes</span>.<br />
+                              <span className="text-white font-semibold">{totalCo2Accumulated.toFixed(0)} kg</span>{" "}
                               ÷ 192 ={" "}
-                              <span className="text-[#9dd187] font-bold">
-                                {Math.floor(totalCo2Accumulated / 192)} coches
-                              </span>{" "}
+                              <span className="text-[#9dd187] font-bold">{Math.floor(totalCo2Accumulated / 192)} coches</span>{" "}
                               fuera de carretera durante un mes.
                             </p>
                           </div>
                         </div>
                         <div className="absolute top-full right-4 -mt-px">
-                          <div
-                            style={{
-                              width: 0,
-                              height: 0,
-                              borderLeft: "6px solid transparent",
-                              borderRight: "6px solid transparent",
-                              borderTop: "6px solid #111315",
-                            }}
-                          />
+                          <div style={{ width: 0, height: 0, borderLeft: "6px solid transparent", borderRight: "6px solid transparent", borderTop: "6px solid #111315" }} />
                         </div>
                       </div>
                     )}
@@ -734,15 +495,12 @@ export default function AnalyticsPage({
                 </div>
                 <p className="text-2xl font-black text-white">
                   {displayValue(Math.floor(totalCo2Accumulated / 192))}
-                  <span className="text-sm font-medium text-gray-500 ml-1">
-                    coches/mes
-                  </span>
+                  <span className="text-sm font-medium text-gray-500 ml-1">coches/mes</span>
                 </p>
               </div>
             </div>
           </div>
         </div>
-        {/* Gráfico Area grande */}
         <div className="px-4 pb-6 pt-4">
           {loading ? (
             <div className="h-70 flex items-center justify-center">
@@ -751,69 +509,24 @@ export default function AnalyticsPage({
           ) : chartData.length > 0 ? (
             <div className="h-70">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart
-                  data={chartData}
-                  margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
-                >
+                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                   <defs>
-                    <linearGradient
-                      id="colorCo2Hero"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
+                    <linearGradient id="colorCo2Hero" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="#9dd187" stopOpacity={0.4} />
-                      <stop
-                        offset="60%"
-                        stopColor="#9dd187"
-                        stopOpacity={0.08}
-                      />
+                      <stop offset="60%" stopColor="#9dd187" stopOpacity={0.08} />
                       <stop offset="100%" stopColor="#9dd187" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#2a2c38"
-                  />
-                  <XAxis
-                    dataKey="monthLabel"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#4a4c58", fontSize: 11 }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "#4a4c58", fontSize: 11 }}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2c38" />
+                  <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fill: "#4a4c58", fontSize: 11 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: "#4a4c58", fontSize: 11 }} />
                   <Tooltip
-                    contentStyle={{
-                      borderRadius: "16px",
-                      border: "1px solid #2a2c38",
-                      backgroundColor: "#1e2029",
-                      color: "#fff",
-                      boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-                    }}
-                    formatter={(value: number) => [
-                      `${value} kg`,
-                      "CO₂e evitado",
-                    ]}
+                    contentStyle={{ borderRadius: "16px", border: "1px solid #2a2c38", backgroundColor: "#1e2029", color: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}
+                    formatter={(value: number) => [`${value} kg`, "CO₂e evitado"]}
                   />
-                  <Area
-                    type="monotone"
-                    dataKey="co2"
-                    stroke="#9dd187"
-                    strokeWidth={3}
-                    fill="url(#colorCo2Hero)"
+                  <Area type="monotone" dataKey="co2" stroke="#9dd187" strokeWidth={3} fill="url(#colorCo2Hero)"
                     dot={{ r: 5, fill: "#9dd187", strokeWidth: 0 }}
-                    activeDot={{
-                      r: 7,
-                      fill: "#9dd187",
-                      stroke: "#1a1c26",
-                      strokeWidth: 3,
-                    }}
+                    activeDot={{ r: 7, fill: "#9dd187", stroke: "#1a1c26", strokeWidth: 3 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -826,7 +539,7 @@ export default function AnalyticsPage({
         </div>
       </div>
 
-      {/* ─── Company Goals — línea única, ancho completo ─── */}
+      {/* ─── Company Goals ─── */}
       <CompanyGoals
         co2Target={companyData.co2Target || undefined}
         totalCo2={totalCo2Accumulated}
@@ -834,195 +547,332 @@ export default function AnalyticsPage({
       />
 
       {/* ═══════════════════════════════════════════════════════════
-      CHARTS GRID — 2x2
+          CHARTS GRID
       ═══════════════════════════════════════════════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Tendencia de Trayectos */}
         <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
-                Tendencia de Trayectos
-              </h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">
-                Publicados mensualmente
-              </p>
+              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Tendencia de Trayectos</h3>
+              <p className="text-xs text-gray-400 font-medium mt-0.5">Publicados mensualmente</p>
             </div>
-            <div className="p-2 bg-purple-50 rounded-xl">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
-            </div>
+            <div className="p-2 bg-purple-50 rounded-xl"><TrendingUp className="w-5 h-5 text-purple-600" /></div>
           </div>
           {loading ? (
-            <div className="h-60 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
-            </div>
+            <div className="h-60 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
           ) : activityTrendData.length > 0 ? (
             <div className="h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={activityTrendData}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#f0f0f0"
-                  />
-                  <XAxis
-                    dataKey="monthLabel"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: "#9ca3af" }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: "#9ca3af" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "12px",
-                      border: "1px solid #e5e7eb",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="actividad"
-                    stroke="#9333ea"
-                    strokeWidth={3}
-                    dot={{ r: 5, fill: "#9333ea" }}
-                    name="Trayectos"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                  <Line type="monotone" dataKey="actividad" stroke="#9333ea" strokeWidth={3} dot={{ r: 5, fill: "#9333ea" }} name="Trayectos" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">
-              No hay datos disponibles
-            </div>
+            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
           )}
         </Card>
 
-        {/* Trayectos por Mes */}
         <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
-                Trayectos por Mes
-              </h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">
-                Volumen mensual
-              </p>
+              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Trayectos por Mes</h3>
+              <p className="text-xs text-gray-400 font-medium mt-0.5">Volumen mensual</p>
             </div>
-            <div className="p-2 bg-[#E8F5E0] rounded-xl">
-              <Route className="w-5 h-5 text-[#5A9642]" />
-            </div>
+            <div className="p-2 bg-[#E8F5E0] rounded-xl"><Route className="w-5 h-5 text-[#5A9642]" /></div>
           </div>
           {loading ? (
-            <div className="h-60 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
-            </div>
+            <div className="h-60 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
           ) : chartData.length > 0 ? (
             <div className="h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#f0f0f0"
-                  />
-                  <XAxis
-                    dataKey="monthLabel"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: "#9ca3af" }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: "#9ca3af" }}
-                  />
-                  <Tooltip
-                    cursor={{ fill: "#f9fafb" }}
-                    contentStyle={{
-                      borderRadius: "12px",
-                      border: "1px solid #e5e7eb",
-                    }}
-                  />
-                  <Bar
-                    dataKey="totalTravels"
-                    fill="#9dd187"
-                    radius={[8, 8, 0, 0]}
-                    name="Trayectos"
-                  />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                  <Bar dataKey="totalTravels" fill="#9dd187" radius={[8, 8, 0, 0]} name="Trayectos" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">
-              No hay datos disponibles
-            </div>
+            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
           )}
         </Card>
 
-        {/* Tasa de Ocupación */}
         <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
-                Tasa de Ocupación
-              </h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">
-                Plazas ocupadas por mes
-              </p>
+              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Tasa de Ocupación</h3>
+              <p className="text-xs text-gray-400 font-medium mt-0.5">Plazas ocupadas por mes</p>
             </div>
-            <div className="p-2 bg-blue-50 rounded-xl">
-              <Car className="w-5 h-5 text-blue-500" />
-            </div>
+            <div className="p-2 bg-blue-50 rounded-xl"><Car className="w-5 h-5 text-blue-500" /></div>
           </div>
           {loading ? (
-            <div className="h-60 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
-            </div>
+            <div className="h-60 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
           ) : chartData.length > 0 ? (
             <div className="h-60">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                    stroke="#f0f0f0"
-                  />
-                  <XAxis
-                    dataKey="monthLabel"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fontSize: 11, fill: "#9ca3af" }}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    unit="%"
-                    tick={{ fontSize: 11, fill: "#9ca3af" }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "12px",
-                      border: "1px solid #e5e7eb",
-                    }}
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <YAxis axisLine={false} tickLine={false} unit="%" tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                  <Line type="monotone" dataKey="occupancy" stroke="#2a2c38" strokeWidth={3} dot={{ r: 6, fill: "#9dd187", strokeWidth: 0 }} name="Ocupación %" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
+          )}
+        </Card>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════
+          ★  CONDUCTORES Y COCHES HABILITANDO EL CARPOOLING
+      ═══════════════════════════════════════════════════════════ */}
+      <div className="space-y-6">
+
+        {/* Section divider / header */}
+        <div className="flex items-center gap-4 pt-4">
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+          <div className="flex items-center gap-3 px-5 py-2.5 bg-[#2a2c38] rounded-full shadow-lg">
+            <Car className="w-4 h-4 text-[#9dd187]" />
+            <span className="text-[10px] font-black text-white uppercase tracking-[0.22em]">
+              Conductores y coches habilitando el carpooling
+            </span>
+          </div>
+          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+        </div>
+
+        {/* ── 4 KPI cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+
+          {/* Coches habilitados */}
+          <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-[#2a2c38] text-white">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-[#9dd187]/15 rounded-2xl">
+                <Car size={24} className="text-[#9dd187]" />
+              </div>
+            </div>
+            <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-widest mb-1">
+              Coches habilitados
+            </p>
+            <h3 className="text-4xl font-black text-white">
+              {loading
+                ? <Loader2 className="w-6 h-6 animate-spin" />
+                : displayValue(currentMonthData?.activeDrivers || 0)}
+            </h3>
+            <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+              Empleados que han publicado una ruta y han puesto su coche a disposición de otros usuarios en SharetoGo.
+            </p>
+          </Card>
+
+          {/* Plazas disponibles */}
+          <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-[#E8F5E0] rounded-2xl">
+                <Users size={24} className="text-[#5A9642]" />
+              </div>
+            </div>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+              Plazas disponibles
+            </p>
+            <h3 className="text-4xl font-black text-[#2a2c38]">
+              {loading
+                ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+                : displayValue(currentMonthData?.availableSeats || 0)}
+            </h3>
+            <p className="text-xs text-gray-400 mt-2 leading-relaxed">
+              Plazas libres para compartir generadas por los trayectos publicados en SharetoGo.
+            </p>
+          </Card>
+
+          {/* Ratio de activación */}
+          <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-amber-50 to-orange-50 hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-white/80 rounded-2xl">
+                <Percent size={24} className="text-amber-500" />
+              </div>
+            </div>
+            <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1">
+              Ratio de activación
+            </p>
+            <h3 className="text-4xl font-black text-[#2a2c38]">
+              {loading
+                ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+                : `${activationRatio}%`}
+            </h3>
+            <p className="text-xs text-amber-700/70 mt-2 leading-relaxed">
+              {activationRatio !== "0"
+                ? `El ${activationRatio}% de la plantilla ya ha habilitado su coche para compartir trayectos en SharetoGo.`
+                : "Aún no hay datos de activación para este mes."}
+            </p>
+          </Card>
+
+          {/* Nuevos conductores este mes */}
+          <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] hover:shadow-md transition-shadow">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-white/80 rounded-2xl">
+                <Zap size={24} className="text-[#5A9642]" />
+              </div>
+            </div>
+            <p className="text-[10px] font-black text-[#5A9642] uppercase tracking-widest mb-1">
+              Nuevos conductores
+            </p>
+            <h3 className="text-4xl font-black text-[#2a2c38]">
+              {loading
+                ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+                : displayValue(currentMonthData?.newDrivers || 0)}
+            </h3>
+            <p className="text-xs text-gray-600 mt-2 leading-relaxed">
+              {currentMonthData?.newDrivers
+                ? `Este mes, ${currentMonthData.newDrivers} empleado${currentMonthData.newDrivers !== 1 ? "s han" : " ha"} habilitado su coche para compartir trayectos con compañeros en SharetoGo.`
+                : "Sin nuevas activaciones registradas este mes."}
+            </p>
+          </Card>
+        </div>
+
+        {/* ── 2 activation charts side by side ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* Chart A: Vehicle activation — drivers vs total users */}
+          <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
+                  Activación de vehículos
+                </h3>
+                <p className="text-xs text-gray-400 font-medium mt-0.5">
+                  Conductores activos vs usuarios registrados · {currentMonthData?.monthLabel || ""}
+                </p>
+              </div>
+              <div className="p-2 bg-[#E8F5E0] rounded-xl">
+                <UserCheck className="w-5 h-5 text-[#5A9642]" />
+              </div>
+            </div>
+            {loading ? (
+              <div className="h-52 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
+            ) : activationChartData.length > 0 ? (
+              <div className="h-52">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={activationChartData} layout="vertical" margin={{ left: 0, right: 24 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                    <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                    <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#4a4c58" }} width={150} />
+                    <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                    <Bar dataKey="value" radius={[0, 8, 8, 0]} name="Personas"
+                      label={{ position: "right", fontSize: 12, fontWeight: 700, fill: "#2a2c38" }}
+                    >
+                      {activationChartData.map((entry, index) => (
+                        // @ts-ignore — recharts Cell pattern
+                        <rect key={`c-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-52 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
+            )}
+          </Card>
+
+          {/* Chart B: Carpooling capacity */}
+          <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
+                  Capacidad de carpooling
+                </h3>
+                <p className="text-xs text-gray-400 font-medium mt-0.5">
+                  Trayectos · reservas · plazas libres · {currentMonthData?.monthLabel || ""}
+                </p>
+              </div>
+              <div className="p-2 bg-blue-50 rounded-xl">
+                <Route className="w-5 h-5 text-blue-500" />
+              </div>
+            </div>
+            {loading ? (
+              <div className="h-52 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
+            ) : capacityChartData.length > 0 ? (
+              <div className="h-52">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={capacityChartData} layout="vertical" margin={{ left: 0, right: 24 }}>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
+                    <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                    <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#4a4c58" }} width={150} />
+                    <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                    <Bar dataKey="value" radius={[0, 8, 8, 0]} name="Cantidad"
+                      label={{ position: "right", fontSize: 12, fontWeight: 700, fill: "#2a2c38" }}
+                    >
+                      {capacityChartData.map((entry, index) => (
+                        // @ts-ignore
+                        <rect key={`c-${index}`} fill={entry.fill} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-52 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
+            )}
+          </Card>
+        </div>
+
+        {/* ── Chart C: Driver network growth over time ── */}
+        <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
+                Crecimiento de la red de carpooling
+              </h3>
+              <p className="text-xs text-gray-400 font-medium mt-0.5">
+                Evolución de conductores activos mes a mes
+              </p>
+            </div>
+            <div className="p-2 bg-[#E8F5E0] rounded-xl">
+              <TrendingUp className="w-5 h-5 text-[#5A9642]" />
+            </div>
+          </div>
+
+          {/* Narrative callout */}
+          <div className="mb-6 px-5 py-3 bg-[#f6fdf2] border border-[#9dd187]/40 rounded-2xl">
+            <p className="text-xs text-[#5A9642] leading-relaxed">
+              La red de carpooling de la empresa continúa creciendo con nuevos conductores que ponen plazas disponibles para compartir trayectos en SharetoGo.
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="h-64 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
+          ) : driverGrowthData.length > 0 ? (
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={driverGrowthData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                  <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                  <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "12px" }} />
+                  <Line
+                    type="monotone" dataKey="conductores" stroke="#9dd187" strokeWidth={3}
+                    dot={{ r: 5, fill: "#9dd187", strokeWidth: 0 }}
+                    activeDot={{ r: 7, fill: "#9dd187", stroke: "#2a2c38", strokeWidth: 2 }}
+                    name="Conductores activos"
                   />
                   <Line
-                    type="monotone"
-                    dataKey="occupancy"
-                    stroke="#2a2c38"
-                    strokeWidth={3}
-                    dot={{ r: 6, fill: "#9dd187", strokeWidth: 0 }}
-                    name="Ocupación %"
+                    type="monotone" dataKey="nuevos" stroke="#2a2c38" strokeWidth={2} strokeDasharray="5 4"
+                    dot={{ r: 4, fill: "#2a2c38", strokeWidth: 0 }}
+                    name="Nuevos este mes"
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-60 flex items-center justify-center text-gray-400 text-sm">
-              No hay datos disponibles
-            </div>
+            <div className="h-64 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
           )}
         </Card>
       </div>
@@ -1034,14 +884,13 @@ export default function AnalyticsPage({
             <Info className="w-5 h-5 text-gray-600" />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-[#2a2c38] mb-1">
-              Acerca de estos datos
-            </p>
+            <p className="text-sm font-bold text-[#2a2c38] mb-1">Acerca de estos datos</p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              Todas las métricas mostradas provienen de cálculos mensuales
-              automáticos. Los valores &quot;-&quot; indican ausencia de datos. Puedes
-              seleccionar meses anteriores y compararlos para ver la evolución
-              de tu programa de carpooling.
+              Todas las métricas mostradas provienen de cálculos mensuales automáticos. Los valores &quot;-&quot; indican ausencia de datos.
+              Puedes seleccionar meses anteriores y compararlos para ver la evolución de tu programa de carpooling.
+              Los indicadores de conductores y vehículos habilitados requieren los campos{" "}
+              <span className="font-semibold text-[#2a2c38]">activeDrivers, totalUsers, availableSeats, reservedSeats</span> y{" "}
+              <span className="font-semibold text-[#2a2c38]">newDrivers</span> en la colección mensual de Firestore.
             </p>
           </div>
         </div>
