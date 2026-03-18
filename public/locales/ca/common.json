@@ -71,6 +71,7 @@
   "footer_descargar_app": "Descarregar l’app",
   "footer_copyright": "© {{year}} sharetogo.es. Tots els drets reservats.",
   "footer_tree": "TreeNation",
+
   "_preguntas_frecuentes": "Preguntes freqüents",
   "pf_descripcion": "Tens alguna pregunta específica que no s'hagi tractat aquí? El nostre equip està a punt per ajudar-te personalment.",
   "pf_button": "Contacta amb suport",
@@ -238,7 +239,7 @@
   "ct_contact_location": "Castelldefels, Barcelona, Espanya",
   "ct_contact_hours": "Horari d’atenció: Dilluns a Divendres, 9:00 - 18:00",
   "ct_faq_title": "Tens preguntes? Tenim respostes.",
-  "ct_faq_cta_text": "Descobreix tot el que necessites saber sobre com ShareToGo pot transformar els teus objectius de mobilitat corporativa i sostenibilitat.",
+  "ct_faq_cta_text": "Descobreix tot el que necessites saber sobre com SharetoGo pot transformar els teus objectius de mobilitat corporativa i sostenibilitat.",
   "ct_faq_button": "Consulta les preguntes més freqüents",
 
   "_espacio_empresas": "Espai Empreses",

@@ -182,7 +182,6 @@ export default function QuienesSomos() {
         transition={{ duration: 0.4, delay: 0.2 }}
         viewport={{ once: true, amount: 0.2 }}
       >
-        <Reviews />
       </motion.section>
     </main>
   );
