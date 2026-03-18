@@ -517,10 +517,12 @@
   "co_faq3_q": "¿Es posible recibir una visita de un comercial?",
   "co_faq3_a": "Por supuesto. Nuestro equipo comercial puede desplazarse a tu empresa para presentaciones personalizadas.",
 
-    "_descargar": "Descargar app",
+  "_descargar": "Descargar app",
+  "dl_badge": "Ya disponible",
   "dl_qr_title": "Descarga nuestra aplicación",
   "dl_qr_text": "Comparte tus trayectos diarios y ahorra todo el año. Optimiza las plazas libres de tu coche y obtén beneficios económicos con SharetoGo.",
   "dl_qr_img_alt": "Código QR para descargar la aplicación SharetoGo",
+  "dl_scan_prompt": "Escanea para comenzar tu viaje →",
   "dl_qr_mock_alt": "Vista previa de la aplicación SharetoGo",
   "dl_mid_title": "Registrate en dos clicks",
   "dl_mid_subtitle": "¿Empezamos?",

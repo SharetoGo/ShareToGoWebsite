@@ -76,27 +76,53 @@ export default function DownloadSection() {
         viewport={{ once: true, amount: 0.2 }}
         className="space-y-16"
       >
-        <section className="bg-[#2a2c38] py-16">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-12">
+        <section className="relative bg-[#2a2c38] py-16 md:py-16 overflow-hidden">
+          {/* Decorative background elements */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#9dd187]/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-full h-1/2 bg-linear-to-t from-black/20 to-transparent" />
+          </div>
+
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-16 relative z-10">
             {/* LEFT SIDE */}
-            <div className="flex flex-col items-center text-center md:w-1/2">
-              <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <QRCodeCanvas value={qrLink} size={160} />
+            <div className="flex flex-col items-center md:items-start text-center md:text-left md:w-1/2 space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#9dd187]/20 border border-[#9dd187]/30 text-[#9dd187] text-sm font-bold uppercase tracking-wider">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#9dd187] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#9dd187]"></span>
+                </span>
+                {t("dl_badge")}
               </div>
-              <h2 className="mt-6 text-2xl font-semibold text-white">
+              
+              <h2 className="text-4xl md:text-4xl font-black text-white leading-tight">
                 {t("dl_qr_title")}
               </h2>
-              <p className="mt-2 text-white max-w-sm">{t("dl_qr_text")}</p>
+              
+              <p className="text-xl text-gray-300 max-w-xl leading-relaxed">
+                {t("dl_qr_text")}
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center gap-8 pt-4">
+                <div className="bg-white p-4 rounded-3xl shadow-[0_0_40px_rgba(157,209,135,0.3)] transform hover:scale-105 transition-transform duration-300">
+                  <QRCodeCanvas value={qrLink} size={170} />
+                </div>
+                <div className="flex flex-col gap-3">
+                  <p className="text-white font-medium text-sm opacity-70 italic">
+                    {t("dl_scan_prompt")}
+                  </p>
+                  <div className="h-px w-full bg-linear-to-r from-[#9dd187] to-transparent" />
+                </div>
+              </div>
             </div>
 
             {/* RIGHT SIDE */}
-            <div className="md:w-1/2 flex justify-center">
+            <div className="md:w-1/2 flex justify-center relative">
               <Image
                 src="/images/descargar/inicio.png"
                 alt={t("dl_qr_mock_alt")}
-                width={320}
-                height={640}
-                className="max-w-xs w-full drop-shadow-lg rounded-xl"
+                width={380}
+                height={760}
+                className="max-w-70 md:max-w-sm w-full drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-[2.5rem] border-4 border-white"
                 priority
               />
             </div>

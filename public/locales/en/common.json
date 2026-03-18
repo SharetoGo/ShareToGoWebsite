@@ -489,10 +489,12 @@
   "co_faq3_a": "Absolutely. Our sales team can visit your company for personalized presentations.",
 
   "_descargar": "Download app",
+  "dl_badge": "Available now",
   "dl_qr_title": "Download our app",
   "dl_qr_text": "Share your daily trips and save all year round. Make use of the empty seats in your car and get financial benefits with SharetoGo.",
   "dl_qr_img_alt": "QR code to download the SharetoGo app",
   "dl_qr_mock_alt": "Preview of the SharetoGo app",
+  "dl_scan_prompt": "Scan to start your journey →",
   "dl_mid_title": "Sign up in two clicks",
   "dl_mid_subtitle": "Shall we start?",
   "dl_mid_block_title": "Start today",

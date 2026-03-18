@@ -499,9 +499,11 @@
   "co_faq3_a": "Bien sûr. Notre équipe commerciale peut se déplacer dans votre entreprise pour des présentations personnalisées.",
 
   "_descargar": "Télécharger l’app",
+  "dl_badge": "Disponible dès maintenant",
   "dl_qr_title": "Téléchargez notre application",
   "dl_qr_text": "Partagez vos trajets quotidiens et faites des économies toute l’année. Optimisez les places libres de votre voiture et obtenez des avantages économiques avec SharetoGo.",
   "dl_qr_img_alt": "Code QR pour télécharger l’application SharetoGo",
+  "dl_scan_prompt": "Scannez pour commencer votre voyage →",
   "dl_qr_mock_alt": "Aperçu de l’application SharetoGo",
   "dl_mid_title": "Inscrivez-vous en deux clics",
   "dl_mid_subtitle": "On commence ?",

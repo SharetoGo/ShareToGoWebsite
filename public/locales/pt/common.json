@@ -533,10 +533,13 @@
   "co_faq2_a": "Sim, oferecemos suporte em espanhol, inglês, francês, italiano e português para os nossos clientes internacionais.",
   "co_faq3_q": "É possível receber a visita de um comercial?",
   "co_faq3_a": "Claro. A nossa equipa comercial pode deslocar-se à tua empresa para realizar apresentações personalizadas.",
+  
   "_descargar": "Descarregar app",
+  "dl_badge": "Disponível agora",
   "dl_qr_title": "Descarrega a nossa aplicação",
   "dl_qr_text": "Partilha os teus trajetos diários e poupa durante todo o ano. Otimiza os lugares livres do teu carro e obtém benefícios económicos com a SharetoGo.",
   "dl_qr_img_alt": "Código QR para descarregar a aplicação SharetoGo",
+  "dl_scan_prompt": "Digitalize para iniciar a sua jornada →",
   "dl_qr_mock_alt": "Pré-visualização da aplicação SharetoGo",
   "dl_mid_title": "Regista-te em dois cliques",
   "dl_mid_subtitle": "Começamos?",
