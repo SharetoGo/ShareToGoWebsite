@@ -63,7 +63,7 @@ export function CompanyGoals({ co2Target, totalCo2, onViewSettings }: CompanyGoa
           <h4 className="font-bold text-[#2a2c38]">Meta de Sostenibilidad</h4>
         </div>
         <button
-          onClick={() => router.push("/intranet-empresas/settings")}
+          onClick={() => router.push("/intranet-empresas/ajustes")}
           className="text-xs text-gray-400 hover:text-[#9dd187] transition-colors flex items-center gap-1"
         >
           <Settings className="w-3 h-3" />

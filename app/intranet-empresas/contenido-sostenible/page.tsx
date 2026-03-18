@@ -44,10 +44,34 @@ interface SavedPost {
   createdAt: any;
 }
 
+const monthKeys = [
+  "enero",
+  "febrero",
+  "marzo",
+  "abril",
+  "mayo",
+  "junio",
+  "julio",
+  "agosto",
+  "septiembre",
+  "octubre",
+  "noviembre",
+  "diciembre",
+];
+
+// FIX 2: Derive current month label dynamically so the page always opens on today's month
+function getCurrentMonthLabel(): string {
+  const now = new Date();
+  const monthName = monthKeys[now.getMonth()];
+  const year = now.getFullYear();
+  return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${year}`;
+}
+
 export default function ContentPage() {
   const { companyData } = useAuth();
   const [posts, setPosts] = useState<SavedPost[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState("febrero 2026");
+  // FIX 2: initialise to the real current month instead of a hardcoded string
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonthLabel);
   const [activeTab, setActiveTab] = useState<string>("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -65,21 +89,6 @@ export default function ContentPage() {
     [],
   );
 
-  const monthKeys = [
-    "enero",
-    "febrero",
-    "marzo",
-    "abril",
-    "mayo",
-    "junio",
-    "julio",
-    "agosto",
-    "septiembre",
-    "octubre",
-    "noviembre",
-    "diciembre",
-  ];
-
   useEffect(() => {
     if (!companyData?.id) return;
     const q = query(
@@ -92,15 +101,16 @@ export default function ContentPage() {
         ...doc.data(),
       })) as SavedPost[];
       setPosts(fetchedPosts);
-
-      if (fetchedPosts.length > 0 && !activeTab) {
-        const firstOfMonth = fetchedPosts.find(
-          (p) => p.month.toLowerCase() === selectedMonth.toLowerCase(),
-        );
-        setActiveTab(firstOfMonth?.id || fetchedPosts[0].id);
-      }
     });
-  }, [companyData?.id, selectedMonth]);
+  }, [companyData?.id]);
+
+  // FIX 3: Reset the active tab whenever the selected month changes so the
+  // right panel never shows content from a previously selected month.
+  const handleMonthChange = (monthLabel: string) => {
+    setSelectedMonth(monthLabel);
+    setActiveTab("");
+    setIsCreating(false);
+  };
 
   const currentMonthContent = useMemo(() => {
     const typeConfigs: Record<PostType, { label: string; icon: any }> = {
@@ -127,6 +137,15 @@ export default function ContentPage() {
   const activeContent = useMemo(() => {
     return posts.find((p) => p.id === activeTab);
   }, [activeTab, posts]);
+
+  // FIX 1: Count only posts whose month matches the currently selected month
+  const postsThisMonth = useMemo(
+    () =>
+      posts.filter(
+        (p) => p.month.toLowerCase() === selectedMonth.toLowerCase(),
+      ).length,
+    [posts, selectedMonth],
+  );
 
   const handleSave = async () => {
     if (!formState.title.trim() || !formState.content.trim()) {
@@ -178,9 +197,10 @@ export default function ContentPage() {
           <Sparkles size={120} />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 relative z-10">
+          {/* FIX 1: use postsThisMonth derived from filtered posts */}
           <StatMiniWhite
             label="Posts del Mes"
-            value={posts.filter((p) => p.month === selectedMonth).length}
+            value={postsThisMonth}
             sub="Total en este periodo"
           />
           <StatMiniWhite
@@ -201,14 +221,15 @@ export default function ContentPage() {
         </div>
       </div>
 
-      {/* 2. Month Selector (The "Month IDs") */}
+      {/* 2. Month Selector */}
       <div className="flex gap-2 overflow-x-auto no-scrollbar py-2">
         {monthKeys.map((m) => {
           const monthLabel = `${m.charAt(0).toUpperCase() + m.slice(1)} 2026`;
           return (
             <button
               key={m}
-              onClick={() => setSelectedMonth(monthLabel)}
+              // FIX 3: use handleMonthChange to also clear the active tab
+              onClick={() => handleMonthChange(monthLabel)}
               className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all border ${selectedMonth === monthLabel ? "bg-[#9dd187] text-[#2a2c38] border-[#9dd187] shadow-md" : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"}`}
             >
               {monthLabel}
@@ -331,6 +352,9 @@ export default function ContentPage() {
                   setFormState({ ...formState, content: e.target.value })
                 }
               />
+              {error && (
+                <p className="text-red-500 text-xs font-semibold">{error}</p>
+              )}
               <button
                 onClick={handleSave}
                 className="w-full bg-[#9dd187] text-[#2a2c38] py-5 rounded-2xl font-black uppercase shadow-lg shadow-[#9dd187]/20"
@@ -378,6 +402,7 @@ export default function ContentPage() {
               </div>
             </div>
           ) : (
+            // FIX 3: This empty state now always shows when switching months with no selection
             <div className="h-full flex items-center justify-center text-gray-300 italic font-medium p-20 border-2 border-dashed border-gray-50 rounded-[3rem]">
               Selecciona un contenido del lateral para previsualizarlo
             </div>
