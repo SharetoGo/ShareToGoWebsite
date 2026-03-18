@@ -1,4 +1,5 @@
 ﻿"use client";
+import Link from "next/link";
 
 import { motion } from "framer-motion";
 import type React from "react";
@@ -333,39 +334,19 @@ export default function Contratar() {
         variants={fadeInUp}
         transition={{ duration: 0.4, delay: 0.3 }}
         viewport={{ once: true, amount: 0.2 }}
-        className="py-16 md:py-24 bg-gray-50"
+        className=""
       >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[#2a2c38] text-center mb-12">
-            {t("ct_faq_title")}
-          </h2>
-          <div className="space-y-6">
-            <Card className="p-6">
-              <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">
-                  {t("ct_faq1_q")}
-                </h3>
-                <p className="text-gray-600">{t("ct_faq1_a")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="p-6">
-              <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">
-                  {t("ct_faq2_q")}
-                </h3>
-                <p className="text-gray-600">{t("ct_faq2_a")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="p-6">
-              <CardContent className="pt-6">
-                <h3 className="font-semibold text-[#2a2c38] mb-2">
-                  {t("ct_faq3_q")}
-                </h3>
-                <p className="text-gray-600">{t("ct_faq3_a")}</p>
-              </CardContent>
-            </Card>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-gray-100">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2a2c38] mb-6">
+              {t("ct_faq_title")}
+            </h2>
+            <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">
+              {t("ct_faq_cta_text", "Discover everything you need to know about how ShareToGo can transform your corporate mobility and sustainability goals.")}
+            </p>
+            <Button asChild size="lg" className="bg-[#2a2c38] hover:bg-[#3d4051] text-white px-8 py-6 text-lg rounded-full transition-all hover:scale-105">
+              <Link href="/faqs">{t("ct_faq_button")}</Link>
+            </Button>
           </div>
         </div>
       </motion.section>
