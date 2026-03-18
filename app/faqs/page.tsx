@@ -109,7 +109,7 @@ export default function Faqs() {
               {t("pf_descripcion")}
             </p>
 
-            <Link href="/contact">
+            <Link href="/contacto">
               <button className="flex items-center justify-between w-full sm:w-auto gap-4 bg-[#2a2c38] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#9dd187] transition-all duration-300 group shadow-lg shadow-gray-200">
                 {t("pf_button")}
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
