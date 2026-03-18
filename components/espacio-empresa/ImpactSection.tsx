@@ -221,7 +221,7 @@ export function ImpactSection({ t }: { t: any }) {
               </Card>
 
               {/* Floating badge */}
-              <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3">
+              <div className="absolute -bottom-6 right-2 md:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3">
                 <div className="w-8 h-8 bg-[#f4f9eb] rounded-full flex items-center justify-center">
                   <Share2 size={16} className="text-[#4d7c41]" />
                 </div>

@@ -11,7 +11,7 @@ const EASE_SPRING: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 
 export function HeroSection({ t }: { t: any }) {
   return (
-    <section className="py-16 md:py-24 bg-linear-to-br from-[#2a2c38] via-[#2a2c38] to-[#1a1c24] overflow-hidden">
+    <section className="relative py-16 md:py-24 bg-linear-to-br from-[#2a2c38] via-[#2a2c38] to-[#1a1c24] overflow-hidden">
       <motion.div
         initial={{ opacity: 0, x: 80 }}
         animate={{ opacity: 1, x: 0 }}
