@@ -27,21 +27,36 @@ export default function EmployeesPage() {
     emp: any;
   } | null>(null);
 
+  
+
   // --- CLEAN DATA PROCESSING ---
   const activeEmployees = useMemo(() => {
     const ids = companyData?.membersIds || [];
-    return ids.map((id) => {
-      const fullData = users.find((u) => u.id === id);
-      return fullData
-        ? { ...fullData, status: "active" }
-        : {
-            id,
-            name: "Cargando...",
-            lastName: "",
-            status: "active",
-            kmTravelled: 0,
-          };
-    });
+    return ids
+      .map((id) => {
+        const fullData = users.find((u) => u.id === id);
+        return fullData
+          ? { 
+              ...fullData, 
+              status: "active",
+              trips: (fullData.passengerTravels || 0) + (fullData.driverTravels || 0)
+            }
+          : {
+              id,
+              name: "Cargando...",
+              lastName: "",
+              status: "active",
+              kmTravelled: 0,
+              trips: 0,
+            };
+      })
+      .sort((a, b) => {
+        // Sort primarily by KM, secondarily by number of trips
+        if ((b.kmTravelled || 0) !== (a.kmTravelled || 0)) {
+          return (b.kmTravelled || 0) - (a.kmTravelled || 0);
+        }
+        return (b.trips || 0) - (a.trips || 0);
+      });
   }, [users, companyData?.membersIds]);
 
   const blockedEmployees = useMemo(() => {

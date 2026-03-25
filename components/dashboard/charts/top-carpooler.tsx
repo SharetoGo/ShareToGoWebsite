@@ -62,11 +62,11 @@ export function TopCarpoolers({ users }: TopCarpoolersProps) {
             {champions.map((person, i) => (
               <div 
                 key={i} 
-                className="flex items-center justify-between p-3 rounded-2xl hover:bg-gradient-to-r hover:from-[#E8F5E0]/30 hover:to-transparent transition-all border border-transparent hover:border-[#9dd187]/20 group"
+                className="flex items-center justify-between p-3 rounded-2xl hover:bg-linear-to-r hover:from-[#E8F5E0]/30 hover:to-transparent transition-all border border-transparent hover:border-[#9dd187]/20 group"
               >
                 {/* Left: Medal + User Info */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <div className={`p-2 rounded-xl bg-gray-50 group-hover:bg-white transition-colors ${person.color}`}>
                       <Medal size={16} />
                     </div>
@@ -78,7 +78,7 @@ export function TopCarpoolers({ users }: TopCarpoolersProps) {
                         {person.name} {person.lastName}
                       </p>
                       {i === 0 && (
-                        <span className="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-bold rounded uppercase flex-shrink-0">
+                        <span className="px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-[9px] font-bold rounded uppercase shrink-0">
                           MVP
                         </span>
                       )}
@@ -90,7 +90,7 @@ export function TopCarpoolers({ users }: TopCarpoolersProps) {
                 </div>
 
                 {/* Right: KM */}
-                <div className="text-right flex-shrink-0 ml-3">
+                <div className="text-right shrink-0 ml-3">
                   <div className="flex items-center justify-end gap-1.5">
                     <Car className="text-[#9dd187]" size={14} />
                     <p className="text-lg font-bold text-[#2a2c38]">
@@ -105,7 +105,7 @@ export function TopCarpoolers({ users }: TopCarpoolersProps) {
             ))}
 
             {/* Summary Footer */}
-            <div className="mt-3 p-3 rounded-2xl bg-gradient-to-br from-[#E8F5E0] to-[#F0F8EC] border border-[#9dd187]/20">
+            <div className="mt-3 p-3 rounded-2xl bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] border border-[#9dd187]/20">
               <div className="flex items-start gap-2.5">
                 <div className="p-2 rounded-xl bg-white/80">
                   <TrendingUp className="text-[#5A9642]" size={14} />

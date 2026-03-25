@@ -2,6 +2,9 @@ import { Award } from "lucide-react";
 import Image from "next/image";
 
 export function Leaderboard({ employees, onSelect }: { employees: any[], onSelect: (e: any) => void }) {
+  const bgColors = ["bg-yellow-50", "bg-gray-50", "bg-yellow-100"];
+  const textColors = ["text-yellow-500", "text-gray-500", "text-yellow-700"];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {employees.map((emp, i) => (
@@ -18,7 +21,9 @@ export function Leaderboard({ employees, onSelect }: { employees: any[], onSelec
               {emp.profilePicture ? (
                 <Image src={emp.profilePicture} alt={emp.name} fill className="object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-[#2a2c38] font-black text-xl uppercase">{emp.name[0]}</div>
+                <div className={`w-full h-full flex items-center justify-center font-black text-xl uppercase ${bgColors[i % 3]} ${textColors[i % 3]}`}>
+                  {emp.name ? emp.name[0] : "?"}
+                </div>
               )}
             </div>
             <div className="absolute -top-2 -right-2 w-7 h-7 bg-[#2a2c38] text-[#9dd187] rounded-full flex items-center justify-center text-[10px] font-black shadow-lg">

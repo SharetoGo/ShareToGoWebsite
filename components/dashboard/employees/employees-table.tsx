@@ -69,7 +69,7 @@ export function EmployeeTable({
                   <div className="flex items-center gap-5">
                     <div className="flex flex-col">
                       <span className="text-[9px] font-black text-gray-300 uppercase">Km</span>
-                      <span className="text-xs font-bold text-[#2a2c38]">{emp.kmTravelled || 0}</span>
+                      <span className="text-xs font-bold text-[#2a2c38]">{emp.kmTravelled ? Number(emp.kmTravelled).toFixed(2) : 0}</span>
                     </div>
                     <div className="flex flex-col">
                       <span className="text-[9px] font-black text-gray-300 uppercase">Viajes</span>
