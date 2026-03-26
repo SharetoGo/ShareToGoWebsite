@@ -1,7 +1,14 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
-import { useAuth } from '@/app/intranet-empresas/auth/AuthContext'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from "react";
+import { useAuth } from '@/app/intranet-empresas/auth/AuthContext';
 import { db } from "@/lib/firebase";
 import {
   collection,
@@ -11,6 +18,8 @@ import {
   doc,
   getDoc,
   documentId,
+  setDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 
 /* ═══════════════════════════════════════════════════════════
@@ -29,11 +38,7 @@ export interface User {
   driverTravels: number;
   co2SavedKg: number;
   zones?: Array<{ name: string; lat: number; lng: number }>;
-  reviews?: Array<{
-    authorName: string;
-    rating: number;
-    comment: string;
-  }>;
+  reviews?: Array<{ authorName: string; rating: number; comment: string }>;
   company: string;
 }
 
@@ -43,17 +48,39 @@ export interface Travel {
   origin: string;
   destination: string;
   date: any;
-  seats: number;
-  availableSeats: number;
+  carSeatsAvailable: number;
   reservedBy: string[];
 }
 
+/**
+ * Monthly metrics stored at:
+ *   /companies/{companyId}/month/{year-month}/metrics/{metricId}
+ *
+ * Fields written by computeAndSaveMonthlyMetrics():
+ *  - totalTravels        : number of travel docs in that month's subcollection
+ *  - totalTrips          : total passengers who booked (sum of reservedBy.length)
+ *  - availableSeats      : sum of (seats - 1) across all travels (driver excluded)
+ *  - reservedSeats       : sum of (seats - availableSeats) per travel
+ *  - co2SavedKg          : kg CO₂ avoided  (reservedSeats × avg_km × 0.21 kg/km)
+ *  - seatOccupancyRate   : reservedSeats / availableSeats × 100  (%)
+ *  - participationRate   : unique participants / totalMembers × 100  (%)
+ *  - activeDrivers       : unique driver userIds this month
+ *  - totalUsers          : snapshot of company member count
+ *  - newDrivers          : drivers who had NOT posted in ANY previous month
+ *  - computedAt          : server timestamp
+ */
 export interface MonthlyMetrics {
+  totalTravels: number;
+  totalTrips: number;
+  availableSeats: number;
+  reservedSeats: number;
   co2SavedKg: number;
   seatOccupancyRate: number;
   participationRate: number;
-  totalTravels: number;
-  totalTrips: number;
+  activeDrivers: number;
+  totalUsers: number;
+  newDrivers: number;
+  computedAt?: any;
 }
 
 interface DashboardContextData {
@@ -68,6 +95,25 @@ interface DashboardContextData {
 
   // Actions
   refresh: () => Promise<void>;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CONSTANTS
+   ═══════════════════════════════════════════════════════════ */
+
+/** Average one-way commute distance used for CO₂ estimates (km). */
+const AVG_COMMUTE_KM = 15;
+
+/** CO₂ emission factor for a petrol passenger car (kg per km per passenger). */
+const CO2_KG_PER_KM = 0.21;
+
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════ */
+
+/** Returns "YYYY-MM" for a given Date. */
+function toYearMonth(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -95,7 +141,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
      ═══════════════════════════════════════════════════════════ */
 
   const loadDashboardData = useCallback(async () => {
-    // No cargar si no hay companyData o ya se está cargando
     if (!companyData?.id || hasLoaded) {
       setLoading(false);
       return;
@@ -105,18 +150,26 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
 
-      // Cargar datos en paralelo
+      const now = new Date();
+      const currentYM = toYearMonth(now);
+
+      // Ensure metrics exist for the current month before loading
+      await computeAndSaveMonthlyMetrics(
+        companyData.id,
+        currentYM,
+        companyData.membersIds || [],
+      );
+
       const [metricsData, usersData, travelsData] = await Promise.all([
-        loadMonthlyMetrics(companyData.id),
+        loadCurrentMonthMetrics(companyData.id, currentYM),
         loadUsers(companyData.membersIds || []),
-        loadTravels(companyData.travels || [])
+        loadCurrentMonthTravels(companyData.id, currentYM),
       ]);
 
       setMonthlyMetrics(metricsData);
       setUsers(usersData);
       setTravels(travelsData);
       setHasLoaded(true);
-
     } catch (err) {
       console.error("❌ Error loading dashboard data:", err);
       setError(err instanceof Error ? err.message : "Error desconocido");
@@ -124,97 +177,226 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [companyData?.id, companyData?.membersIds, companyData?.travels, hasLoaded]);
+  }, [companyData?.id, companyData?.membersIds, hasLoaded]);
+
+  /* ═══════════════════════════════════════════════════════════
+     COMPUTE & SAVE MONTHLY METRICS
+     Path: /companies/{companyId}/month/{yearMonth}/metrics/summary
+     ═══════════════════════════════════════════════════════════ */
+
+  async function computeAndSaveMonthlyMetrics(
+    companyId: string,
+    yearMonth: string,
+    memberIds: string[],
+  ): Promise<void> {
+    const summaryRef = doc(
+      db,
+      "companies", companyId,
+      "month", yearMonth,
+      "metrics", "summary",
+    );
+
+    // Skip recomputing if a fresh snapshot already exists for today
+    const existing = await getDoc(summaryRef);
+    if (existing.exists()) {
+      const data = existing.data();
+      if (data?.computedAt) {
+        const computedDate: Date =
+          data.computedAt.toDate ? data.computedAt.toDate() : new Date(data.computedAt);
+        const today = new Date();
+        const sameDay =
+          computedDate.getFullYear() === today.getFullYear() &&
+          computedDate.getMonth() === today.getMonth() &&
+          computedDate.getDate() === today.getDate();
+        if (sameDay) return; // already computed today
+      }
+    }
+
+    try {
+      // 1. Fetch all travels for this month
+      const travelsSnap = await getDocs(
+        collection(db, "companies", companyId, "month", yearMonth, "travels"),
+      );
+
+      const monthTravels: Travel[] = travelsSnap.docs.map(d => ({
+        id: d.id,
+        ...d.data(),
+      } as Travel));
+
+      // 2. Core aggregations
+      const totalTravels = monthTravels.length;
+
+      let totalReservedSeats = 0;
+      let totalAvailableSeats = 0;
+      const driverIds = new Set<string>();
+      const passengerIds = new Set<string>();
+
+      for (const t of monthTravels) {
+        // seats = total capacity including driver; available = free seats for passengers
+        const capacity = t.carSeatsAvailable ?? 0;
+        const reserved = Array.isArray(t.reservedBy) ? t.reservedBy.length : 0;
+        const available = Math.max(capacity - 1 - reserved, 0); // -1 for driver
+
+        totalReservedSeats += reserved;
+        totalAvailableSeats += capacity; // seats offered (driver excluded)
+
+        if (t.userId) driverIds.add(t.userId);
+        if (Array.isArray(t.reservedBy)) {
+          t.reservedBy.forEach(uid => passengerIds.add(uid));
+        }
+      }
+
+      // totalTrips = total passenger bookings this month
+      const totalTrips = totalReservedSeats;
+
+      // CO₂ saved: each reserved seat replaces one solo car trip
+      // co2 (kg) = reservedSeats × avg_km × CO2_factor
+      const co2SavedKg = parseFloat(
+        (totalReservedSeats * AVG_COMMUTE_KM * CO2_KG_PER_KM).toFixed(2),
+      );
+
+      // Seat occupancy rate: % of offered seats that were filled
+      const seatOccupancyRate =
+        totalAvailableSeats > 0
+          ? parseFloat(((totalReservedSeats / totalAvailableSeats) * 100).toFixed(2))
+          : 0;
+
+      // Participation rate: unique members (drivers + passengers) / total members
+      const uniqueParticipants = new Set([...driverIds, ...passengerIds]);
+      const totalMembers = memberIds.length;
+      const participationRate =
+        totalMembers > 0
+          ? parseFloat(((uniqueParticipants.size / totalMembers) * 100).toFixed(2))
+          : 0;
+
+      const activeDrivers = driverIds.size;
+      const totalUsers = totalMembers;
+
+      // 3. Determine new drivers (drivers who posted for the first time this month)
+      //    Compare against all previous months' known driver sets
+      const newDrivers = await countNewDrivers(companyId, yearMonth, driverIds);
+
+      // 4. Write to Firestore
+      const metrics: MonthlyMetrics = {
+        totalTravels,
+        totalTrips,
+        availableSeats: totalAvailableSeats,
+        reservedSeats: totalReservedSeats,
+        co2SavedKg,
+        seatOccupancyRate,
+        participationRate,
+        activeDrivers,
+        totalUsers,
+        newDrivers,
+        computedAt: serverTimestamp(),
+      };
+
+      await setDoc(summaryRef, metrics);
+    } catch (err) {
+      console.error("❌ Error computing monthly metrics:", err);
+    }
+  }
+
+  /**
+   * Returns how many drivers in `currentDriverIds` have NOT appeared
+   * as drivers in any month before `yearMonth`.
+   */
+  async function countNewDrivers(
+    companyId: string,
+    yearMonth: string,
+    currentDriverIds: Set<string>,
+  ): Promise<number> {
+    if (currentDriverIds.size === 0) return 0;
+
+    try {
+      // Fetch all month documents that come before this one
+      const monthsSnap = await getDocs(
+        collection(db, "companies", companyId, "month"),
+      );
+
+      const priorMonths = monthsSnap.docs
+        .map(d => d.id)
+        .filter(id => id < yearMonth); // lexicographic comparison works for "YYYY-MM"
+
+      const historicDriverIds = new Set<string>();
+
+      for (const m of priorMonths) {
+        const snap = await getDoc(
+          doc(db, "companies", companyId, "month", m, "metrics", "summary"),
+        );
+        if (snap.exists()) {
+          // We stored driverIds as an array in a dedicated field for this purpose
+          const data = snap.data();
+          if (Array.isArray(data?.driverIds)) {
+            data.driverIds.forEach((uid: string) => historicDriverIds.add(uid));
+          }
+        }
+      }
+
+      let newCount = 0;
+      currentDriverIds.forEach(uid => {
+        if (!historicDriverIds.has(uid)) newCount++;
+      });
+      return newCount;
+    } catch (err) {
+      console.error("❌ Error counting new drivers:", err);
+      return 0;
+    }
+  }
 
   /* ═══════════════════════════════════════════════════════════
      DATA LOADERS
      ═══════════════════════════════════════════════════════════ */
 
-  async function loadMonthlyMetrics(companyId: string): Promise<MonthlyMetrics | null> {
+  /** Load already-computed metrics for a specific month. */
+  async function loadCurrentMonthMetrics(
+    companyId: string,
+    yearMonth: string,
+  ): Promise<MonthlyMetrics | null> {
     try {
-      const now = new Date();
-      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-      const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const previousMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, "0")}`;
-
-      // Intenta mes actual
-      try {
-        const currentRef = doc(db, "companies", companyId, "metrics", "metrics", "monthly", currentMonth);
-        const currentSnap = await getDoc(currentRef);
-
-        if (currentSnap.exists()) {
-          return currentSnap.data() as MonthlyMetrics;
-        }
-      } catch (e) {
-        console.warn("Current month metrics not found:", e);
-      }
-
-      // Fallback a mes anterior
-      try {
-        const prevRef = doc(db, "companies", companyId, "metrics", "metrics", "monthly", previousMonth);
-        const prevSnap = await getDoc(prevRef);
-
-        return prevSnap.exists() ? (prevSnap.data() as MonthlyMetrics) : null;
-      } catch (e) {
-        console.warn("Previous month metrics not found:", e);
-        return null;
-      }
-    } catch (error) {
-      console.error("❌ Error loading monthly metrics:", error);
+      const ref = doc(db, "companies", companyId, "month", yearMonth, "metrics", "summary");
+      const snap = await getDoc(ref);
+      return snap.exists() ? (snap.data() as MonthlyMetrics) : null;
+    } catch (err) {
+      console.error("❌ Error loading monthly metrics:", err);
       return null;
     }
   }
 
+  /** Load travel documents for the current month. */
+  async function loadCurrentMonthTravels(
+    companyId: string,
+    yearMonth: string,
+  ): Promise<Travel[]> {
+    try {
+      const snap = await getDocs(
+        collection(db, "companies", companyId, "month", yearMonth, "travels"),
+      );
+      return snap.docs.map(d => ({ id: d.id, ...d.data() } as Travel));
+    } catch (err) {
+      console.error("❌ Error loading travels:", err);
+      return [];
+    }
+  }
+
+  /** Load user documents by IDs (batched to respect Firestore 30-item limit). */
   async function loadUsers(memberIds: string[]): Promise<User[]> {
     if (!memberIds || memberIds.length === 0) return [];
 
     try {
       const allUsers: User[] = [];
 
-      // Procesar en lotes de 30 (límite de Firestore)
       for (let i = 0; i < memberIds.length; i += 30) {
         const batch = memberIds.slice(i, i + 30);
-        const usersQuery = query(
-          collection(db, "users"),
-          where(documentId(), "in", batch)
+        const usersSnap = await getDocs(
+          query(collection(db, "users"), where(documentId(), "in", batch)),
         );
-        const usersSnap = await getDocs(usersQuery);
-
-        usersSnap.docs.forEach(doc => {
-          allUsers.push({ id: doc.id, ...doc.data() } as User);
-        });
+        usersSnap.docs.forEach(d => allUsers.push({ id: d.id, ...d.data() } as User));
       }
 
       return allUsers;
-    } catch (error) {
-      console.error("❌ Error loading users:", error);
-      return [];
-    }
-  }
-
-  async function loadTravels(travelIds: string[]): Promise<Travel[]> {
-    if (!travelIds || travelIds.length === 0) return [];
-
-    try {
-      const allTravels: Travel[] = [];
-
-      // Procesar en lotes de 30
-      for (let i = 0; i < travelIds.length; i += 30) {
-        const batch = travelIds.slice(i, i + 30);
-        const travelsQuery = query(
-          collection(db, "travels"),
-          where(documentId(), "in", batch)
-        );
-        const travelsSnap = await getDocs(travelsQuery);
-
-        travelsSnap.docs.forEach(doc => {
-          allTravels.push({ id: doc.id, ...doc.data() } as Travel);
-        });
-      }
-
-      return allTravels;
-    } catch (error) {
-      console.error("❌ Error loading travels:", error);
+    } catch (err) {
+      console.error("❌ Error loading users:", err);
       return [];
     }
   }
@@ -223,15 +405,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
      EFFECTS
      ═══════════════════════════════════════════════════════════ */
 
-  // Solo cargar cuando companyData esté listo y Auth haya terminado
   useEffect(() => {
     if (!authLoading && companyData?.id && !hasLoaded) {
       loadDashboardData();
     }
   }, [authLoading, companyData?.id, hasLoaded, loadDashboardData]);
 
-  /* ══════════════════════════════════════════════════════════
-     REFRESH FUNCTION
+  /* ═══════════════════════════════════════════════════════════
+     REFRESH
      ═══════════════════════════════════════════════════════════ */
 
   const refresh = async () => {
@@ -249,7 +430,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     monthlyMetrics,
     loading,
     error,
-    refresh
+    refresh,
   };
 
   return (
@@ -265,10 +446,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
 export function useDashboard() {
   const context = useContext(DashboardContext);
-
   if (context === undefined) {
     throw new Error("useDashboard must be used within DashboardProvider");
   }
-
   return context;
 }

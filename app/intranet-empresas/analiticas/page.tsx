@@ -1,9 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
 import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { Card } from "@/components/ui/card";
 import { CompanyGoals } from "@/components/dashboard/widgets/company-goals";
 import {
@@ -36,25 +43,194 @@ import {
   Zap,
 } from "lucide-react";
 
-/* ───────────────── TYPES ───────────────── */
+/* ═══════════════════════════════════════════════════════════
+   CONSTANTS
+   ═══════════════════════════════════════════════════════════ */
+
+/** Average one-way commute in km — used for CO₂ estimation. */
+const AVG_COMMUTE_KM = 15;
+
+/** kg of CO₂ avoided per km per replaced car trip. */
+const CO2_KG_PER_KM = 0.21;
+
+const MONTH_NAMES = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
+];
+
+/* ═══════════════════════════════════════════════════════════
+   TYPES
+   ═══════════════════════════════════════════════════════════ */
+
+interface TravelDoc {
+  id: string;
+  userId: string;
+  carSeatsAvailable: number;
+  reservedBy: string[];
+}
 
 interface MonthlyMetric {
+  /** "YYYY-MM" — used for sorting and Firestore queries */
   month: string;
+  /** Human-readable label, e.g. "Febrero 2026" */
   monthLabel: string;
-  trips: number;
+  totalTravels: number;
+  totalTrips: number;
   co2: number;
   occupancy: number;
   participationRate: number;
-  totalTravels: number;
-  // New driver/vehicle activation fields
-  activeDrivers: number;   // employees who posted at least one trip
-  totalUsers: number;      // total registered users
-  availableSeats: number;  // free seats made available
-  reservedSeats: number;   // seats that were booked
-  newDrivers: number;      // drivers enabling for the first time this month
+  activeDrivers: number;
+  totalUsers: number;
+  availableSeats: number;
+  reservedSeats: number;
+  newDrivers: number;
 }
 
-/* ───────────────── COMPONENT ───────────────── */
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════ */
+
+function toYearMonth(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function toMonthLabel(yearMonth: string): string {
+  const [year, month] = yearMonth.split("-");
+  return `${MONTH_NAMES[parseInt(month, 10) - 1]} ${year}`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   METRIC COMPUTATION
+   Source:  /companies/{id}/month/{YYYY-MM}/travels/{travelId}
+   Target:  /companies/{id}/month/{YYYY-MM}/metrics/summary
+   ═══════════════════════════════════════════════════════════ */
+
+/**
+ * Computes all KPIs for a given month from its travel subcollection
+ * and writes (or refreshes) metrics/summary.
+ *
+ * Rules:
+ *  - Past months  → skip if summary already exists (data is final).
+ *  - Current month → skip if summary was already written today.
+ */
+async function computeAndSaveMetrics(
+  companyId: string,
+  yearMonth: string,
+  memberIds: string[],
+): Promise<void> {
+  const summaryRef = doc(
+    db,
+    "companies", companyId,
+    "month", yearMonth,
+    "metrics", "summary",
+  );
+
+  const now = new Date();
+  const currentYM = toYearMonth(now);
+  const isPastMonth = yearMonth < currentYM;
+
+  const existing = await getDoc(summaryRef);
+  if (existing.exists()) {
+    if (isPastMonth) return; // Past months are immutable — never recompute.
+
+    // Current month: skip only if already computed today.
+    const computedAt = existing.data()?.computedAt;
+    if (computedAt) {
+      const computed: Date = computedAt.toDate ? computedAt.toDate() : new Date(computedAt);
+      const sameDay =
+        computed.getFullYear() === now.getFullYear() &&
+        computed.getMonth() === now.getMonth() &&
+        computed.getDate() === now.getDate();
+      if (sameDay) return;
+    }
+  }
+
+  // ── Fetch travels for this specific month ──────────────────────
+  const travelsSnap = await getDocs(
+    collection(db, "companies", companyId, "month", yearMonth, "travels"),
+  );
+
+  const travels: TravelDoc[] = travelsSnap.docs.map(d => ({
+    id: d.id,
+    ...(d.data() as Omit<TravelDoc, "id">),
+  }));
+
+  // ── Aggregate ──────────────────────────────────────────────────
+  const driverIds = new Set<string>();
+  const passengerIds = new Set<string>();
+  let reservedSeats = 0;
+  let availableSeats = 2;
+
+  for (const t of travels) {
+    const capacity = t.carSeatsAvailable ?? 0;
+    const reserved = Array.isArray(t.reservedBy) ? t.reservedBy.length : 0;
+
+    reservedSeats += reserved;
+    // Seats offered to passengers = total capacity minus driver's own seat
+    availableSeats += Math.max(capacity, 0);
+
+    if (t.userId) driverIds.add(t.userId);
+    if (Array.isArray(t.reservedBy)) {
+      t.reservedBy.forEach(uid => passengerIds.add(uid));
+    }
+  }
+
+  const totalTravels = travels.length;
+  const totalTrips = reservedSeats;
+  const co2SavedKg = parseFloat((reservedSeats * AVG_COMMUTE_KM * CO2_KG_PER_KM).toFixed(2));
+  const seatOccupancyRate = availableSeats > 0
+    ? parseFloat(((reservedSeats / availableSeats) * 100).toFixed(2))
+    : 0;
+
+  const uniqueParticipants = new Set([...driverIds, ...passengerIds]);
+  const totalMembers = memberIds.length;
+  const participationRate = totalMembers > 0
+    ? parseFloat(((uniqueParticipants.size / totalMembers) * 100).toFixed(2))
+    : 0;
+
+  // ── New drivers: those who never posted before this month ──────
+  const monthsSnap = await getDocs(collection(db, "companies", companyId, "month"));
+  const priorMonths = monthsSnap.docs
+    .map(d => d.id)
+    .filter(id => /^\d{4}-\d{2}$/.test(id) && id < yearMonth);
+
+  const historicDrivers = new Set<string>();
+  for (const m of priorMonths) {
+    const prevSnap = await getDoc(
+      doc(db, "companies", companyId, "month", m, "metrics", "summary"),
+    );
+    if (prevSnap.exists()) {
+      const prevData = prevSnap.data();
+      if (Array.isArray(prevData?.driverIds)) {
+        prevData.driverIds.forEach((uid: string) => historicDrivers.add(uid));
+      }
+    }
+  }
+
+  let newDrivers = 0;
+  driverIds.forEach(uid => { if (!historicDrivers.has(uid)) newDrivers++; });
+
+  // ── Write summary ──────────────────────────────────────────────
+  await setDoc(summaryRef, {
+    totalTravels,
+    totalTrips,
+    availableSeats,
+    reservedSeats,
+    co2SavedKg,
+    seatOccupancyRate,
+    participationRate,
+    activeDrivers: driverIds.size,
+    totalUsers: totalMembers,
+    newDrivers,
+    // Stored so future months can detect "new drivers" accurately
+    driverIds: Array.from(driverIds),
+    computedAt: serverTimestamp(),
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENT
+   ═══════════════════════════════════════════════════════════ */
 
 export default function AnalyticsPage({
   setActiveTab,
@@ -65,218 +241,247 @@ export default function AnalyticsPage({
 
   const [loading, setLoading] = useState(true);
   const [allMonthlyData, setAllMonthlyData] = useState<MonthlyMetric[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string>("");
-  const [compareMonth, setCompareMonth] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>(""); // "YYYY-MM"
+  const [compareMonth, setCompareMonth] = useState<string>("");  // "YYYY-MM"
   const [heroTooltip, setHeroTooltip] = useState(false);
 
-  const [totalCo2Accumulated, setTotalCo2Accumulated] = useState(0);
-  const [totalTripsAccumulated, setTotalTripsAccumulated] = useState(0);
+  /* ─────────────────────────────────────────────────────────
+     FETCH  ·  discovers all months from DB, ensures metrics
+     exist for each, then loads every summary into state
+  ───────────────────────────────────────────────────────── */
 
-  /* ───────────────── FETCH METRICS ───────────────── */
+  const fetchAnalytics = useCallback(async () => {
+    if (!companyData?.id) return;
+
+    try {
+      setLoading(true);
+
+      const companyId = companyData.id;
+      const memberIds = companyData.membersIds || [];
+
+      // 1. Discover all month sub-documents under this company
+      const monthsSnap = await getDocs(
+        collection(db, "companies", companyId, "month"),
+      );
+
+      const monthIds: string[] = monthsSnap.docs
+        .map(d => d.id)
+        .filter(id => /^\d{4}-\d{2}$/.test(id)) // guard stray docs
+        .sort(); // oldest → newest (lexicographic "YYYY-MM" is correct)
+
+      if (monthIds.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      // 2. For each month: ensure metrics/summary exists, then read it
+      const data: MonthlyMetric[] = [];
+
+      for (const yearMonth of monthIds) {
+        // Compute metrics if the summary is missing or stale
+        await computeAndSaveMetrics(companyId, yearMonth, memberIds);
+
+        const summarySnap = await getDoc(
+          doc(db, "companies", companyId, "month", yearMonth, "metrics", "summary"),
+        );
+
+        if (!summarySnap.exists()) continue;
+
+        const m = summarySnap.data();
+
+        data.push({
+          month: yearMonth,
+          monthLabel: toMonthLabel(yearMonth),
+          totalTravels: m.totalTravels ?? 0,
+          totalTrips: m.totalTrips ?? 0,
+          co2: m.co2SavedKg ?? 0,
+          occupancy: m.seatOccupancyRate ?? 0,
+          participationRate: m.participationRate ?? 0,
+          activeDrivers: m.activeDrivers ?? 0,
+          totalUsers: m.totalUsers ?? 0,
+          availableSeats: m.availableSeats ?? 0,
+          reservedSeats: m.reservedSeats ?? 0,
+          newDrivers: m.newDrivers ?? 0,
+        });
+      }
+
+      // Selector: most recent first
+      const sorted = [...data].sort((a, b) => b.month.localeCompare(a.month));
+      setAllMonthlyData(sorted);
+
+      // Default selected month = most recent
+      if (sorted.length > 0) setSelectedMonth(sorted[0].month);
+    } catch (err) {
+      console.error("Error loading analytics:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [companyData?.id, companyData?.membersIds]);
 
   useEffect(() => {
-    async function fetchAnalytics() {
-      if (!companyData?.name) return;
-
-      try {
-        setLoading(true);
-
-        const q = query(
-          collection(db, "companies"),
-          where("name", "==", companyData.name),
-        );
-
-        const snap = await getDocs(q);
-        if (snap.empty) { setLoading(false); return; }
-
-        const companyId = snap.docs[0].id;
-
-        const monthlyRef = collection(
-          db, "companies", companyId, "metrics", "metrics", "monthly",
-        );
-
-        const monthlySnap = await getDocs(monthlyRef);
-
-        const data: MonthlyMetric[] = [];
-        let totalCo2 = 0;
-        let totalTrips = 0;
-
-        monthlySnap.forEach((doc) => {
-          const m = doc.data();
-          const monthId = doc.id;
-
-          const [year, month] = monthId.split("-");
-          const monthNames = [
-            "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-            "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",
-          ];
-          const monthLabel = `${monthNames[parseInt(month) - 1]} ${year}`;
-
-          const co2 = m.co2SavedKg || 0;
-          const trips = m.totalTrips || 0;
-          const travels = m.totalTravels || 0;
-
-          data.push({
-            month: monthId,
-            monthLabel,
-            trips,
-            co2,
-            occupancy: m.seatOccupancyRate || 0,
-            participationRate: m.participationRate || 0,
-            totalTravels: travels,
-            activeDrivers: m.activeDrivers || 0,
-            totalUsers: m.totalUsers || 0,
-            availableSeats: m.availableSeats || 0,
-            reservedSeats: m.reservedSeats || 0,
-            newDrivers: m.newDrivers || 0,
-          });
-
-          totalCo2 += co2;
-          totalTrips += trips;
-        });
-
-        data.sort((a, b) => b.month.localeCompare(a.month));
-
-        setAllMonthlyData(data);
-        setTotalCo2Accumulated(totalCo2);
-        setTotalTripsAccumulated(totalTrips);
-
-        if (data.length > 0) setSelectedMonth(data[0].monthLabel);
-      } catch (err) {
-        console.error("Error loading analytics:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchAnalytics();
-  }, [companyData?.name]);
+  }, [fetchAnalytics]);
 
   if (!companyData) return null;
 
-  /* ───────────────── HELPERS ───────────────── */
+  /* ─────────────────────────────────────────────────────────
+     DERIVED VALUES
+  ───────────────────────────────────────────────────────── */
 
-  const displayValue = (value: number | string, suffix = "") => {
-    const numValue = typeof value === "string" ? parseFloat(value) : value;
-    return numValue === 0 ? "-" : `${value}${suffix}`;
-  };
-
-  const currentMonthData = allMonthlyData.find((d) => d.monthLabel === selectedMonth);
+  // KPI cards + single-month charts
+  const currentMonthData = allMonthlyData.find(d => d.month === selectedMonth) ?? null;
   const compareMonthData = compareMonth
-    ? allMonthlyData.find((d) => d.monthLabel === compareMonth)
+    ? (allMonthlyData.find(d => d.month === compareMonth) ?? null)
     : null;
 
-  const calculateTrend = (current: number, previous: number) => {
-    if (previous === 0) return { value: 0, isPositive: true };
-    const change = ((current - previous) / previous) * 100;
-    return { value: Math.abs(change).toFixed(1), isPositive: change >= 0 };
-  };
+  // Accumulated totals across ALL months (impact header only)
+  const totalCo2Accumulated = allMonthlyData.reduce((s, m) => s + m.co2, 0);
 
-  const activityTrendData = allMonthlyData.slice().reverse().map((m) => ({
-    monthLabel: m.monthLabel,
-    actividad: m.totalTravels,
-  }));
-
-  const chartData = allMonthlyData.slice().reverse();
-
-  // Driver activation ratio for selected month
+  // Activation ratio for selected month
   const activationRatio =
     currentMonthData && currentMonthData.totalUsers > 0
       ? ((currentMonthData.activeDrivers / currentMonthData.totalUsers) * 100).toFixed(1)
       : "0";
 
-  // Chart: vehicle activation (horizontal bar)
-  const activationChartData = currentMonthData
-    ? [
-        { name: "Conductores activos", value: currentMonthData.activeDrivers, fill: "#9dd187" },
-        { name: "Usuarios registrados", value: currentMonthData.totalUsers, fill: "#e5e7eb" },
-      ]
-    : [];
+  // Multi-month trend charts use chronological order
+  const chartData = [...allMonthlyData].sort((a, b) => a.month.localeCompare(b.month));
 
-  // Chart: carpooling capacity (horizontal bar)
-  const capacityChartData = currentMonthData
-    ? [
-        { name: "Trayectos publicados", value: currentMonthData.totalTravels, fill: "#9dd187" },
-        { name: "Plazas reservadas",    value: currentMonthData.reservedSeats, fill: "#93c5fd" },
-        { name: "Plazas disponibles",   value: currentMonthData.availableSeats, fill: "#fcd34d" },
-      ]
-    : [];
+  const activityTrendData = chartData.map(m => ({
+    monthLabel: m.monthLabel,
+    actividad: m.totalTravels,
+  }));
 
-  // Chart: driver growth (line, chronological)
-  const driverGrowthData = allMonthlyData.slice().reverse().map((m) => ({
+  const driverGrowthData = chartData.map(m => ({
     monthLabel: m.monthLabel,
     conductores: m.activeDrivers,
     nuevos: m.newDrivers,
   }));
 
-  /* ───────────────── RENDER ───────────────── */
+  // Horizontal bars — selected month only
+  const activationChartData = currentMonthData
+    ? [
+      { name: "Conductores activos", value: currentMonthData.activeDrivers, fill: "#9dd187" },
+      { name: "Usuarios registrados", value: currentMonthData.totalUsers, fill: "#e5e7eb" },
+    ]
+    : [];
+
+  const capacityChartData = currentMonthData
+    ? [
+      { name: "Trayectos publicados", value: currentMonthData.totalTravels, fill: "#9dd187" },
+      { name: "Plazas reservadas", value: currentMonthData.reservedSeats, fill: "#93c5fd" },
+      { name: "Plazas disponibles", value: currentMonthData.availableSeats, fill: "#fcd34d" },
+    ]
+    : [];
+
+  /* ─────────────────────────────────────────────────────────
+     SMALL HELPERS
+  ───────────────────────────────────────────────────────── */
+
+  const displayValue = (value: number | string, suffix = "") => {
+    const num = typeof value === "string" ? parseFloat(value) : value;
+    return num === 0 ? "-" : `${value}${suffix}`;
+  };
+
+  const calculateTrend = (current: number, previous: number) => {
+    if (previous === 0) return { value: "0", isPositive: true };
+    const change = ((current - previous) / previous) * 100;
+    return { value: Math.abs(change).toFixed(1), isPositive: change >= 0 };
+  };
+
+  /* ═══════════════════════════════════════════════════════════
+     RENDER
+     ═══════════════════════════════════════════════════════════ */
 
   return (
     <div className="space-y-8 pb-20 animate-in fade-in duration-700">
 
-      {/* ───────── Month Selector ───────── */}
+      {/* ══════════════════════════════════════════
+          MONTH SELECTOR
+          One pill per month document found in DB
+      ══════════════════════════════════════════ */}
       <div className="space-y-4">
+
+        {/* Header */}
         <div className="bg-linear-to-r from-[#9dd187]/10 to-[#E8F5E0] p-4 rounded-2xl border border-[#9dd187]/30">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[#9dd187]/20 rounded-xl">
               <Calendar className="w-5 h-5 text-[#5A9642]" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-bold text-[#2a2c38]">Datos actualizados mensualmente</p>
-              <p className="text-xs text-gray-600">
-                Selecciona un mes para ver métricas · Compara con otro mes opcional
+            <div>
+              <p className="text-sm font-bold text-[#2a2c38]">Selecciona un mes</p>
+              <p className="text-xs text-gray-500">
+                {loading
+                  ? "Cargando meses disponibles…"
+                  : allMonthlyData.length > 0
+                    ? `${allMonthlyData.length} ${allMonthlyData.length === 1 ? "mes disponible" : "meses disponibles"} · Compara con otro mes de forma opcional`
+                    : "No hay meses con datos aún"}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-          <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
-          {allMonthlyData.map((m) => (
-            <button
-              key={m.month}
-              onClick={() => setSelectedMonth(m.monthLabel)}
-              className={`px-6 py-2.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border ${
-                selectedMonth === m.monthLabel
-                  ? "bg-[#9dd187] text-[#2a2c38] border-[#9dd187] shadow-md"
-                  : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
-              }`}
-            >
-              {m.monthLabel}
-            </button>
-          ))}
-        </div>
+        {/* Month pills — most recent first */}
+        {loading ? (
+          <div className="flex gap-2">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-9 w-28 rounded-full bg-gray-100 animate-pulse" />
+            ))}
+          </div>
+        ) : allMonthlyData.length > 0 ? (
+          <div
+            className="flex gap-2 overflow-x-auto pb-2"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
+            {allMonthlyData.map(m => (
+              <button
+                key={m.month}
+                onClick={() => { setSelectedMonth(m.month); setCompareMonth(""); }}
+                className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border ${selectedMonth === m.month
+                    ? "bg-[#9dd187] text-[#2a2c38] border-[#9dd187] shadow-md scale-105"
+                    : "bg-white text-gray-400 border-gray-100 hover:border-[#9dd187]/40 hover:text-[#5A9642]"
+                  }`}
+              >
+                {m.monthLabel}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-400 py-2">No hay meses registrados para esta empresa.</p>
+        )}
 
-        {selectedMonth && (
+        {/* Compare selector — only visible when ≥ 2 months exist */}
+        {selectedMonth && !loading && allMonthlyData.length > 1 && (
           <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-            <div className="flex items-center gap-3">
-              <TrendingUp className="w-5 h-5 text-blue-500" />
+            <div className="flex items-start gap-3">
+              <TrendingUp className="w-5 h-5 text-blue-500 mt-0.5 shrink-0" />
               <div className="flex-1">
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-2">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
                   Comparar con otro mes (opcional)
-                </label>
-                <div className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+                </p>
+                <div
+                  className="flex gap-2 overflow-x-auto"
+                  style={{ scrollbarWidth: "none" }}
+                >
                   <button
                     onClick={() => setCompareMonth("")}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${
-                      compareMonth === ""
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${compareMonth === ""
                         ? "bg-gray-100 text-[#2a2c38] border-gray-200"
                         : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
-                    }`}
+                      }`}
                   >
                     Sin comparar
                   </button>
                   {allMonthlyData
-                    .filter((m) => m.monthLabel !== selectedMonth)
-                    .map((m) => (
+                    .filter(m => m.month !== selectedMonth)
+                    .map(m => (
                       <button
                         key={m.month}
-                        onClick={() => setCompareMonth(m.monthLabel)}
-                        className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${
-                          compareMonth === m.monthLabel
+                        onClick={() => setCompareMonth(m.month)}
+                        className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${compareMonth === m.month
                             ? "bg-blue-500 text-white border-blue-500"
-                            : "bg-white text-gray-400 border-gray-100 hover:border-blue-200"
-                        }`}
+                            : "bg-white text-gray-400 border-gray-100 hover:border-blue-200 hover:text-blue-500"
+                          }`}
                       >
                         {m.monthLabel}
                       </button>
@@ -288,7 +493,11 @@ export default function AnalyticsPage({
         )}
       </div>
 
-      {/* ───────── Impact Header ───────── */}
+      {/* ══════════════════════════════════════════
+          IMPACT HEADER
+          — "este mes" = selected month
+          — "acumulado" = sum of all months
+      ══════════════════════════════════════════ */}
       <div className="bg-[#2a2c38] p-10 rounded-[3rem] text-white relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 p-8 opacity-10">
           <Leaf size={120} className="text-[#9dd187]" />
@@ -297,44 +506,52 @@ export default function AnalyticsPage({
           <div className="flex items-center gap-3 text-[#9dd187] mb-4">
             <div className="h-px w-8 bg-[#9dd187]" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em]">
-              {currentMonthData?.monthLabel || "Análisis"} · Impacto Acumulado
+              {currentMonthData?.monthLabel ?? "Sin datos"} · Impacto Acumulado
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <p className="text-gray-400 text-sm mb-2">CO₂e evitado este mes</p>
+              <p className="text-gray-400 text-sm mb-2">CO₂e evitado en {currentMonthData?.monthLabel ?? "el mes"}</p>
               <p className="text-4xl font-black text-white">
-                {displayValue(currentMonthData?.co2.toFixed(0) || 0, " kg")}
+                {loading
+                  ? <Loader2 className="w-7 h-7 animate-spin" />
+                  : displayValue(currentMonthData?.co2.toFixed(0) ?? 0, " kg")}
               </p>
             </div>
             <div>
               <p className="text-gray-400 text-sm mb-2">CO₂e acumulado total</p>
               <p className="text-4xl font-black text-[#9dd187]">
-                {displayValue(totalCo2Accumulated.toFixed(0), " kg")}
+                {loading
+                  ? <Loader2 className="w-7 h-7 animate-spin" />
+                  : displayValue(totalCo2Accumulated.toFixed(0), " kg")}
               </p>
             </div>
             <div>
               <p className="text-gray-400 text-sm mb-2">Progreso hacia meta</p>
               <p className="text-4xl font-black text-white">
-                {companyData.co2Target && companyData.co2Target > 0
-                  ? `${((totalCo2Accumulated / companyData.co2Target) * 100).toFixed(0)}%`
-                  : <span className="text-sm text-gray-500">Sin meta</span>}
+                {loading
+                  ? <Loader2 className="w-7 h-7 animate-spin" />
+                  : companyData.co2Target && companyData.co2Target > 0
+                    ? `${((totalCo2Accumulated / companyData.co2Target) * 100).toFixed(0)}%`
+                    : <span className="text-sm text-gray-500">Sin meta definida</span>}
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ───────── Comparison Panel ───────── */}
+      {/* ══════════════════════════════════════════
+          COMPARISON PANEL
+      ══════════════════════════════════════════ */}
       {compareMonthData && currentMonthData && (
         <div className="bg-linear-to-br from-blue-50 via-purple-50 to-pink-50 p-6 md:p-8 rounded-3xl border-2 border-blue-200/50 shadow-lg">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-6 h-6 text-blue-600" />
-                <h3 className="text-lg md:text-xl font-bold text-[#2a2c38]">Comparación de Meses</h3>
+              <div className="flex items-center gap-2 mb-1">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
+                <h3 className="text-lg font-bold text-[#2a2c38]">Comparación de Meses</h3>
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-500">
                 <span className="font-semibold text-blue-600">{currentMonthData.monthLabel}</span>
                 {" vs "}
                 <span className="font-semibold text-purple-600">{compareMonthData.monthLabel}</span>
@@ -350,27 +567,56 @@ export default function AnalyticsPage({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: "CO₂e Evitado", icon: <Leaf className="w-4 h-4 text-green-600" />, curr: currentMonthData.co2.toFixed(0), prev: compareMonthData.co2.toFixed(0), suffix: "kg", trend: calculateTrend(currentMonthData.co2, compareMonthData.co2) },
-              { label: "Trayectos",    icon: <Route className="w-4 h-4 text-orange-600" />, curr: currentMonthData.totalTravels, prev: compareMonthData.totalTravels, suffix: "", trend: calculateTrend(currentMonthData.totalTravels, compareMonthData.totalTravels) },
-              { label: "Ocupación",    icon: <Car className="w-4 h-4 text-blue-600" />, curr: `${currentMonthData.occupancy.toFixed(1)}`, prev: `${compareMonthData.occupancy.toFixed(1)}`, suffix: "%", trend: calculateTrend(currentMonthData.occupancy, compareMonthData.occupancy) },
-              { label: "Participación",icon: <Users className="w-4 h-4 text-green-600" />, curr: `${currentMonthData.participationRate.toFixed(1)}`, prev: `${compareMonthData.participationRate.toFixed(1)}`, suffix: "%", trend: calculateTrend(currentMonthData.participationRate, compareMonthData.participationRate) },
-            ].map((item) => (
+              {
+                label: "CO₂e Evitado",
+                icon: <Leaf className="w-4 h-4 text-green-600" />,
+                curr: currentMonthData.co2.toFixed(0),
+                prev: compareMonthData.co2.toFixed(0),
+                suffix: "kg",
+                trend: calculateTrend(currentMonthData.co2, compareMonthData.co2),
+              },
+              {
+                label: "Trayectos",
+                icon: <Route className="w-4 h-4 text-orange-500" />,
+                curr: String(currentMonthData.totalTravels),
+                prev: String(compareMonthData.totalTravels),
+                suffix: "",
+                trend: calculateTrend(currentMonthData.totalTravels, compareMonthData.totalTravels),
+              },
+              {
+                label: "Ocupación",
+                icon: <Car className="w-4 h-4 text-blue-600" />,
+                curr: currentMonthData.occupancy.toFixed(1),
+                prev: compareMonthData.occupancy.toFixed(1),
+                suffix: "%",
+                trend: calculateTrend(currentMonthData.occupancy, compareMonthData.occupancy),
+              },
+              {
+                label: "Participación",
+                icon: <Users className="w-4 h-4 text-green-600" />,
+                curr: currentMonthData.participationRate.toFixed(1),
+                prev: compareMonthData.participationRate.toFixed(1),
+                suffix: "%",
+                trend: calculateTrend(currentMonthData.participationRate, compareMonthData.participationRate),
+              },
+            ].map(item => (
               <div key={item.label} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
                 <div className="flex items-center gap-2 mb-3">
                   {item.icon}
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{item.label}</p>
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-baseline gap-2">
-                    <p className="text-3xl font-black text-[#2a2c38]">{item.curr}</p>
-                    {item.suffix && <span className="text-sm text-gray-400">{item.suffix}</span>}
-                  </div>
-                  <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">vs {item.prev}{item.suffix}</span>
-                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${item.trend.isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                      {item.trend.isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
-                      {item.trend.value}%
-                    </div>
+                <div className="flex items-baseline gap-1.5 mb-2">
+                  <p className="text-3xl font-black text-[#2a2c38]">{item.curr}</p>
+                  {item.suffix && <span className="text-sm text-gray-400">{item.suffix}</span>}
+                </div>
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <span className="text-xs text-gray-400">vs {item.prev}{item.suffix}</span>
+                  <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${item.trend.isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    }`}>
+                    {item.trend.isPositive
+                      ? <ArrowUpRight className="w-3 h-3" />
+                      : <ArrowDownRight className="w-3 h-3" />}
+                    {item.trend.value}%
                   </div>
                 </div>
               </div>
@@ -379,75 +625,106 @@ export default function AnalyticsPage({
         </div>
       )}
 
-      {/* ───────── Current Month KPIs ───────── */}
+      {/* ══════════════════════════════════════════
+          KPI CARDS  — values from selected month
+      ══════════════════════════════════════════ */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-green-50 rounded-2xl text-[#9dd187]"><Users size={24} /></div>
+            <div className="p-3 bg-green-50 rounded-2xl"><Users size={24} className="text-[#9dd187]" /></div>
+            {currentMonthData && (
+              <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-2 py-1 rounded-full">
+                {currentMonthData.monthLabel}
+              </span>
+            )}
           </div>
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Participación</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
-            {displayValue(currentMonthData?.participationRate.toFixed(1) || 0, "%")}
+            {loading
+              ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+              : displayValue(currentMonthData?.participationRate.toFixed(1) ?? 0, "%")}
           </h3>
-          <p className="text-xs text-gray-400 mt-2 truncate">{currentMonthData?.monthLabel || "-"}</p>
+          <p className="text-xs text-gray-400 mt-2">Empleados activos como conductor o pasajero</p>
         </Card>
 
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-blue-50 rounded-2xl text-blue-500"><Car size={24} /></div>
+            <div className="p-3 bg-blue-50 rounded-2xl"><Car size={24} className="text-blue-500" /></div>
+            {currentMonthData && (
+              <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-2 py-1 rounded-full">
+                {currentMonthData.monthLabel}
+              </span>
+            )}
           </div>
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Ocupación</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
-            {displayValue(currentMonthData?.occupancy.toFixed(1) || 0, "%")}
+            {loading
+              ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+              : displayValue(currentMonthData?.occupancy.toFixed(1) ?? 0, "%")}
           </h3>
-          <p className="text-xs text-gray-400 mt-2">Plazas ocupadas</p>
+          <p className="text-xs text-gray-400 mt-2">Plazas reservadas sobre plazas ofrecidas</p>
         </Card>
 
         <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-orange-50 rounded-2xl text-orange-500"><Route size={24} /></div>
+            <div className="p-3 bg-orange-50 rounded-2xl"><Route size={24} className="text-orange-500" /></div>
+            {currentMonthData && (
+              <span className="text-[10px] font-bold text-gray-300 bg-gray-50 px-2 py-1 rounded-full">
+                {currentMonthData.monthLabel}
+              </span>
+            )}
           </div>
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Trayectos</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
-            {displayValue(currentMonthData?.totalTravels || 0)}
+            {loading
+              ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+              : displayValue(currentMonthData?.totalTravels ?? 0)}
           </h3>
-          <p className="text-xs text-gray-400 mt-2">Publicados</p>
+          <p className="text-xs text-gray-400 mt-2">Publicados por conductores este mes</p>
         </Card>
 
-        <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] border-[#9dd187]/20">
+        <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC]">
           <div className="flex justify-between items-start mb-4">
-            <div className="p-3 bg-white/80 rounded-2xl text-[#5A9642]"><Leaf size={24} /></div>
+            <div className="p-3 bg-white/80 rounded-2xl"><Leaf size={24} className="text-[#5A9642]" /></div>
+            {currentMonthData && (
+              <span className="text-[10px] font-bold text-[#5A9642]/50 bg-white/60 px-2 py-1 rounded-full">
+                {currentMonthData.monthLabel}
+              </span>
+            )}
           </div>
           <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">CO₂e Evitado</p>
           <h3 className="text-4xl font-black text-[#2a2c38]">
-            {displayValue(currentMonthData?.co2.toFixed(0) || 0)}
+            {loading
+              ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
+              : displayValue(currentMonthData?.co2.toFixed(0) ?? 0)}
           </h3>
-          <p className="text-xs text-gray-600 mt-2 font-medium">kilogramos</p>
+          <p className="text-xs text-gray-600 mt-2 font-medium">kilogramos este mes</p>
         </Card>
       </div>
 
-      {/* ═══════════════════════════════════════════════════════════
-          CO₂ HERO
-      ═══════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════
+          CO₂ HERO CHART  — trend across all months
+      ══════════════════════════════════════════ */}
       <div className="bg-[#1a1c26] rounded-[3rem] overflow-hidden shadow-2xl">
         <div className="px-8 pt-8 pb-2">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-            <div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="p-2.5 bg-[#9dd187]/10 rounded-2xl">
-                  <Leaf className="w-6 h-6 text-[#9dd187]" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-[0.3em]">Impacto Climático</p>
-                  <h3 className="text-2xl font-black text-white mt-0.5">CO₂e Evitado</h3>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-[#9dd187]/10 rounded-2xl">
+                <Leaf className="w-6 h-6 text-[#9dd187]" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-[0.3em]">Impacto Climático</p>
+                <h3 className="text-2xl font-black text-white mt-0.5">CO₂e Evitado — Evolución</h3>
               </div>
             </div>
             <div className="flex gap-6">
               <div className="text-right">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Este mes</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">
+                  {currentMonthData?.monthLabel ?? "Seleccionado"}
+                </p>
                 <p className="text-2xl font-black text-white">
-                  {displayValue(currentMonthData?.co2.toFixed(0) || 0)}
+                  {displayValue(currentMonthData?.co2.toFixed(0) ?? 0)}
                   <span className="text-sm font-medium text-gray-500 ml-1">kg</span>
                 </p>
               </div>
@@ -476,13 +753,14 @@ export default function AnalyticsPage({
                           <div>
                             <p className="font-semibold text-white mb-1">¿Cómo se calcula?</p>
                             <p className="text-gray-400 leading-relaxed">
-                              Un coche medio emite ≈{" "}
-                              <span className="text-[#9dd187] font-bold">2.300 kg CO₂/año</span>, es decir{" "}
-                              <span className="text-[#9dd187] font-bold">192 kg/mes</span>.<br />
-                              <span className="text-white font-semibold">{totalCo2Accumulated.toFixed(0)} kg</span>{" "}
-                              ÷ 192 ={" "}
-                              <span className="text-[#9dd187] font-bold">{Math.floor(totalCo2Accumulated / 192)} coches</span>{" "}
-                              fuera de carretera durante un mes.
+                              Cada plaza reservada reemplaza un coche en carretera.
+                              Se asume {AVG_COMMUTE_KM} km por trayecto y{" "}
+                              <span className="text-[#9dd187] font-bold">{CO2_KG_PER_KM} kg CO₂/km</span>.
+                              Un coche medio emite ~192 kg/mes, por lo que{" "}
+                              <span className="text-[#9dd187] font-bold">
+                                {Math.floor(totalCo2Accumulated / 192)} coches
+                              </span>{" "}
+                              equivalen a {totalCo2Accumulated.toFixed(0)} kg fuera de carretera un mes.
                             </p>
                           </div>
                         </div>
@@ -501,13 +779,14 @@ export default function AnalyticsPage({
             </div>
           </div>
         </div>
+
         <div className="px-4 pb-6 pt-4">
           {loading ? (
-            <div className="h-70 flex items-center justify-center">
+            <div className="h-64 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
             </div>
           ) : chartData.length > 0 ? (
-            <div className="h-70">
+            <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                   <defs>
@@ -521,10 +800,12 @@ export default function AnalyticsPage({
                   <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fill: "#4a4c58", fontSize: 11 }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: "#4a4c58", fontSize: 11 }} />
                   <Tooltip
-                    contentStyle={{ borderRadius: "16px", border: "1px solid #2a2c38", backgroundColor: "#1e2029", color: "#fff", boxShadow: "0 8px 32px rgba(0,0,0,0.3)" }}
+                    contentStyle={{ borderRadius: "16px", border: "1px solid #2a2c38", backgroundColor: "#1e2029", color: "#fff" }}
                     formatter={(value: number) => [`${value} kg`, "CO₂e evitado"]}
                   />
-                  <Area type="monotone" dataKey="co2" stroke="#9dd187" strokeWidth={3} fill="url(#colorCo2Hero)"
+                  <Area
+                    type="monotone" dataKey="co2" stroke="#9dd187" strokeWidth={3}
+                    fill="url(#colorCo2Hero)"
                     dot={{ r: 5, fill: "#9dd187", strokeWidth: 0 }}
                     activeDot={{ r: 7, fill: "#9dd187", stroke: "#1a1c26", strokeWidth: 3 }}
                   />
@@ -532,29 +813,28 @@ export default function AnalyticsPage({
               </ResponsiveContainer>
             </div>
           ) : (
-            <div className="h-70 flex items-center justify-center text-gray-600">
-              <p>No hay datos disponibles</p>
-            </div>
+            <div className="h-64 flex items-center justify-center text-gray-600">No hay datos disponibles</div>
           )}
         </div>
       </div>
 
-      {/* ─── Company Goals ─── */}
+      {/* Company Goals */}
       <CompanyGoals
         co2Target={companyData.co2Target || undefined}
         totalCo2={totalCo2Accumulated}
         onViewSettings={() => setActiveTab("settings")}
       />
 
-      {/* ═══════════════════════════════════════════════════════════
-          CHARTS GRID
-      ═══════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════
+          TREND CHARTS  (all months, chronological)
+      ══════════════════════════════════════════ */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
         <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Tendencia de Trayectos</h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">Publicados mensualmente</p>
+              <p className="text-xs text-gray-400 mt-0.5">Trayectos publicados por mes</p>
             </div>
             <div className="p-2 bg-purple-50 rounded-xl"><TrendingUp className="w-5 h-5 text-purple-600" /></div>
           </div>
@@ -581,7 +861,7 @@ export default function AnalyticsPage({
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Trayectos por Mes</h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">Volumen mensual</p>
+              <p className="text-xs text-gray-400 mt-0.5">Volumen mensual comparado</p>
             </div>
             <div className="p-2 bg-[#E8F5E0] rounded-xl"><Route className="w-5 h-5 text-[#5A9642]" /></div>
           </div>
@@ -594,7 +874,7 @@ export default function AnalyticsPage({
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                  <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                  <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} formatter={(v: number) => [v, "Trayectos"]} />
                   <Bar dataKey="totalTravels" fill="#9dd187" radius={[8, 8, 0, 0]} name="Trayectos" />
                 </BarChart>
               </ResponsiveContainer>
@@ -608,7 +888,7 @@ export default function AnalyticsPage({
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Tasa de Ocupación</h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">Plazas ocupadas por mes</p>
+              <p className="text-xs text-gray-400 mt-0.5">% de plazas reservadas sobre plazas ofrecidas — por mes</p>
             </div>
             <div className="p-2 bg-blue-50 rounded-xl"><Car className="w-5 h-5 text-blue-500" /></div>
           </div>
@@ -620,8 +900,8 @@ export default function AnalyticsPage({
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                  <YAxis axisLine={false} tickLine={false} unit="%" tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
+                  <YAxis axisLine={false} tickLine={false} unit="%" tick={{ fontSize: 11, fill: "#9ca3af" }} domain={[0, 100]} />
+                  <Tooltip contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} formatter={(v: number) => [`${v}%`, "Ocupación"]} />
                   <Line type="monotone" dataKey="occupancy" stroke="#2a2c38" strokeWidth={3} dot={{ r: 6, fill: "#9dd187", strokeWidth: 0 }} name="Ocupación %" />
                 </LineChart>
               </ResponsiveContainer>
@@ -632,147 +912,106 @@ export default function AnalyticsPage({
         </Card>
       </div>
 
-      {/* ═══════════════════════════════════════════════════════════
-          ★  CONDUCTORES Y COCHES HABILITANDO EL CARPOOLING
-      ═══════════════════════════════════════════════════════════ */}
+      {/* ══════════════════════════════════════════
+          CONDUCTORES Y COCHES
+          All values scoped to selected month
+      ══════════════════════════════════════════ */}
       <div className="space-y-6">
 
-        {/* Section divider / header */}
         <div className="flex items-center gap-4 pt-4">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent" />
           <div className="flex items-center gap-3 px-5 py-2.5 bg-[#2a2c38] rounded-full shadow-lg">
             <Car className="w-4 h-4 text-[#9dd187]" />
             <span className="text-[10px] font-black text-white uppercase tracking-[0.22em]">
-              Conductores y coches habilitando el carpooling
+              Conductores y coches · {currentMonthData?.monthLabel ?? ""}
             </span>
           </div>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent" />
         </div>
 
-        {/* ── 4 KPI cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
 
-          {/* Coches habilitados */}
           <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-[#2a2c38] text-white">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-[#9dd187]/15 rounded-2xl">
-                <Car size={24} className="text-[#9dd187]" />
-              </div>
+            <div className="p-3 bg-[#9dd187]/15 rounded-2xl w-fit mb-4">
+              <Car size={24} className="text-[#9dd187]" />
             </div>
-            <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-widest mb-1">
-              Coches habilitados
-            </p>
+            <p className="text-[10px] font-black text-[#9dd187] uppercase tracking-widest mb-1">Coches habilitados</p>
             <h3 className="text-4xl font-black text-white">
-              {loading
-                ? <Loader2 className="w-6 h-6 animate-spin" />
-                : displayValue(currentMonthData?.activeDrivers || 0)}
+              {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : displayValue(currentMonthData?.activeDrivers ?? 0)}
             </h3>
             <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-              Empleados que han publicado una ruta y han puesto su coche a disposición de otros usuarios en SharetoGo.
+              Empleados que han publicado al menos una ruta en {currentMonthData?.monthLabel ?? "este mes"}.
             </p>
           </Card>
 
-          {/* Plazas disponibles */}
           <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-white hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-[#E8F5E0] rounded-2xl">
-                <Users size={24} className="text-[#5A9642]" />
-              </div>
+            <div className="p-3 bg-[#E8F5E0] rounded-2xl w-fit mb-4">
+              <Users size={24} className="text-[#5A9642]" />
             </div>
-            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
-              Plazas disponibles
-            </p>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Plazas disponibles</p>
             <h3 className="text-4xl font-black text-[#2a2c38]">
-              {loading
-                ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
-                : displayValue(currentMonthData?.availableSeats || 0)}
+              {loading ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" /> : displayValue(currentMonthData?.availableSeats ?? 0)}
             </h3>
             <p className="text-xs text-gray-400 mt-2 leading-relaxed">
-              Plazas libres para compartir generadas por los trayectos publicados en SharetoGo.
+              Total de plazas ofrecidas en trayectos publicados este mes.
             </p>
           </Card>
 
-          {/* Ratio de activación */}
           <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-amber-50 to-orange-50 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-white/80 rounded-2xl">
-                <Percent size={24} className="text-amber-500" />
-              </div>
+            <div className="p-3 bg-white/80 rounded-2xl w-fit mb-4">
+              <Percent size={24} className="text-amber-500" />
             </div>
-            <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1">
-              Ratio de activación
-            </p>
+            <p className="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-1">Ratio de activación</p>
             <h3 className="text-4xl font-black text-[#2a2c38]">
-              {loading
-                ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
-                : `${activationRatio}%`}
+              {loading ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" /> : `${activationRatio}%`}
             </h3>
             <p className="text-xs text-amber-700/70 mt-2 leading-relaxed">
               {activationRatio !== "0"
-                ? `El ${activationRatio}% de la plantilla ya ha habilitado su coche para compartir trayectos en SharetoGo.`
+                ? `El ${activationRatio}% de la plantilla ha habilitado su coche en ${currentMonthData?.monthLabel}.`
                 : "Aún no hay datos de activación para este mes."}
             </p>
           </Card>
 
-          {/* Nuevos conductores este mes */}
           <Card className="p-6 rounded-[2.5rem] border-none shadow-sm bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-white/80 rounded-2xl">
-                <Zap size={24} className="text-[#5A9642]" />
-              </div>
+            <div className="p-3 bg-white/80 rounded-2xl w-fit mb-4">
+              <Zap size={24} className="text-[#5A9642]" />
             </div>
-            <p className="text-[10px] font-black text-[#5A9642] uppercase tracking-widest mb-1">
-              Nuevos conductores
-            </p>
+            <p className="text-[10px] font-black text-[#5A9642] uppercase tracking-widest mb-1">Nuevos conductores</p>
             <h3 className="text-4xl font-black text-[#2a2c38]">
-              {loading
-                ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
-                : displayValue(currentMonthData?.newDrivers || 0)}
+              {loading ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" /> : displayValue(currentMonthData?.newDrivers ?? 0)}
             </h3>
             <p className="text-xs text-gray-600 mt-2 leading-relaxed">
               {currentMonthData?.newDrivers
-                ? `Este mes, ${currentMonthData.newDrivers} empleado${currentMonthData.newDrivers !== 1 ? "s han" : " ha"} habilitado su coche para compartir trayectos con compañeros en SharetoGo.`
-                : "Sin nuevas activaciones registradas este mes."}
+                ? `${currentMonthData.newDrivers} empleado${currentMonthData.newDrivers !== 1 ? "s han" : " ha"} habilitado su coche por primera vez en ${currentMonthData.monthLabel}.`
+                : `Sin nuevas activaciones en ${currentMonthData?.monthLabel ?? "este mes"}.`}
             </p>
           </Card>
         </div>
 
-        {/* ── 2 activation charts side by side ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-          {/* Chart A: Vehicle activation — drivers vs total users */}
           <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
-                  Activación de vehículos
-                </h3>
-                <p className="text-xs text-gray-400 font-medium mt-0.5">
-                  Conductores activos vs usuarios registrados · {currentMonthData?.monthLabel || ""}
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Activación de vehículos</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Conductores activos vs total registrados · {currentMonthData?.monthLabel ?? ""}
                 </p>
               </div>
-              <div className="p-2 bg-[#E8F5E0] rounded-xl">
-                <UserCheck className="w-5 h-5 text-[#5A9642]" />
-              </div>
+              <div className="p-2 bg-[#E8F5E0] rounded-xl"><UserCheck className="w-5 h-5 text-[#5A9642]" /></div>
             </div>
             {loading ? (
               <div className="h-52 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
             ) : activationChartData.length > 0 ? (
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={activationChartData} layout="vertical" margin={{ left: 0, right: 24 }}>
+                  <BarChart data={activationChartData} layout="vertical" margin={{ left: 0, right: 32 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                    <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#4a4c58" }} width={150} />
+                    <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#4a4c58" }} width={155} />
                     <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
-                    <Bar dataKey="value" radius={[0, 8, 8, 0]} name="Personas"
-                      label={{ position: "right", fontSize: 12, fontWeight: 700, fill: "#2a2c38" }}
-                    >
-                      {activationChartData.map((entry, index) => (
-                        // @ts-ignore — recharts Cell pattern
-                        <rect key={`c-${index}`} fill={entry.fill} />
-                      ))}
-                    </Bar>
+                    <Bar dataKey="value" name="Personas" radius={[0, 8, 8, 0]} fill="#9dd187"
+                      label={{ position: "right", fontSize: 12, fontWeight: 700, fill: "#2a2c38" }} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -781,39 +1020,28 @@ export default function AnalyticsPage({
             )}
           </Card>
 
-          {/* Chart B: Carpooling capacity */}
           <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
-                  Capacidad de carpooling
-                </h3>
-                <p className="text-xs text-gray-400 font-medium mt-0.5">
-                  Trayectos · reservas · plazas libres · {currentMonthData?.monthLabel || ""}
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">Capacidad de carpooling</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Trayectos · reservas · plazas libres · {currentMonthData?.monthLabel ?? ""}
                 </p>
               </div>
-              <div className="p-2 bg-blue-50 rounded-xl">
-                <Route className="w-5 h-5 text-blue-500" />
-              </div>
+              <div className="p-2 bg-blue-50 rounded-xl"><Route className="w-5 h-5 text-blue-500" /></div>
             </div>
             {loading ? (
               <div className="h-52 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
             ) : capacityChartData.length > 0 ? (
               <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={capacityChartData} layout="vertical" margin={{ left: 0, right: 24 }}>
+                  <BarChart data={capacityChartData} layout="vertical" margin={{ left: 0, right: 32 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />
                     <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
-                    <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#4a4c58" }} width={150} />
+                    <YAxis type="category" dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#4a4c58" }} width={155} />
                     <Tooltip cursor={{ fill: "#f9fafb" }} contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }} />
-                    <Bar dataKey="value" radius={[0, 8, 8, 0]} name="Cantidad"
-                      label={{ position: "right", fontSize: 12, fontWeight: 700, fill: "#2a2c38" }}
-                    >
-                      {capacityChartData.map((entry, index) => (
-                        // @ts-ignore
-                        <rect key={`c-${index}`} fill={entry.fill} />
-                      ))}
-                    </Bar>
+                    <Bar dataKey="value" name="Cantidad" radius={[0, 8, 8, 0]} fill="#93c5fd"
+                      label={{ position: "right", fontSize: 12, fontWeight: 700, fill: "#2a2c38" }} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -823,29 +1051,23 @@ export default function AnalyticsPage({
           </Card>
         </div>
 
-        {/* ── Chart C: Driver network growth over time ── */}
         <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
                 Crecimiento de la red de carpooling
               </h3>
-              <p className="text-xs text-gray-400 font-medium mt-0.5">
-                Evolución de conductores activos mes a mes
+              <p className="text-xs text-gray-400 mt-0.5">
+                Conductores activos y nuevas incorporaciones mes a mes
               </p>
             </div>
-            <div className="p-2 bg-[#E8F5E0] rounded-xl">
-              <TrendingUp className="w-5 h-5 text-[#5A9642]" />
-            </div>
+            <div className="p-2 bg-[#E8F5E0] rounded-xl"><TrendingUp className="w-5 h-5 text-[#5A9642]" /></div>
           </div>
-
-          {/* Narrative callout */}
           <div className="mb-6 px-5 py-3 bg-[#f6fdf2] border border-[#9dd187]/40 rounded-2xl">
             <p className="text-xs text-[#5A9642] leading-relaxed">
-              La red de carpooling de la empresa continúa creciendo con nuevos conductores que ponen plazas disponibles para compartir trayectos en SharetoGo.
+              La red de carpooling continúa creciendo con nuevos conductores que ponen plazas disponibles cada mes en SharetoGo.
             </p>
           </div>
-
           {loading ? (
             <div className="h-64 flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
           ) : driverGrowthData.length > 0 ? (
@@ -877,24 +1099,25 @@ export default function AnalyticsPage({
         </Card>
       </div>
 
-      {/* ───────── Info Footer ───────── */}
+      {/* ══════════════════════════════════════════
+          INFO FOOTER
+      ══════════════════════════════════════════ */}
       <div className="bg-linear-to-r from-gray-50 to-white p-6 rounded-2xl border border-gray-200">
         <div className="flex items-start gap-3">
           <div className="p-2 bg-gray-100 rounded-xl">
             <Info className="w-5 h-5 text-gray-600" />
           </div>
-          <div className="flex-1">
+          <div>
             <p className="text-sm font-bold text-[#2a2c38] mb-1">Acerca de estos datos</p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              Todas las métricas mostradas provienen de cálculos mensuales automáticos. Los valores &quot;-&quot; indican ausencia de datos.
-              Puedes seleccionar meses anteriores y compararlos para ver la evolución de tu programa de carpooling.
-              Los indicadores de conductores y vehículos habilitados requieren los campos{" "}
-              <span className="font-semibold text-[#2a2c38]">activeDrivers, totalUsers, availableSeats, reservedSeats</span> y{" "}
-              <span className="font-semibold text-[#2a2c38]">newDrivers</span> en la colección mensual de Firestore.
+              Cada mes se calcula de forma independiente a partir de los trayectos guardados.
+              El CO₂ se estima con {AVG_COMMUTE_KM} km de trayecto medio y {CO2_KG_PER_KM} kg CO₂/km por plaza reservada.
+              Los meses pasados se computan una única vez. Los valores &quot;-&quot; indican ausencia de datos.
             </p>
           </div>
         </div>
       </div>
+
     </div>
   );
 }
