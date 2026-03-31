@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from "react";
 import { useDashboard } from "@/app/intranet-empresas/dashboard/DashboardContext";
-import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
+import { useAuth } from "@/app/intranet-empresas/providers/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { 

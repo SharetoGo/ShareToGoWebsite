@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
-import { AuthProvider, useAuth } from './auth/AuthContext'
+import { AuthProvider, useAuth } from './providers/AuthContext'
 import { useRouter, usePathname } from 'next/navigation'
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
-import { DashboardProvider } from "./dashboard/DashboardContext"
+import { DashboardProvider } from "./providers/DashboardContext"
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 
@@ -68,9 +68,11 @@ export default function DefaultLayout({ children }: { children: React.ReactNode 
 
   return (
     <AuthProvider>
-      <IntranetShell>
-        {children}
-      </IntranetShell>
+      <DashboardProvider>
+        <IntranetShell>
+          {children}
+        </IntranetShell>
+      </DashboardProvider>
     </AuthProvider>
   )
 }

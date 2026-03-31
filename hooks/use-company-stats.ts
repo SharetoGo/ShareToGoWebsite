@@ -1,4 +1,4 @@
-import { useAuth } from '@/app/intranet-empresas/auth/AuthContext';
+import { useAuth } from '@/app/intranet-empresas/providers/AuthContext';
 
 export function useCompanyStats() {
   const { companyData, loading } = useAuth();
