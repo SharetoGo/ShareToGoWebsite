@@ -129,7 +129,7 @@ export default function QuienesSomos() {
                 <Quote className="text-[#9dd187] mb-6 opacity-40" size={48} />
                 <h3 className="text-2xl md:text-3xl italic font-medium text-[#2a2c38] leading-snug">
                    {/* Optional: Add a powerful short quote or leave as space */}
-                   Transformando la movilidad hacia un futuro más humano y sostenible.
+                  {t("qs_tagline")}
                 </h3>
             </div>
         </div>
