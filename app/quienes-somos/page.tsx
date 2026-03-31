@@ -174,6 +174,33 @@ export default function QuienesSomos() {
         </div>
       </section>
 
+      {/* --- ACTION BANNER --- */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <motion.div 
+            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
+            className="bg-[#2a2c38] p-10 md:p-20 rounded-[4rem] shadow-2xl relative overflow-hidden group"
+          >
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-[#9dd187]/10 rounded-full -mr-48 -mt-48 blur-3xl group-hover:bg-[#9dd187]/20 transition-colors duration-700" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full -ml-32 -mb-32 blur-3xl" />
+            
+            <div className="relative z-10 max-w-5xl mx-auto text-center lg:text-left">
+              <div className="flex items-center gap-3 mb-8 justify-center lg:justify-start">
+                <div className="h-px w-12 bg-[#9dd187]" />
+                <span className="text-[#9dd187] text-sm font-black uppercase tracking-[0.3em]">{t("qs_action_vision")}</span>
+              </div>
+              
+              <h3 className="text-3xl md:text-5xl font-bold text-white leading-[1.15] tracking-tight">
+                {t("qs_action_titulo")} <br className="hidden md:block" />
+                <span className="text-[#9dd187] italic"> {t("qs_action_texto")}, </span> 
+                 {t("qs_action_texto1")} <span className="underline decoration-[#9dd187]/30 underline-offset-8"> {t("qs_action_texto2")}</span> {t("qs_action_texto3")}
+              </h3>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* --- ODS SECTION --- */}
       <section className="bg-[#2a2c38] rounded-t-[3rem] md:rounded-t-[5rem] overflow-hidden">
         <motion.div

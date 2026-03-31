@@ -155,7 +155,7 @@
   "func_contact_cta": "Sol·licitar informació",
 
   "_quienes_somos": "Qui som",
-  "qs_hero_titulo": "Qui som",
+  "qs_hero_titulo": "Qui som?",
   "qs_badge": "La nostra història",
   "qs_hero_texto": "<bold>SharetoGo<bold> transforma la mobilitat dels teus empleats en un avantatge <bold>estratègic<bold>, <bold>optimitzant trajectes mitjançant carpooling intel·ligent i desplaçaments sostenibles<bold>. La nostra plataforma converteix cada quilòmetre en dades <bold>precises i accionables<bold>, permetent a l'empresa gestionar el seu impacte ambiental amb total transparència.",
   "qs_hero_texto1": "És l'eina definitiva per a <bold>reduir emissions<bold> i elevar el perfil de sostenibilitat de l'organització sota els més <bold>estrictes criteris ESG<bold>.",
@@ -173,6 +173,12 @@
   "qs_equipo_texto": "<bold>SharetoGo<bold> aborda la mobilitat com un repte operatiu dins de les organitzacions, que requereix solucions aplicables en el dia a dia. <bold>La solució es desenvolupa alineada amb marcs normatius i estàndards de sostenibilitat<bold>, assegurant que la informació generada sigui útil en contextos reals de gestió i seguiment.",
   "qs_equipo_texto1": "L'enfocament combina <bold>tecnologia i anàlisi<bold> per facilitar la implementació de solucions adaptades a l'operativa de cada empresa.",
   "qs_equipo_alt": "Equip SharetoGo",
+  "qs_action_vision": "La nostra Visió",
+  "qs_action_titulo": "De la mobilitat a l'acció:",
+  "qs_action_texto": "A SharetoGo impulsem el canvi",
+  "qs_action_texto1": "facilitant una integració",
+  "qs_action_texto2": "gestionable i mesurable",
+  "qs_action_texto3": "dins de l'operativa de les organitzacions.",
 
   "_od_section": "Secció ODS",
   "od_badge": "Sostenibilitat",

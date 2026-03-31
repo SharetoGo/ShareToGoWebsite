@@ -159,7 +159,7 @@
 
 
   "_quienes_somos": "Quiénes somos",
-  "qs_hero_titulo": "Quiénes somos",
+  "qs_hero_titulo": "¿Quiénes somos?",
   "qs_badge": "Nuestra historia",
   "qs_hero_texto": "<bold>SharetoGo<bold> transforma la movilidad de tus empleados en una ventaja <bold>estratégica<bold>, <bold>optimizando trayectos mediante carpooling inteligente y desplazamientos sostenibles<bold>. Nuestra plataforma convierte cada kilómetro en datos <bold>precisos y accionables<bold>, permitiendo a la empresa gestionar su impacto ambiental con total transparencia.",
   "qs_hero_texto1": "Es la herramienta definitiva para <bold>reducir emisiones<bold> y elevar el perfil de sostenibilidad de la organización bajo los más <bold>estrictos criterios ESG<bold>.",
@@ -177,6 +177,13 @@
   "qs_equipo_texto": "<bold>SharetoGo<bold> aborda la movilidad como un reto operativo dentro de las organizaciones, que requiere soluciones aplicables en el día a día. <bold>La solución se desarrolla alineada con marcos normativos y estándares de sostenibilidad<bold>, asegurando que la información generada sea útil en contextos reales de gestión y seguimiento.",
   "qs_equipo_texto1": "El enfoque combina <bold>tecnología y análisis<bold> para facilitar la implementación de soluciones adaptadas a la operativa de cada empresa.",
   "qs_equipo_alt": "Equipo SharetoGo",
+  "qs_action_vision": "Nuestra Visión",
+  "qs_action_titulo": "De la movilidad a la acción:",
+  "qs_action_texto": "En SharetoGo impulsamos el cambio",
+  "qs_action_texto1": "facilitando una integración",
+  "qs_action_texto2": "gestionable y medible",
+  "qs_action_texto3": " dentro de la operativa de las organizaciones.",
+
 
   "_od_section": "Sección ODS",
   "od_badge": "Sostenibilidad",
