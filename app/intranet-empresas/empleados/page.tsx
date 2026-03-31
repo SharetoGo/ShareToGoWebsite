@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useDashboard } from "@/app/intranet-empresas/dashboard/DashboardContext";
-import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
+import { useDashboard } from "../providers/DashboardContext";
+import { useAuth } from "@/app/intranet-empresas/providers/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, arrayRemove, arrayUnion } from "firebase/firestore";
 import { Search, Loader2 } from "lucide-react";
@@ -14,7 +14,7 @@ import { EmployeeDetailsModal } from "@/components/dashboard/views/employee-deta
 
 export default function EmployeesPage() {
   const { companyData } = useAuth();
-  const { users, loading } = useDashboard();
+  const { users, travels, loading } = useDashboard();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,14 +32,27 @@ export default function EmployeesPage() {
   // --- CLEAN DATA PROCESSING ---
   const activeEmployees = useMemo(() => {
     const ids = companyData?.membersIds || [];
+    
+    // Safety check: ensure travels is an array before processing
+    const safeTravels = travels || [];
+
     return ids
       .map((id) => {
         const fullData = users.find((u) => u.id === id);
+        
+        const userTravels = safeTravels.filter(t => 
+          t.userId === id || (t.reservedBy && t.reservedBy.includes(id))
+        );
+
+        const monthlyTrips = userTravels.length;
+        const monthlyKm = userTravels.reduce((acc, t) => acc + (t.distance || 0), 0);
+
         return fullData
           ? { 
               ...fullData, 
               status: "active",
-              trips: (fullData.passengerTravels || 0) + (fullData.driverTravels || 0)
+              trips: monthlyTrips,
+              kmTravelled: monthlyKm
             }
           : {
               id,
@@ -50,14 +63,8 @@ export default function EmployeesPage() {
               trips: 0,
             };
       })
-      .sort((a, b) => {
-        // Sort primarily by KM, secondarily by number of trips
-        if ((b.kmTravelled || 0) !== (a.kmTravelled || 0)) {
-          return (b.kmTravelled || 0) - (a.kmTravelled || 0);
-        }
-        return (b.trips || 0) - (a.trips || 0);
-      });
-  }, [users, companyData?.membersIds]);
+      .sort((a, b) => (b.kmTravelled || 0) - (a.kmTravelled || 0));
+  }, [users, travels, companyData?.membersIds]);
 
   const blockedEmployees = useMemo(() => {
     const ids = companyData?.blockedIds || [];

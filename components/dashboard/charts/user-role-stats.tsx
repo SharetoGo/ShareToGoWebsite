@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { Users, Car, UserCheck } from "lucide-react";
+import { Users, Car, UserCheck, Info, TrendingUp } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface UserRoleStatsProps {
   companyName: string;
@@ -11,207 +12,98 @@ interface UserRoleStatsProps {
   users: any[];
 }
 
-export function UserRoleStats({
-  companyName,
-  totalMembers,
-  travels,
-  users,
-}: UserRoleStatsProps) {
+export function UserRoleStats({ totalMembers, travels }: UserRoleStatsProps) {
   const stats = useMemo(() => {
-    if (!travels || travels.length === 0) {
-      return {
-        drivers: 0,
-        passengers: 0,
-        driversPercentage: 0,
-        passengersPercentage: 0,
-      };
-    }
+    if (!travels?.length) return { d: 0, p: 0, dP: 0, pP: 0 };
 
-    const driverIds = new Set<string>();
-    const passengerIds = new Set<string>();
-
-    // Procesar travels (ya pre-cargados del contexto)
-    travels.forEach((travel) => {
-      // Conductor
-      if (travel.userId) {
-        driverIds.add(travel.userId);
-      }
-
-      // Pasajeros
-      if (travel.reservedBy && Array.isArray(travel.reservedBy)) {
-        travel.reservedBy.forEach((userId: string) => {
-          passengerIds.add(userId);
-        });
-      }
-    });
-
-    const companyDrivers = driverIds.size;
-    const companyPassengers = passengerIds.size;
-
-    const driversPercentage =
-      totalMembers > 0 ? Math.round((companyDrivers / totalMembers) * 100) : 0;
-    const passengersPercentage =
-      totalMembers > 0
-        ? Math.round((companyPassengers / totalMembers) * 100)
-        : 0;
+    const drivers = new Set(travels.map(t => t.userId)).size;
+    const passengers = new Set(travels.flatMap(t => t.reservedBy || [])).size;
 
     return {
-      drivers: companyDrivers,
-      passengers: companyPassengers,
-      driversPercentage,
-      passengersPercentage,
+      d: drivers,
+      p: passengers,
+      dP: totalMembers > 0 ? Math.round((drivers / totalMembers) * 100) : 0,
+      pP: totalMembers > 0 ? Math.round((passengers / totalMembers) * 100) : 0,
     };
   }, [travels, totalMembers]);
 
-  // Sin datos
-  if (
-    !companyName ||
-    totalMembers === 0 ||
-    (stats.drivers === 0 && stats.passengers === 0)
-  ) {
-    return (
-      <div className="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <Users className="w-5 h-5 text-[#9CD186]" />
-          <h3 className="text-lg font-semibold text-[#2a2c38]">
-            Participación de Usuarios
-          </h3>
-        </div>
-
-        <div className="flex flex-col items-center justify-center py-8 gap-4">
-          <div className="p-4 bg-gray-50 rounded-2xl">
-            <Users className="w-10 h-10 text-gray-300" />
-          </div>
-          <div className="text-center">
-            <p className="text-sm font-semibold text-gray-400">
-              Sin datos de participación
-            </p>
-            <p className="text-xs text-gray-300 mt-1 max-w-xs mx-auto">
-              Los datos aparecerán una vez que los empleados publiquen o
-              reserven trayectos.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Datos disponibles
   return (
-    <div className="col-span-1 lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <Users className="w-5 h-5 text-[#9CD186]" />
-        <h3 className="text-lg font-semibold text-[#2a2c38]">
-          Participación de Usuarios
-        </h3>
+    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm py-20 px-8">
+      <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-gray-900 rounded-2xl">
+            <Users className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-black text-[#2a2c38]">Participación</h3>
+            <p className="text-xs text-gray-400 font-medium tracking-wide uppercase">Distribución de roles este mes</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <span className="text-3xl font-black text-[#9CD186]">{Math.min(100, stats.dP + stats.pP)}%</span>
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Total Activos</p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* CONDUCTORES */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-[#9dd187]/20 rounded-xl">
-                <Car className="w-6 h-6 text-[#2a2c38]" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">Conductores</p>
-                <p className="text-2xl font-bold text-[#2a2c38]">
-                  {stats.drivers}
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-3xl font-bold text-[#9CD186]">
-                {stats.driversPercentage}%
-              </p>
-              <p className="text-xs text-gray-400">del total</p>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-linear-to-r from-[#9CD186] to-[#7AB86A] rounded-full transition-all duration-500"
-                style={{ width: `${stats.driversPercentage}%` }}
-              />
-            </div>
-          </div>
-
-          <p className="text-xs text-gray-500">
-            {stats.drivers} de {totalMembers} usuarios han publicado trayectos
-          </p>
-        </div>
+        <RoleCard 
+          label="Conductores" 
+          count={stats.d} 
+          total={totalMembers} 
+          percent={stats.dP} 
+          icon={Car} 
+          color="bg-[#9dd187]" 
+          description="han ofrecido su coche"
+        />
 
         {/* PASAJEROS */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-[#9dd187]/20 rounded-xl">
-                <UserCheck className="w-6 h-6 text-[#2a2c38]" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 font-medium">Pasajeros</p>
-                <p className="text-2xl font-bold text-[#2a2c38]">
-                  {stats.passengers}
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-3xl font-bold text-[#9CD186]">
-                {stats.passengersPercentage}%
-              </p>
-              <p className="text-xs text-gray-400">del total</p>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-linear-to-r from-[#9CD186] to-[#7AB86A] rounded-full transition-all duration-500"
-                style={{ width: `${stats.passengersPercentage}%` }}
-              />
-            </div>
-          </div>
-
-          <p className="text-xs text-gray-500">
-            {stats.passengers} de {totalMembers} usuarios han reservado
-            trayectos
-          </p>
-        </div>
+        <RoleCard 
+          label="Pasajeros" 
+          count={stats.p} 
+          total={totalMembers} 
+          percent={stats.pP} 
+          icon={UserCheck} 
+          color="bg-[#9dd187]" 
+          description="han reservado plazas"
+        />
       </div>
 
-      {/* Insight */}
-      <div className="mt-6 p-4 bg-linear-to-br from-[#E8F5E0] to-[#F0F8EC] rounded-xl border border-[#9CD186]/20">
-        <div className="flex items-start gap-3">
-          <div className="p-2 bg-white rounded-lg mt-0.5">
-            <Users className="w-4 h-4 text-[#5A9642]" />
+      {/* FOOTER INSIGHT */}
+      <div className="mt-12 p-5 bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center gap-4">
+        <div className="p-2 bg-white rounded-xl shadow-sm">
+          <TrendingUp className="w-4 h-4 text-[#5A9642]" />
+        </div>
+        <p className="text-xs text-gray-600 font-medium leading-relaxed">
+          <span className="font-bold text-[#2a2c38]">Análisis:</span> 
+          {stats.d >= stats.p 
+            ? " Tienes una base sólida de conductores. El ratio de oferta es saludable." 
+            : " Hay alta demanda de plazas. Considera incentivar a más conductores."}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function RoleCard({ label, count, total, percent, icon: Icon, color, description }: any) {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-end justify-between">
+        <div className="flex items-center gap-3">
+          <div className={`p-2.5 ${color}/10 rounded-xl`}>
+            <Icon className={`w-5 h-5 ${color.replace('bg-', 'text-')}`} />
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-semibold text-[#2a2c38] mb-1">
-              Tasa de Participación Total
-            </p>
-            <p className="text-xs text-gray-600 leading-relaxed">
-              {Math.round(
-                ((stats.drivers + stats.passengers) / totalMembers) * 100,
-              )}
-              % de tus empleados están participando activamente en el programa
-              de carpooling.
-              {stats.drivers > stats.passengers ? (
-                <span className="text-[#5A9642] font-medium">
-                  {" "}
-                  Hay más conductores que pasajeros, ¡excelente!
-                </span>
-              ) : (
-                <span className="text-[#5A9642] font-medium">
-                  {" "}
-                  Considera incentivar a más empleados a ofrecer plazas.
-                </span>
-              )}
-            </p>
+          <div>
+            <p className="text-sm font-bold text-[#2a2c38]">{label}</p>
+            <p className="text-xs text-gray-400 font-medium">{count} usuarios</p>
           </div>
         </div>
+        <p className="text-2xl font-black text-[#2a2c38]">{percent}%</p>
       </div>
+      <Progress value={percent} className={`h-2 bg-gray-100 ${color}`} />
+      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+        {count} de {total} empleados {description}
+      </p>
     </div>
   );
 }

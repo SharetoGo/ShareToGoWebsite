@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from "react";
-import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
+import { useAuth } from "@/app/intranet-empresas/providers/AuthContext";
 import { db } from "@/lib/firebase";
 import { collection, query, onSnapshot, orderBy, Timestamp, addDoc, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { formatStats } from "@/lib/utils/format";

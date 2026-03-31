@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@/app/intranet-empresas/auth/AuthContext";
+import { useAuth } from "@/app/intranet-empresas/providers/AuthContext";
 import { db, storage } from "@/lib/firebase"; // Ensure storage is exported from your firebase config
 import { doc, updateDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -180,7 +180,7 @@ export function SettingsView() {
               Comparte este código con tus empleados para que se unan a la empresa en la app.
             </p>
             <div className="bg-gray-50/70 border border-gray-100 rounded-2xl p-4 flex items-center justify-between gap-2">
-              <span className="font-mono font-bold text-sm text-[#2a2c38] tracking-widest">
+              <span className="font-mono font-bold text-sm text-[#2a2c38]">
                 {showAccessCode ? companyData.accessCodeDisplay : 'xxx-xxxx-xxx'}
               </span>
               <div className="flex items-center">
