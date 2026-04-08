@@ -14,7 +14,7 @@ import { EmployeeDetailsModal } from "@/components/dashboard/views/employee-deta
 
 export default function EmployeesPage() {
   const { companyData } = useAuth();
-  const { users, travels, loading } = useDashboard();
+  const { users, travels, loading, selectedMonth } = useDashboard();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,32 +27,40 @@ export default function EmployeesPage() {
     emp: any;
   } | null>(null);
 
-  
-
   // --- CLEAN DATA PROCESSING ---
   const activeEmployees = useMemo(() => {
     const ids = companyData?.membersIds || [];
+    const isGlobal = selectedMonth === "all";
     
-    // Safety check: ensure travels is an array before processing
+    // Safety check: ensure travels is an array
     const safeTravels = travels || [];
 
     return ids
       .map((id) => {
         const fullData = users.find((u) => u.id === id);
         
-        const userTravels = safeTravels.filter(t => 
-          t.userId === id || (t.reservedBy && t.reservedBy.includes(id))
-        );
+        let finalTrips = 0;
+        let finalKm = 0;
 
-        const monthlyTrips = userTravels.length;
-        const monthlyKm = userTravels.reduce((acc, t) => acc + (t.distance || 0), 0);
+        if (isGlobal && fullData) {
+          // 1. If Global: Use the lifetime totals saved in the User document
+          finalTrips = (fullData.passengerTravels || 0) + (fullData.driverTravels || 0);
+          finalKm = fullData.kmTravelled || 0;
+        } else {
+          // 2. If Monthly: Calculate dynamically from the 'travels' array of that month
+          const userTravels = safeTravels.filter(t => 
+            t.userId === id || (t.reservedBy && t.reservedBy.includes(id))
+          );
+          finalTrips = userTravels.length;
+          finalKm = userTravels.reduce((acc, t) => acc + (t.distance || 0), 0);
+        }
 
         return fullData
           ? { 
               ...fullData, 
               status: "active",
-              trips: monthlyTrips,
-              kmTravelled: monthlyKm
+              trips: finalTrips,
+              kmTravelled: finalKm
             }
           : {
               id,
@@ -64,7 +72,7 @@ export default function EmployeesPage() {
             };
       })
       .sort((a, b) => (b.kmTravelled || 0) - (a.kmTravelled || 0));
-  }, [users, travels, companyData?.membersIds]);
+  }, [users, travels, companyData?.membersIds, selectedMonth]);
 
   const blockedEmployees = useMemo(() => {
     const ids = companyData?.blockedIds || [];
@@ -82,6 +90,7 @@ export default function EmployeesPage() {
             lastName: `(${id.slice(0, 5)})`,
             status: "blocked",
             kmTravelled: 0,
+            trips: 0,
           };
     });
   }, [users, companyData?.blockedIds]);
@@ -99,7 +108,7 @@ export default function EmployeesPage() {
       .sort((a, b) => (b.kmTravelled || 0) - (a.kmTravelled || 0));
   }, [currentList, searchTerm]);
 
-  // --- DATABASE ACTIONS ---
+  // --- DATABASE ACTIONS (Keep as is) ---
   const handleExecuteAction = async () => {
     if (!pendingAction || !companyData?.id) return;
     setIsActionLoading(true);
@@ -119,15 +128,9 @@ export default function EmployeesPage() {
           blockedFrom: arrayUnion(cid),
         });
       } else if (pendingAction.type === "unblock") {
-        const companyRef = doc(db, "companies", companyData.id);
-        const userRef = doc(db, "users", pendingAction.emp.id);
-        const uid = pendingAction.emp.id;
-        const cid = companyData.id;
-
         await updateDoc(companyRef, {
           blockedIds: arrayRemove(uid),
         });
-
         await updateDoc(userRef, {
           blockedFrom: arrayRemove(cid),
         });
@@ -173,29 +176,22 @@ export default function EmployeesPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700 pb-20">
-      {/* HEADER WITH COUNTERS */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div>
           <h1 className="text-4xl font-black text-[#2a2c38]">Tu Equipo</h1>
           <p className="text-gray-500 font-medium italic">
-            Gestión directa de listas de acceso.
+            Mostrando datos {selectedMonth === "all" ? "Históricos Globales" : "del mes seleccionado"}.
           </p>
         </div>
         <div className="flex items-center gap-3 bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100">
           <button
-            onClick={() => {
-              setViewMode("active");
-              setCurrentPage(1);
-            }}
+            onClick={() => { setViewMode("active"); setCurrentPage(1); }}
             className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${viewMode === "active" ? "bg-[#2a2c38] text-[#9dd187]" : "text-gray-400"}`}
           >
             Activos ({activeEmployees.length})
           </button>
           <button
-            onClick={() => {
-              setViewMode("blocked");
-              setCurrentPage(1);
-            }}
+            onClick={() => { setViewMode("blocked"); setCurrentPage(1); }}
             className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${viewMode === "blocked" ? "bg-red-500 text-white" : "text-gray-400"}`}
           >
             Bloqueados ({blockedEmployees.length})
@@ -203,7 +199,6 @@ export default function EmployeesPage() {
         </div>
       </div>
 
-      {/* TOP 3 (Only shown for active members) */}
       {viewMode === "active" && (
         <Leaderboard
           employees={activeEmployees.slice(0, 3)}
@@ -211,20 +206,13 @@ export default function EmployeesPage() {
         />
       )}
 
-      {/* SEARCH BAR */}
       <div className="relative w-full">
-        <Search
-          className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300"
-          size={20}
-        />
+        <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300" size={20} />
         <input
           type="text"
           placeholder={`Buscar en ${viewMode === "active" ? "miembros activos" : "bloqueados"}...`}
           value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setCurrentPage(1);
-          }}
+          onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
           className="w-full pl-16 pr-6 py-4 bg-white border border-transparent rounded-4xl shadow-xl shadow-[#2a2c38]/5 focus:ring-2 focus:ring-[#9dd187] outline-none transition-all font-medium"
         />
       </div>
@@ -249,7 +237,6 @@ export default function EmployeesPage() {
         onConfirmUpdate={handleUpdateUser}
       />
 
-      {/* --- DETAILS MODAL --- */}
       {selectedEmployee && !editingEmployee && (
         <EmployeeDetailsModal
           employee={selectedEmployee}
