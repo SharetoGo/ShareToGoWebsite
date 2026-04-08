@@ -324,7 +324,7 @@ export default function ContentPage() {
               </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {(
-                  ["linkedin", "instagram", "mail", "website"] as PostType[]
+                  ["linkedin", "instagram", "newsletter", "website"] as PostType[]
                 ).map((t) => (
                   <button
                     key={t}

@@ -14,21 +14,36 @@ interface UserRoleStatsProps {
 
 export function UserRoleStats({ totalMembers, travels }: UserRoleStatsProps) {
   const stats = useMemo(() => {
-    if (!travels?.length) return { d: 0, p: 0, dP: 0, pP: 0 };
+    // If we have no travels, everything is 0
+    if (!travels || travels.length === 0) return { d: 0, p: 0, dP: 0, pP: 0 };
 
+    // Unique Drivers: Count unique UserIDs who created a travel this month
     const drivers = new Set(travels.map(t => t.userId)).size;
-    const passengers = new Set(travels.flatMap(t => t.reservedBy || [])).size;
+
+    // Unique Passengers: Flatten all 'reservedBy' arrays and count unique UIDs
+    const passengers = new Set(
+        travels.flatMap(t => t.reservedBy || [])
+    ).size;
 
     return {
       d: drivers,
       p: passengers,
+      // Participation rate = (Active People / Total Employees) * 100
       dP: totalMembers > 0 ? Math.round((drivers / totalMembers) * 100) : 0,
       pP: totalMembers > 0 ? Math.round((passengers / totalMembers) * 100) : 0,
     };
   }, [travels, totalMembers]);
 
+  // Optional: Add a subtle placeholder if data is empty
+  const hasData = travels && travels.length > 0;
+
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm py-20 px-8">
+      {!hasData && (
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+           <p className="text-sm text-gray-400 italic">No hay actividad registrada en este periodo</p>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-3">
           <div className="p-3 bg-gray-900 rounded-2xl">
