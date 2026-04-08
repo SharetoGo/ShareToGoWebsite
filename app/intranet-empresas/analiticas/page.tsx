@@ -26,6 +26,9 @@ import {
   AreaChart,
   Area,
   Legend,
+  PieChart,
+  Pie,
+  Cell,
 } from "recharts";
 import {
   Users,
@@ -41,6 +44,10 @@ import {
   UserCheck,
   Percent,
   Zap,
+  Bike,
+  Footprints,
+  Train,
+  Bolt,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════
@@ -58,15 +65,31 @@ const MONTH_NAMES = [
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
 
+/** Visual config for each travelMode value. */
+const TRAVEL_MODE_CONFIG = {
+  car: { label: "Coche", color: "#9dd187", bg: "bg-[#E8F5E0]", text: "text-[#5A9642]" },
+  walking: { label: "A pie", color: "#f97316", bg: "bg-orange-50", text: "text-orange-500" },
+  bicycle: { label: "Bicicleta", color: "#3b82f6", bg: "bg-blue-50", text: "text-blue-500" },
+  e_scooter: { label: "Patinete eléctrico", color: "#a855f7", bg: "bg-purple-50", text: "text-purple-500" },
+  public_transport: { label: "Transporte público", color: "#14b8a6", bg: "bg-teal-50", text: "text-teal-500" },
+} as const;
+
 /* ═══════════════════════════════════════════════════════════
    TYPES
    ═══════════════════════════════════════════════════════════ */
+
+type TravelMode = "car" | "walking" | "bicycle" | "e_scooter" | "public_transport";
 
 interface TravelDoc {
   id: string;
   userId: string;
   carSeatsAvailable: number;
+  carSeatsTaken: number;
   reservedBy: string[];
+  travelMode?: TravelMode;
+  /** Per-travel CO₂ already computed by the mobile app (kg). Falls back to estimation if missing. */
+  co2SavedKg?: number;
+  totalCo2SavedKg?: number;
 }
 
 interface MonthlyMetric {
@@ -84,6 +107,8 @@ interface MonthlyMetric {
   availableSeats: number;
   reservedSeats: number;
   newDrivers: number;
+  /** Count of travels per travelMode for this month. */
+  travelModeBreakdown: Record<TravelMode, number>;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -111,12 +136,14 @@ function toMonthLabel(yearMonth: string): string {
  *
  * Rules:
  *  - Past months  → skip if summary already exists (data is final).
+ *                   Pass forceRecompute=true to override (e.g. after a bug fix).
  *  - Current month → skip if summary was already written today.
  */
 async function computeAndSaveMetrics(
   companyId: string,
   yearMonth: string,
   memberIds: string[],
+  forceRecompute = false,
 ): Promise<void> {
   const summaryRef = doc(
     db,
@@ -130,7 +157,7 @@ async function computeAndSaveMetrics(
   const isPastMonth = yearMonth < currentYM;
 
   const existing = await getDoc(summaryRef);
-  if (existing.exists()) {
+  if (existing.exists() && !forceRecompute) {
     if (isPastMonth) return; // Past months are immutable — never recompute.
 
     // Current month: skip only if already computed today.
@@ -159,25 +186,40 @@ async function computeAndSaveMetrics(
   const driverIds = new Set<string>();
   const passengerIds = new Set<string>();
   let reservedSeats = 0;
-  let availableSeats = 2;
+  let availableSeats = 0;
+  let co2SumKg = 0;
+
+  const ALL_MODES: TravelMode[] = ["car", "walking", "bicycle", "e_scooter", "public_transport"];
+  const travelModeBreakdown: Record<TravelMode, number> = {
+    car: 0, walking: 0, bicycle: 0, e_scooter: 0, public_transport: 0,
+  };
 
   for (const t of travels) {
     const capacity = t.carSeatsAvailable ?? 0;
     const reserved = Array.isArray(t.reservedBy) ? t.reservedBy.length : 0;
 
     reservedSeats += reserved;
-    // Seats offered to passengers = total capacity minus driver's own seat
     availableSeats += Math.max(capacity, 0);
+
+    // Prefer the co2 value already stored on the travel document (computed by the app).
+    // Fall back to the estimation formula only when it is absent.
+    const travelCo2 =
+      t.totalCo2SavedKg ?? t.co2SavedKg ?? reserved * AVG_COMMUTE_KM * CO2_KG_PER_KM;
+    co2SumKg += travelCo2;
 
     if (t.userId) driverIds.add(t.userId);
     if (Array.isArray(t.reservedBy)) {
       t.reservedBy.forEach(uid => passengerIds.add(uid));
     }
+
+    const mode = t.travelMode && ALL_MODES.includes(t.travelMode) ? t.travelMode : "car";
+    travelModeBreakdown[mode] += 1;
   }
 
   const totalTravels = travels.length;
+  /** totalTrips = number of seat reservations made this month (one per passenger per ride). */
   const totalTrips = reservedSeats;
-  const co2SavedKg = parseFloat((reservedSeats * AVG_COMMUTE_KM * CO2_KG_PER_KM).toFixed(2));
+  const co2SavedKg = parseFloat(co2SumKg.toFixed(2));
   const seatOccupancyRate = availableSeats > 0
     ? parseFloat(((reservedSeats / availableSeats) * 100).toFixed(2))
     : 0;
@@ -222,6 +264,7 @@ async function computeAndSaveMetrics(
     activeDrivers: driverIds.size,
     totalUsers: totalMembers,
     newDrivers,
+    travelModeBreakdown,
     // Stored so future months can detect "new drivers" accurately
     driverIds: Array.from(driverIds),
     computedAt: serverTimestamp(),
@@ -302,12 +345,16 @@ export default function AnalyticsPage({
           availableSeats: m.availableSeats ?? 0,
           reservedSeats: m.reservedSeats ?? 0,
           newDrivers: m.newDrivers ?? 0,
+          travelModeBreakdown: m.travelModeBreakdown ?? {
+            car: 0, walking: 0, bicycle: 0, e_scooter: 0, public_transport: 0,
+          },
         });
       }
 
       // Selector: most recent first
       const sorted = [...data].sort((a, b) => b.month.localeCompare(a.month));
       setAllMonthlyData(sorted);
+      console.log("All monthly data:", sorted);
 
       // Default selected month = most recent
       if (sorted.length > 0) setSelectedMonth(sorted[0].month);
@@ -335,7 +382,11 @@ export default function AnalyticsPage({
     : null;
 
   // Accumulated totals across ALL months (impact header only)
-  const totalCo2Accumulated = allMonthlyData.reduce((s, m) => s + m.co2, 0);
+  const totalCo2Accumulated = allMonthlyData.reduce((s, m) => {
+    // Ensure m.co2 is a valid positive number
+    const val = typeof m.co2 === 'number' ? m.co2 : 0;
+    return s + val;
+  }, 0);
 
   // Activation ratio for selected month
   const activationRatio =
@@ -373,13 +424,39 @@ export default function AnalyticsPage({
     ]
     : [];
 
+  // Travel mode breakdown — pie + bar data for selected month
+  const travelModeChartData = currentMonthData
+    ? (Object.entries(currentMonthData.travelModeBreakdown) as [TravelMode, number][])
+      .filter(([, count]) => count > 0)
+      .map(([mode, count]) => ({
+        mode,
+        name: TRAVEL_MODE_CONFIG[mode].label,
+        value: count,
+        color: TRAVEL_MODE_CONFIG[mode].color,
+        pct: currentMonthData.totalTravels > 0
+          ? parseFloat(((count / currentMonthData.totalTravels) * 100).toFixed(1))
+          : 0,
+      }))
+      .sort((a, b) => b.value - a.value)
+    : [];
+
+  // Travel mode trend across all months (stacked bar)
+  const travelModeTrendData = chartData.map(m => ({
+    monthLabel: m.monthLabel,
+    ...Object.fromEntries(
+      (Object.keys(TRAVEL_MODE_CONFIG) as TravelMode[]).map(mode => [
+        mode, m.travelModeBreakdown[mode] ?? 0,
+      ])
+    ),
+  }));
+
   /* ─────────────────────────────────────────────────────────
      SMALL HELPERS
   ───────────────────────────────────────────────────────── */
 
   const displayValue = (value: number | string, suffix = "") => {
     const num = typeof value === "string" ? parseFloat(value) : value;
-    return num === 0 ? "-" : `${value}${suffix}`;
+    return num === 0 ? "0" : `${value}${suffix}`;
   };
 
   const calculateTrend = (current: number, previous: number) => {
@@ -438,8 +515,8 @@ export default function AnalyticsPage({
                 key={m.month}
                 onClick={() => { setSelectedMonth(m.month); setCompareMonth(""); }}
                 className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all whitespace-nowrap border ${selectedMonth === m.month
-                    ? "bg-[#9dd187] text-[#2a2c38] border-[#9dd187] shadow-md scale-105"
-                    : "bg-white text-gray-400 border-gray-100 hover:border-[#9dd187]/40 hover:text-[#5A9642]"
+                  ? "bg-[#9dd187] text-[#2a2c38] border-[#9dd187] shadow-md scale-105"
+                  : "bg-white text-gray-400 border-gray-100 hover:border-[#9dd187]/40 hover:text-[#5A9642]"
                   }`}
               >
                 {m.monthLabel}
@@ -466,8 +543,8 @@ export default function AnalyticsPage({
                   <button
                     onClick={() => setCompareMonth("")}
                     className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${compareMonth === ""
-                        ? "bg-gray-100 text-[#2a2c38] border-gray-200"
-                        : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
+                      ? "bg-gray-100 text-[#2a2c38] border-gray-200"
+                      : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
                       }`}
                   >
                     Sin comparar
@@ -479,8 +556,8 @@ export default function AnalyticsPage({
                         key={m.month}
                         onClick={() => setCompareMonth(m.month)}
                         className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap border transition-all ${compareMonth === m.month
-                            ? "bg-blue-500 text-white border-blue-500"
-                            : "bg-white text-gray-400 border-gray-100 hover:border-blue-200 hover:text-blue-500"
+                          ? "bg-blue-500 text-white border-blue-500"
+                          : "bg-white text-gray-400 border-gray-100 hover:border-blue-200 hover:text-blue-500"
                           }`}
                       >
                         {m.monthLabel}
@@ -1097,6 +1174,212 @@ export default function AnalyticsPage({
             <div className="h-64 flex items-center justify-center text-gray-400 text-sm">No hay datos disponibles</div>
           )}
         </Card>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          TRAVEL MODE BREAKDOWN
+          Donut (selected month) + stacked bar trend
+      ══════════════════════════════════════════ */}
+      <div className="space-y-6">
+
+        {/* Section divider */}
+        <div className="flex items-center gap-4 pt-4">
+          <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent" />
+          <div className="flex items-center gap-3 px-5 py-2.5 bg-[#2a2c38] rounded-full shadow-lg">
+            <Route className="w-4 h-4 text-[#9dd187]" />
+            <span className="text-[10px] font-black text-white uppercase tracking-[0.22em]">
+              Medios de transporte · {currentMonthData?.monthLabel ?? ""}
+            </span>
+          </div>
+          <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-200 to-transparent" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* ── Donut chart: share per mode this month ── */}
+          <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
+                  Distribución por medio
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Trayectos por tipo de transporte · {currentMonthData?.monthLabel ?? ""}
+                </p>
+              </div>
+              <div className="p-2 bg-[#E8F5E0] rounded-xl">
+                <Route className="w-5 h-5 text-[#5A9642]" />
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="h-64 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
+              </div>
+            ) : travelModeChartData.length > 0 ? (
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                {/* Donut */}
+                <div className="w-44 h-44 shrink-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={travelModeChartData}
+                        cx="50%" cy="50%"
+                        innerRadius={50} outerRadius={72}
+                        paddingAngle={3}
+                        dataKey="value"
+                        stroke="none"
+                      >
+                        {travelModeChartData.map(entry => (
+                          <Cell key={entry.mode} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb", fontSize: 12 }}
+                        formatter={(value: number, _: string, props: any) => [
+                          `${value} trayecto${value !== 1 ? "s" : ""} (${props.payload.pct}%)`,
+                          props.payload.name,
+                        ]}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Legend list */}
+                <div className="flex flex-col gap-2.5 flex-1 w-full">
+                  {travelModeChartData.map(entry => (
+                    <div key={entry.mode} className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: entry.color }}
+                        />
+                        <span className="text-xs text-gray-600 truncate">{entry.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-xs font-bold text-[#2a2c38]">{entry.value}</span>
+                        <span className="text-[10px] text-gray-400 w-10 text-right">{entry.pct}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="h-64 flex items-center justify-center text-gray-400 text-sm">
+                No hay datos disponibles
+              </div>
+            )}
+          </Card>
+
+          {/* ── Stat cards: one per mode ── */}
+          <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
+                  Detalle por medio
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Número de trayectos por tipo · {currentMonthData?.monthLabel ?? ""}
+                </p>
+              </div>
+              <div className="p-2 bg-purple-50 rounded-xl">
+                <TrendingUp className="w-5 h-5 text-purple-500" />
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="h-64 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {(Object.keys(TRAVEL_MODE_CONFIG) as TravelMode[]).map(mode => {
+                  const cfg = TRAVEL_MODE_CONFIG[mode];
+                  const count = currentMonthData?.travelModeBreakdown[mode] ?? 0;
+                  const pct = currentMonthData && currentMonthData.totalTravels > 0
+                    ? ((count / currentMonthData.totalTravels) * 100).toFixed(0)
+                    : "0";
+                  const ModeIcon =
+                    mode === "car" ? Car :
+                      mode === "walking" ? Footprints :
+                        mode === "bicycle" ? Bike :
+                          mode === "e_scooter" ? Bolt : Train;
+
+                  return (
+                    <div
+                      key={mode}
+                      className="flex items-center gap-3 p-3 rounded-2xl bg-gray-50/60 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className={`p-2 ${cfg.bg} rounded-xl shrink-0`}>
+                        <ModeIcon className={`w-4 h-4 ${cfg.text}`} />
+                      </div>
+                      <span className="text-sm text-gray-600 flex-1">{cfg.label}</span>
+                      <div className="flex items-center gap-3">
+                        {/* Progress bar */}
+                        <div className="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden hidden sm:block">
+                          <div
+                            className="h-full rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%`, backgroundColor: cfg.color }}
+                          />
+                        </div>
+                        <span className="text-xs text-gray-400 w-8 text-right">{pct}%</span>
+                        <span className="text-sm font-black text-[#2a2c38] w-6 text-right">{count}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Card>
+        </div>
+
+        {/* ── Stacked bar: mode trend across all months ── */}
+        {chartData.length > 1 && (
+          <Card className="p-6 lg:p-8 rounded-[2.5rem] border-none shadow-sm bg-white">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-base font-black text-[#2a2c38] uppercase tracking-tight">
+                  Evolución de medios de transporte
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Trayectos por tipo mes a mes
+                </p>
+              </div>
+              <div className="p-2 bg-purple-50 rounded-xl">
+                <TrendingUp className="w-5 h-5 text-purple-500" />
+              </div>
+            </div>
+            {loading ? (
+              <div className="h-64 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
+              </div>
+            ) : (
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={travelModeTrendData} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                    <XAxis dataKey="monthLabel" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: "#9ca3af" }} allowDecimals={false} />
+                    <Tooltip
+                      contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }}
+                      cursor={{ fill: "#f9fafb" }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "11px", paddingTop: "12px" }} />
+                    {(Object.keys(TRAVEL_MODE_CONFIG) as TravelMode[]).map(mode => (
+                      <Bar
+                        key={mode}
+                        dataKey={mode}
+                        name={TRAVEL_MODE_CONFIG[mode].label}
+                        stackId="modes"
+                        fill={TRAVEL_MODE_CONFIG[mode].color}
+                      />
+                    ))}
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </Card>
+        )}
       </div>
 
       {/* ══════════════════════════════════════════

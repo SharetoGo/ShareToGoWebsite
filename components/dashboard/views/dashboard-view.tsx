@@ -22,8 +22,15 @@ import { QuickStatsCompact } from "../widgets/quick-stats-compact";
 export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) => void }) {
   const { companyData } = useAuth();
   const { 
-    users, monthlyMetrics, loading, error, refresh, 
-    availableMonths, selectedMonth, changeMonth 
+    users, 
+    travels,
+    monthlyMetrics, 
+    loading, 
+    error, 
+    refresh, 
+    availableMonths, 
+    selectedMonth, 
+    changeMonth 
   } = useDashboard();
 
   const formatMonthLabel = (monthStr: string) => {
@@ -63,38 +70,35 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
     <div className="space-y-8 pb-20 animate-in fade-in duration-700">
       
       {/* 1. HEADER & MONTH SELECTOR */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-[100]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-100">
         <div>
           <h1 className="text-4xl font-black text-[#2a2c38] tracking-tight">Panel Principal</h1>
           <p className="text-gray-500 font-medium tracking-tight">Impacto ambiental y participación de empleados</p>
         </div>
         
-        <div className="min-w-[260px]">
+        <div className="flex items-center gap-3">
           <Select value={selectedMonth} onValueChange={changeMonth}>
-            <SelectTrigger className="w-full h-14 bg-white border-2 border-gray-50 rounded-full shadow-sm hover:shadow-md transition-all px-6">
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-[#9dd187]" />
-                <span className="font-black text-[#2a2c38] uppercase text-[11px] tracking-wider">
-                  {formatMonthLabel(selectedMonth)}
-                </span>
-              </div>
+            <SelectTrigger className="w-50 bg-white border-gray-200 rounded-xl shadow-sm focus:ring-[#9dd187]">
+              <Calendar className="w-4 h-4 mr-2 text-[#9dd187]" />
+              <SelectValue placeholder="Seleccionar mes" />
             </SelectTrigger>
-            <SelectContent 
-              className="rounded-4xl border-gray-100 shadow-2xl p-2 bg-white" 
-              position="popper" 
-              sideOffset={8}
-            >
+            <SelectContent>
               {availableMonths.map((m) => (
-                <SelectItem 
-                  key={m} 
-                  value={m} 
-                  className="rounded-2xl py-3 cursor-pointer font-black text-[#2a2c38] uppercase text-[10px] tracking-widest px-4"
-                >
-                  {formatMonthLabel(m)}
-                </SelectItem>
+                <SelectItem key={m} value={m}>{formatMonthLabel(m)}</SelectItem>
               ))}
             </SelectContent>
           </Select>
+
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={refresh}
+            disabled={loading} // Disable while loading
+            className="rounded-xl border-gray-200 text-gray-600 hover:bg-gray-50"
+          >
+            <RefreshCcw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            Sincronizar
+          </Button>
         </div>
       </div>
 
@@ -145,7 +149,7 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
           <UserRoleStats
             companyName={companyData.name}
             totalMembers={companyData.membersIds?.length || 0}
-            travels={[]}
+            travels={travels}
             users={users}
           />
         </div>

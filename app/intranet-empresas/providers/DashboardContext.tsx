@@ -36,15 +36,24 @@ export interface User {
 export interface Travel {
     id: string;
     userId: string;
-    origin: string;
+    origine: string;        // note: Firestore field is "origine" (typo in original data)
     destination: string;
     travelDate: any;
     carSeatsAvailable: number;
     carSeatsTaken: number;
     reservedBy: string[];
     distance: number;
+    /** Per-travel CO₂ saved (kg) — computed by the mobile app for the driver's share. */
     co2SavedKg: number;
+    /** Total CO₂ saved including all passengers on this travel. */
+    totalCo2SavedKg?: number;
+    travelMode: string;
+    verificationStatus: string;
+    month: string;
+    companyId: string;
 }
+
+export type TravelMode = "car" | "walking" | "bicycle" | "e_scooter" | "public_transport";
 
 export interface MonthlyMetrics {
     activeDrivers: number;
@@ -56,6 +65,12 @@ export interface MonthlyMetrics {
     totalTravels: number;
     totalTrips: number;
     totalUsers: number;
+    /** Drivers who posted a ride for the first time ever this month. */
+    newDrivers: number;
+    /** UIDs of all drivers who posted at least one ride this month. Stored for newDrivers tracking. */
+    driverIds: string[];
+    /** Count of travels per travelMode for this month. */
+    travelModeBreakdown: Record<TravelMode, number>;
 }
 
 interface DashboardContextData {
@@ -79,13 +94,13 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     const [travels, setTravels] = useState<Travel[]>([]); // Initialize as empty array
     const [monthlyMetrics, setMonthlyMetrics] = useState<MonthlyMetrics | null>(null);
     const [availableMonths, setAvailableMonths] = useState<string[]>([]);
-    
+    const [selectedMonth, setSelectedMonth] = useState<string>("all");
+
     const getCurrentMonthStr = () => {
         const now = new Date();
         return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
     };
 
-    const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonthStr());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -100,7 +115,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             const monthsRef = collection(db, "companies", companyData.id, "month");
             const monthsSnap = await getDocs(query(monthsRef, orderBy("__name__", "desc")));
             const monthsList = monthsSnap.docs.map(d => d.id);
-            
+
             const current = getCurrentMonthStr();
             if (!monthsList.includes(current)) monthsList.unshift(current);
             setAvailableMonths(Array.from(new Set(monthsList)));
@@ -129,7 +144,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             setUsers(usersResults);
             setTravels(travelsList); // Correctly setting the travels state
             setMonthlyMetrics(metricsSnap.exists() ? (metricsSnap.data() as MonthlyMetrics) : null);
-            
+
         } catch (err) {
             console.error("❌ Dashboard Fetch Error:", err);
             setError("Error al sincronizar los datos.");
@@ -145,6 +160,30 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }
     }, [authLoading, companyData?.id, selectedMonth, loadDashboardData]);
 
+    useEffect(() => {
+        const fetchMonths = async () => {
+            if (companyData?.id) {
+                try {
+                    const monthsSnap = await getDocs(collection(db, "companies", companyData.id, "month"));
+                    // Sort months descending (e.g., "2026-05" before "2026-04")
+                    const months = monthsSnap.docs
+                        .map(d => d.id)
+                        .sort((a, b) => b.localeCompare(a));
+
+                    setAvailableMonths(months);
+
+                    // If no month is selected yet, pick the most recent one automatically
+                    if (months.length > 0 && !selectedMonth) {
+                        setSelectedMonth(months[0]);
+                    }
+                } catch (err) {
+                    console.error("Error discovery months:", err);
+                }
+            }
+        };
+        fetchMonths();
+    }, [companyData?.id, selectedMonth]);
+
     const changeMonth = async (month: string) => {
         setSelectedMonth(month);
     };
@@ -154,9 +193,9 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <DashboardContext.Provider value={{ 
-            users, travels, monthlyMetrics, availableMonths, selectedMonth, 
-            loading, error, refresh, changeMonth 
+        <DashboardContext.Provider value={{
+            users, travels, monthlyMetrics, availableMonths, selectedMonth,
+            loading, error, refresh, changeMonth
         }}>
             {children}
         </DashboardContext.Provider>
