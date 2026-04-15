@@ -34,7 +34,8 @@ export default function Footer() {
     { name: "Ayuntament de Castelldefels", href: "https://www.castelldefels.org/", logo: "/images/aytoCastefa.png" },
     { name: "In Move", href: "https://www.railgrup.net", logo: "/images/in_move_logo.png" },
     { name: "BCN Global", href: "http://www.bcnglobal.es", logo: "/images/bcn_global_logo.png" },
-
+    { name: "Ecoindustria", href: "http://www.ecoindustria.net", logo: "/images/ecoindustria_logo.png" },
+    { name: "La Guaita", href: "http://www.laguaita.org", logo: "/images/laguaita_logo.png" },
   ];
 
   const sections = [
