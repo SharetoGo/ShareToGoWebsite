@@ -1,6 +1,6 @@
 import Image from "next/image";
-import AppPreview1 from "@/public/images/bookScreen.png";
-import AppPreview2 from "@/public/images/publishScreen.png";
+import AppPreview1 from "@/public/images/previews/bookScreen.png";
+import AppPreview2 from "@/public/images/previews/publishScreen.png";
 import LogoApple from "@/public/images/logo-apple.png";
 import LogoGooglePlay from "@/public/images/logo-google-play.png";
 import { Sparkles } from "lucide-react";
