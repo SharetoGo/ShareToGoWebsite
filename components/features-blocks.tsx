@@ -63,7 +63,8 @@ export default function FeaturesBlocks() {
             return (
               <div
                 key={f.titleKey}
-                className="px-4 py-2 rounded-full text-primary text-sm font-semibold"
+                className="px-4 py-2 rounded-full border border-primary/30
+                           bg-primary/15 text-primary text-sm font-semibold"
               >
                 <Icon className="inline-block w-4 h-4 mr-2 -mt-[2px]" />
                 {t(f.titleKey)}
@@ -81,11 +82,11 @@ export default function FeaturesBlocks() {
               alt={t("preview_alt")}
               from="center-left"
               active={animate}
-              className="md:block"
+              className="hidden md:block"
             />
 
             <AnimatedPhone
-              src="/images/previews/publishingScreen.png"
+              src="/images/previews/publishScreen.png"
               alt={t("preview_alt")}
               from="center"
               active={animate}
@@ -93,7 +94,7 @@ export default function FeaturesBlocks() {
             />
 
             <AnimatedPhone
-              src="/images/previews/tripScreen.png"
+              src="/images/previews/bookScreen.png"
               alt={t("preview_alt")}
               from="center-right"
               active={animate}
