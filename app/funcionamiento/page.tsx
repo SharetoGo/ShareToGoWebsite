@@ -20,17 +20,17 @@ export default function Funcionamiento() {
 
   const driverSlides = [
     {
-      image: "/images/driver-1.png",
+      image: "/images/previews/PublishScreenStep1.png",
       title: t("driver1_titulo"),
       description: t("driver1_texto"),
     },
     {
-      image: "/images/driver-2.png",
+      image: "/images/previews/PublishScreenStep2.png",
       title: t("driver2_titulo"),
       description: t("driver2_texto"),
     },
     {
-      image: "/images/driver-3.png",
+      image: "/images/previews/PublishScreenStep3.png",
       title: t("driver3_titulo"),
       description: t("driver3_texto"),
     },
@@ -38,12 +38,12 @@ export default function Funcionamiento() {
 
   const passengerSlides = [
     {
-      image: "/images/reservar.png",
+      image: "/images/previews/bookScreen.png",
       title: t("pass1_titulo"),
       description: t("pass1_texto"),
     },
     {
-      image: "/images/info_trayecto.PNG",
+      image: "/images/previews/tripScreen.png",
       title: t("pass2_titulo"),
       description: t("pass2_texto"),
     },
