@@ -63,8 +63,7 @@ export default function FeaturesBlocks() {
             return (
               <div
                 key={f.titleKey}
-                className="px-4 py-2 rounded-full border border-primary/30
-                           bg-primary/15 text-primary text-sm font-semibold"
+                className="px-4 py-2 rounded-full text-primary text-sm font-semibold"
               >
                 <Icon className="inline-block w-4 h-4 mr-2 -mt-[2px]" />
                 {t(f.titleKey)}
@@ -78,15 +77,15 @@ export default function FeaturesBlocks() {
           <div className="relative w-full max-w-5xl h-[360px] sm:h-[400px] md:h-[460px]">
 
             <AnimatedPhone
-              src="/images/homeScreen.png"
+              src="/images/previews/homeScreen.png"
               alt={t("preview_alt")}
               from="center-left"
               active={animate}
-              className="hidden md:block"
+              className="md:block"
             />
 
             <AnimatedPhone
-              src="/images/publishScreen.png"
+              src="/images/previews/publishingScreen.png"
               alt={t("preview_alt")}
               from="center"
               active={animate}
@@ -94,7 +93,7 @@ export default function FeaturesBlocks() {
             />
 
             <AnimatedPhone
-              src="/images/bookScreen.png"
+              src="/images/previews/tripScreen.png"
               alt={t("preview_alt")}
               from="center-right"
               active={animate}
@@ -156,7 +155,7 @@ function AnimatedPhone({
             : {}
         }
       >
-        <div className="rounded-[2rem] overflow-hidden shadow-xl">
+        <div className="rounded-[2rem] overflow-hidden">
           <div className="relative w-full aspect-[9/19]">
             <Image
               src={src}
