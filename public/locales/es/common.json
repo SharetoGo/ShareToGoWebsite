@@ -34,10 +34,12 @@
   "paso_registro": "1. Publica o reserva tu trayecto",
   "desc_paso_registro": "Encuentra rutas compatibles o publica tu trayecto en segundos.",
   "registro_usuarios": "Los usuarios se registran con su email y configuran sus preferencias de viaje",
-  "paso_matching": "2. Ahorra tiempo y dinero",
+  "paso_sostenible": "2. Elige tu método de transporte",
+  "desc_paso_sostenible": "¿Qué medio de transporte va a elegir? (caminar, ciclismo, etc.) y registra cada viaje sostenible.",
+  "paso_matching": "3. Ahorra tiempo y dinero",
   "desc_paso_matching": "Comparte trayecto y optimiza tu desplazamiento diario.",
   "matching_algoritmo": "Nuestro algoritmo conecta automáticamente empleados con rutas y horarios compatibles",
-  "paso_trayecto": "3. Comparte tu experiencia",
+  "paso_trayecto": "4. Comparte tu experiencia",
   "trayecto_seguro": "Valora el viaje y ayuda a crear una comunidad segura y de confianza.",
     
   "desc_paso_trayecto": "Valora el trayecto y ayuda a crear una comunidad segura.",
@@ -641,5 +643,23 @@
   "bytheway_benefit_4": "Contribuye a un campus más sostenible",
 
   "bytheway_cta": "Empieza a Ahorrar",
-  "company_intro_tag": "Impulsa la movilidad sostenible en tu empresa"
+  "company_intro_tag": "Impulsa la movilidad sostenible en tu empresa",
+
+  "sostenible_teaser_cta": "Descubre por qué es necesario",
+  "ts_hero_badge": "Sostenibilidad 2.0",
+  "ts_hero_title": "Viajes sostenibles",
+  "ts_hero_desc": "Más allá del coche compartido. Convertimos cada trayecto a pie, en bicicleta y en transporte público en una experiencia social y en un impacto corporativo medible.",
+  "ts_why_title": "Por qué es necesario",
+  "ts_why_text": "La mayoría de los planes de movilidad corporativa solo se centran en el coche compartido, dejando fuera a los usuarios de transporte sostenible 'silenciosos'. Las empresas necesitan el 100% de los datos para un reporte ESG preciso y el seguimiento de las emisiones de Alcance 3. SharetoGo cierra esta brecha.",
+  "ts_how_title": "Cómo funciona",
+  "ts_how_step1_title": "Publica tu trayecto",
+  "ts_how_step1_desc": "Simplemente registra cómo te desplazas hoy: a pie, en bicicleta o en autobús. Lleva menos de 10 segundos contribuir al objetivo de tu empresa.",
+  "ts_how_step2_title": "Interacción social",
+  "ts_how_step2_desc": "Tu registro se convierte en una publicación en el feed de la comunidad. Tus compañeros pueden reaccionar, comentar e interactuar con tu compromiso con el planeta.",
+  "ts_how_step3_title": "Reserva y únete",
+  "ts_how_step3_desc": "¿Ves el trayecto planificado de otra persona? Puedes unirte o reservar una plaza en sus planes de viaje directamente desde el feed, haciendo del desplazamiento al trabajo un esfuerzo compartido.",
+  "ts_esg_report_title": "Informes de impacto claros",
+  "ts_esg_report_desc": "Recibe un informe mensual detallado con todos los KPIs que tu empresa necesita para demostrar un progreso real hacia los objetivos de sostenibilidad, listo para auditorías.",
+  "ts_cta_title": "¿Listo para capturar el 100% de tus datos de movilidad?",
+  "ts_cta_button": "Solicitar informe de muestra"
 }

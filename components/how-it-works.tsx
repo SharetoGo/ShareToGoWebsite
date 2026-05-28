@@ -3,13 +3,14 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Users, MapPin, CheckCircle, ArrowRight } from "lucide-react";
+import { Users, MapPin, CheckCircle, ArrowRight, Leaf } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const steps = [
   { icon: Users, titleKey: "paso_registro", descKey: "desc_paso_registro", number: "01" },
-  { icon: MapPin, titleKey: "paso_matching", descKey: "desc_paso_matching", number: "02" },
-  { icon: CheckCircle, titleKey: "paso_trayecto", descKey: "desc_paso_trayecto", number: "03" },
+  { icon: Leaf, titleKey: "paso_sostenible", descKey: "desc_paso_sostenible", number: "02" },
+  { icon: MapPin, titleKey: "paso_matching", descKey: "desc_paso_matching", number: "03" },
+  { icon: CheckCircle, titleKey: "paso_trayecto", descKey: "desc_paso_trayecto", number: "04" },
 ];
 
 // Shared animation variant — no opacity:0 in hidden state keeps elements
@@ -60,14 +61,14 @@ export default function HowItWorks() {
 
         {/* STEPS */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 relative"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
           {/* connector line — desktop only */}
           <motion.div
-            className="hidden md:block absolute top-11 left-[calc(16.67%+1.5rem)] right-[calc(16.67%+1.5rem)] h-px"
+            className="hidden lg:block absolute top-11 left-[calc(12.5%+1.5rem)] right-[calc(12.5%+1.5rem)] h-px"
             style={{ background: "linear-gradient(to right, #9DD187 0%, #9DD187 100%)" }}
             initial={{ scaleX: 0, originX: 0 }}
             whileInView={{ scaleX: 1 }}

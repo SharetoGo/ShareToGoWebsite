@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { InteractiveCard } from "@/components/ui/interactive-card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Leaf, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
@@ -189,6 +189,41 @@ export default function Funcionamiento() {
             </div>
           </div>
         </section>
+      </motion.section>
+
+      {/* Trayectos Sostenibles Teaser Section */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true, amount: 0.3 }}
+        className="py-12 md:py-16 bg-[#9dd187]/5 border-y border-[#9dd187]/20"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#9dd187]/20 text-[#2a2c38] font-bold text-xs uppercase tracking-widest mb-4">
+                <Leaf size={14} className="text-[#2a2c38]" />
+                {t("sostenible_teaser_badge")}
+              </div>
+              <h2 className="text-3xl font-bold text-[#2a2c38] mb-4">
+                {t("sostenible_teaser_title")}
+              </h2>
+              <p className="text-gray-600 text-lg leading-relaxed max-w-3xl">
+                {t("sostenible_teaser_text")}
+              </p>
+            </div>
+            <div className="shrink-0">
+              <Link href="/trayectos-sostenibles">
+                <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white px-8 py-7 rounded-xl text-base group">
+                  {t("sostenible_teaser_cta")}
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
       </motion.section>
 
       {/* Proceso paso a paso */}
