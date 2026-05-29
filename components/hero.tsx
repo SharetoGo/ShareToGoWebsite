@@ -26,9 +26,14 @@ export default function Hero() {
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground text-balance leading-tight">
                 <span className="text-primary">{t("nombre_sharetogo")}</span>
               </h1>
-              <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-foreground text-balance leading-tight">
-                {t("Aplicacion")}
-              </h1>
+              <div className="text-center lg:text-left space-y-4">
+                <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-foreground text-balance leading-tight">
+                  {t("Aplicacion")}
+                </h1>
+                <p className="text-sm md:text-md italic text-muted-foreground text-pretty max-w-2xl">
+                  {t("mobility1")} · {t("mobility2")} · {t("mobility3")} · {t("mobility4")} · {t("mobility5")}
+                </p>
+              </div>
               <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-2xl">
                 {t("empresa_unica")}
               </p>
