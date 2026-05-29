@@ -213,14 +213,16 @@ export default function Funcionamiento() {
               <p className="text-gray-600 text-lg leading-relaxed max-w-3xl">
                 {t("sostenible_teaser_text")}
               </p>
+              <div className="mt-6">
+                <Link href="/trayectos-sostenibles">
+                  <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white px-8 py-7 rounded-xl text-base group">
+                    {t("sostenible_button")}
+                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                  </Button>
+                </Link>
+              </div>
             </div>
             <div className="shrink-0">
-              <Link href="/trayectos-sostenibles">
-                <Button className="bg-[#2a2c38] hover:bg-[#1a1c28] text-white px-8 py-7 rounded-xl text-base group">
-                  {t("sostenible_teaser_cta")}
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
-                </Button>
-              </Link>
             </div>
           </div>
         </div>
