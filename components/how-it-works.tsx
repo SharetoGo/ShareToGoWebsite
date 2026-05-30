@@ -112,7 +112,7 @@ export default function HowItWorks() {
                 <h3 className="font-bold text-[#2A2C38] mb-2 text-base md:text-lg -mt-3">
                   {t(step.titleKey)}
                 </h3>
-                <p className="text-sm text-[#2A2C38]/60 leading-relaxed max-w-[220px] mx-auto">
+                <p className="text-sm text-[#2A2C38]/60 leading-relaxed max-w-55 mx-auto">
                   {t(step.descKey)}
                 </p>
               </motion.div>

@@ -222,7 +222,14 @@ export default function Funcionamiento() {
                 </Link>
               </div>
             </div>
-            <div className="shrink-0">
+            <div className="flex-1 relative w-full max-w-md aspect-video rounded-2xl overflow-hidden shadow-lg">
+              <Image
+                src="/images/trayectos-sostenibles/man-bike.jpg"
+                alt={t("sostenible_teaser_title")}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 120vw, 60vw"
+              />
             </div>
           </div>
         </div>
