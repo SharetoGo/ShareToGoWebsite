@@ -30,7 +30,7 @@ export default function Hero() {
                 <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-foreground text-balance leading-tight">
                   {t("Aplicacion")}
                 </h1>
-                <div className="flex flex-wrap lg:text-left lg:justify-start gap-2 p-4 border-t border-white/10">
+                <div className="flex flex-wrap text-center justify-center lg:text-left lg:justify-start gap-2 p-4 border-t border-white/10">
                   <div className="flex items-center gap-1 uppercase text-[9.5px] font-bold opacity-70 animate-bounce">
                     <Car size={14} className="text-[#9dd187]" />{" "}
                     {t("mobility1")}

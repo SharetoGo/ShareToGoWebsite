@@ -3,6 +3,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { HeroSection } from "@/components/espacio-empresa/HeroSection";
+import { RoadTimeline } from "@/components/espacio-empresa/RoadTimeline";
 import { BenefitSection } from "@/components/espacio-empresa/BenefitSection";
 import { ConsultancySection } from "@/components/espacio-empresa/ConsultancySection";
 import { ImpactSection } from "@/components/espacio-empresa/ImpactSection";
@@ -15,6 +16,7 @@ export default function EspacioEmpresas() {
   return (
     <main className="scroll-smooth">
       <HeroSection t={t} />
+      <RoadTimeline t={t} />
       <BenefitSection t={t} />
       <ConsultancySection t={t} />
       <ImpactSection t={t} />
