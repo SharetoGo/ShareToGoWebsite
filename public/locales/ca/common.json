@@ -644,5 +644,14 @@
   "bytheway_benefit_3": "Coneix gent nova de la teva universitat",
   "bytheway_benefit_4": "Contribueix a un campus més sostenible",
   "bytheway_cta": "Comença a estalviar",
-  "company_intro_tag": "Impulsa la mobilitat sostenible a la teva empresa"
+  "company_intro_tag": "Impulsa la mobilitat sostenible a la teva empresa",
+  "sust_main_title": "Redueix les emissions de la teva organització",
+  "sust_main_desc": "Promou alternatives sostenibles per als desplaçaments diaris dels teus empleats.",
+  "sust_transport_list": "Bicicleta · A peu · Patinet elèctric · Transport públic",
+  "sust_carpooling_title": "Cotxe compartit",
+  "sust_carpooling_sub": "Comparteix trajectes amb els teus companys",
+  "sust_carpooling_text": "Publica o reserva trajectes, troba persones compatibles i redueix el cost dels teus desplaçaments diaris.",
+  "sust_journeys_title": "Trajectes sostenibles",
+  "sust_journeys_sub": "Cada desplaçament compta",
+  "sust_journeys_text": "Registra la teva mobilitat sostenible, interactua i competeix amb altres usuaris i participa en una comunitat compromesa amb el canvi."
 }

@@ -3,7 +3,7 @@ import AppPreview1 from "@/public/images/previews/bookScreen.png";
 import AppPreview2 from "@/public/images/previews/publishScreen.png";
 import LogoApple from "@/public/images/logo-apple.png";
 import LogoGooglePlay from "@/public/images/logo-google-play.png";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Bike, Footprints, Zap, Bus, Car } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Hero() {
@@ -30,9 +30,28 @@ export default function Hero() {
                 <h1 className="text-4xl md:text-5xl lg:text-5xl font-bold text-foreground text-balance leading-tight">
                   {t("Aplicacion")}
                 </h1>
-                <p className="text-sm md:text-md italic text-muted-foreground text-pretty max-w-2xl">
-                  {t("mobility1")} · {t("mobility2")} · {t("mobility3")} · {t("mobility4")} · {t("mobility5")}
-                </p>
+                <div className="flex flex-wrap lg:text-left lg:justify-start gap-2 p-4 border-t border-white/10">
+                  <div className="flex items-center gap-1 uppercase text-[9.5px] font-bold opacity-70 animate-bounce">
+                    <Car size={14} className="text-[#9dd187]" />{" "}
+                    {t("mobility1")}
+                  </div>
+                  <div className="flex items-center gap-1 uppercase text-[9.5px] font-bold opacity-70 animate-bounce">
+                    <Bike size={14} className="text-[#9dd187]" />{" "}
+                    {t("mobility2")}
+                  </div>
+                  <div className="flex items-center gap-1 uppercase text-[9.5px] font-bold opacity-70 animate-bounce">
+                    <Footprints size={14} className="text-[#9dd187]" />{" "}
+                    {t("mobility3")}
+                  </div>
+                  <div className="flex items-center gap-1 uppercase text-[9.5px] font-bold opacity-70 animate-bounce">
+                    <Zap size={14} className="text-[#9dd187]" />{" "}
+                    {t("mobility4")}
+                  </div>
+                  <div className="flex items-center gap-1 uppercase text-[9.5px] font-bold opacity-70 animate-bounce">
+                    <Bus size={14} className="text-[#9dd187]" />{" "}
+                    {t("mobility5")}
+                  </div>
+                </div>
               </div>
               <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-2xl">
                 {t("empresa_unica")}
