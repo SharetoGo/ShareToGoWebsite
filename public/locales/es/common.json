@@ -655,8 +655,9 @@
 
   "sostenible_teaser_cta": "Descubre por qué es necesario",
   "ts_hero_badge": "Sostenibilidad 2.0",
-  "ts_hero_title": "Viajes sostenibles",
-  "ts_hero_desc": "Más allá del coche compartido. Convertimos cada trayecto a pie, en bicicleta y en transporte público en una experiencia social y en un impacto corporativo medible.",
+  "ts_hero_title": "Trayectos Sostenibles",
+  "ts_hero_sub": "Más allá del coche compartido",
+  "ts_hero_desc": "Convertimos cada trayecto a pie, en bicicleta y en transporte público en una experiencia social y en un impacto corporativo medible.",
   "ts_why_title": "Por qué es necesario",
   "ts_why_text": "La mayoría de los planes de movilidad corporativa solo se centran en el coche compartido, dejando fuera a los usuarios de transporte sostenible 'silenciosos'. Las empresas necesitan el 100% de los datos para un reporte ESG preciso y el seguimiento de las emisiones de Alcance 3. SharetoGo cierra esta brecha.",
   "ts_how_title": "Cómo funciona",
@@ -669,5 +670,14 @@
   "ts_esg_report_title": "Informes de impacto claros",
   "ts_esg_report_desc": "Recibe un informe mensual detallado con todos los KPIs que tu empresa necesita para demostrar un progreso real hacia los objetivos de sostenibilidad, listo para auditorías.",
   "ts_cta_title": "¿Listo para capturar el 100% de tus datos de movilidad?",
-  "ts_cta_button": "Solicitar informe de muestra"
+  "ts_cta_button": "Solicitar informe de muestra",
+  "sust_main_title": "Reduce las emisiones de tu organización",
+  "sust_main_desc": "Promueve alternativas sostenibles para los desplazamientos diarios de tus empleados.",
+  "sust_transport_list": "Bicicleta · A pie · Patinete eléctrico · Transporte público",
+  "sust_carpooling_title": "Coche compartido",
+  "sust_carpooling_sub": "Comparte trayectos con tus compañeros",
+  "sust_carpooling_text": "Publica o reserva trayectos, encuentra personas compatibles y reduce el coste de tus desplazamientos diarios.",
+  "sust_journeys_title": "Trayectos sostenibles",
+  "sust_journeys_sub": "Cada desplazamiento cuenta",
+  "sust_journeys_text": "Registra tu movilidad sostenible, interactúa y compite con otros usuarios y participa en una comunidad comprometida con el cambio."
 }

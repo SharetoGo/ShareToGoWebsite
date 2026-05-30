@@ -35,7 +35,7 @@ export default function TrayectosSostenibles() {
             animate="visible"
             variants={fadeInUp}
             transition={{ duration: 0.6 }}
-            className="text-center max-w-3xl mx-auto space-y-6"
+            className="text-center max-w-3xl mx-auto space-y-2"
           >
             <Badge className="bg-[#9dd187]/20 text-[#2a2c38] hover:bg-[#9dd187]/30 border-none px-4 py-1.5 text-sm font-bold uppercase tracking-widest">
               <Leaf size={14} className="mr-2" />
@@ -44,6 +44,9 @@ export default function TrayectosSostenibles() {
             <h1 className="text-4xl md:text-6xl font-black text-[#2a2c38] leading-tight">
               {t("ts_hero_title")}
             </h1>
+            <p className="text-lg italic md:text-xl text-gray-600 leading-relaxed">
+              {t("ts_hero_sub")}
+            </p>
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
               {t("ts_hero_desc")}
             </p>

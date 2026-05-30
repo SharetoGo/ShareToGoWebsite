@@ -592,6 +592,15 @@
   "ts_esg_report_title": "Clear Impact Reporting",
   "ts_esg_report_desc": "Receive a detailed monthly report with all the KPIs your company needs to demonstrate real progress towards sustainability goals, ready for audit.",
   "ts_cta_title": "Ready to capture 100% of your mobility data?",
-  "ts_cta_button": "Request a sample report"
+  "ts_cta_button": "Request a sample report",
+  "sust_main_title": "Reduce your organization's emissions",
+  "sust_main_desc": "Promote sustainable alternatives for your employees' daily commutes.",
+  "sust_transport_list": "Bicycle · On foot · Electric scooter · Public transport",
+  "sust_carpooling_title": "Carpooling",
+  "sust_carpooling_sub": "Share journeys with your colleagues",
+  "sust_carpooling_text": "Publish or book journeys, find compatible people and reduce the cost of your daily commutes.",
+  "sust_journeys_title": "Sustainable Journeys",
+  "sust_journeys_sub": "Every journey counts",
+  "sust_journeys_text": "Register your sustainable mobility, interact and compete with other users and participate in a community committed to change."
 
 }

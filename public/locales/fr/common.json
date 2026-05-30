@@ -583,5 +583,14 @@
   "medimos_comunicamos": "Nous mesurons et communiquons votre impact réel",
   "panel_control": "Tableau de bord avec mobilité et CO₂ évité",
   "datos_esg": "Données prêtes pour ESG et durabilité",
-  "insights_contenidos": "Insights et contenus pour communiquer l'impact"
+  "insights_contenidos": "Insights et contenus pour communiquer l'impact",
+  "sust_main_title": "Réduisez les émissions de votre organisation",
+  "sust_main_desc": "Encouragez les alternatives durables pour les déplacements quotidiens de vos collaborateurs.",
+  "sust_transport_list": "Vélo · À pied · Trottinette électrique · Transports en commun",
+  "sust_carpooling_title": "Covoiturage",
+  "sust_carpooling_sub": "Partagez vos trajets avec vos collègues",
+  "sust_carpooling_text": "Publiez ou réservez des trajets, trouvez des personnes compatibles et réduisez le coût de vos déplacements quotidiens.",
+  "sust_journeys_title": "Trajets durables",
+  "sust_journeys_sub": "Chaque déplacement compte",
+  "sust_journeys_text": "Enregistrez votre mobilité durable, interagissez et lancez des défis aux autres utilisateurs, et rejoignez une communauté engagée pour le changement."
 }
