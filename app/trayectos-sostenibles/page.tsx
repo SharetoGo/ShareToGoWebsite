@@ -185,9 +185,9 @@ export default function TrayectosSostenibles() {
             whileInView="visible"
             viewport={{ once: true }}
             variants={fadeInUp}
-            className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+            className="mt-36 mb-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
           >
-            <div className="relative aspect-video lg:aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white">
+            <div className="relative aspect-video lg:aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white lg:-ml-12 lg:scale-100">
               <Image
                 src="/images/trayectos-sostenibles/company-dashboard.png"
                 alt="Dashboard Preview"
@@ -196,7 +196,7 @@ export default function TrayectosSostenibles() {
               />
             </div>
             <div className="space-y-6">
-              <h3 className="text-3xl font-bold text-[#2a2c38]">
+              <h3 className="text-4xl font-bold text-[#2a2c38]">
                 {t("ts_dashboard_title")}
               </h3>
               <p className="text-lg text-gray-600 leading-relaxed">
@@ -269,14 +269,14 @@ export default function TrayectosSostenibles() {
               <Leaf size={120} className="text-[#9dd187]" />
             </div>
             <h3 className="text-3xl md:text-5xl font-black text-white mb-6 relative z-10">
-              {t("ts_final_cta_title", "Ve más allá del carpooling")}
+              {t("ts_final_cta_title")}
             </h3>
             <p className="text-white/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto relative z-10">
-              {t("ts_final_cta_desc", "Transforma cada paso, pedalada o trayecto en transporte público en un dato de valor para tu estrategia ESG. Es hora de liderar el cambio.")}
+              {t("ts_final_cta_desc")}
             </p>
             <Button asChild className="bg-[#9dd187] hover:bg-[#8fd07a] text-[#2a2c38] font-bold px-10 py-7 rounded-2xl text-lg shadow-xl transition-all hover:scale-105">
               <Link href="/contratar">
-                {t("ts_final_cta_btn", "Activar mi Espacio de Empresa")}
+                {t("ts_final_cta_btn")}
               </Link>
             </Button>
           </Card>

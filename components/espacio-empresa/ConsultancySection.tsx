@@ -57,7 +57,7 @@ export function ConsultancySection({ t }: { t: any }) {
                         <span className="text-[#9dd187] font-bold text-lg">
                           0{num}.
                         </span>
-                        <span className="text-[#2a2c38] font-semibold group-hover:text-[#4d7c41] transition-colors">
+                        <span className="text-[#2a2c38] font-semibold group-hover:text-[#4d7c41] transition-colors text-pretty">
                           {t(`cons_item${num}_title`)}
                         </span>
                       </div>

@@ -82,7 +82,7 @@ export function Services({ t }: { t: any }) {
                 >
                   <motion.p
                     variants={fadeSlideUp}
-                    className="text-xl text-gray-600 mb-10 leading-relaxed"
+                    className="text-xl text-gray-600 mb-10 leading-relaxed text-pretty"
                   >
                     {t(`cons_item${num}_text`)}
                   </motion.p>
