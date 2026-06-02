@@ -26,6 +26,8 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
     availableMonths, selectedMonth, changeMonth 
   } = useDashboard();
 
+  const co2SavedKg = typeof monthlyMetrics?.co2SavedKg === "number" ? monthlyMetrics.co2SavedKg : null;
+
   const formatMonthLabel = (monthStr: string) => {
     if (monthStr === "all") return "Histórico Global";
     if (!monthStr) return "";
@@ -100,7 +102,13 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
             <div>
               <p className="text-gray-400 text-xs uppercase font-bold tracking-widest mb-2">CO2 Ahorrado</p>
               <p className="text-5xl font-black text-white">
-                  {formatStats(monthlyMetrics?.co2SavedKg || 0)} <span className="text-base font-medium text-gray-500">kg</span>
+                  {co2SavedKg !== null ? (
+                    <>
+                      {formatStats(co2SavedKg)} <span className="text-base font-medium text-gray-500">kg</span>
+                    </>
+                  ) : (
+                    "-"
+                  )}
               </p>
             </div>
           </div>
@@ -109,7 +117,7 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
 
       {/* 3. QUICK STATS */}
       <QuickStatsCompact
-        totalCo2={monthlyMetrics?.co2SavedKg || 0}
+        totalCo2={co2SavedKg}
         seatOccupancyRate={monthlyMetrics?.seatOccupancyRate || 0}
         participationRate={monthlyMetrics?.participationRate || 0}
         totalTravelsMonthly={monthlyMetrics?.totalTravels || 0}
@@ -132,7 +140,7 @@ export function DashboardView({ setActiveTab }: { setActiveTab: (tab: string) =>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <LinkedInHub data={companyData} onViewContent={() => setActiveTab("content")} />
-        <AnalyticsHub totalCo2={monthlyMetrics?.co2SavedKg || 0} onViewAnalytics={() => setActiveTab("analytics")} />
+        <AnalyticsHub totalCo2={co2SavedKg} onViewAnalytics={() => setActiveTab("analytics")} />
       </div>
     </div>
   );
