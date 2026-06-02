@@ -20,8 +20,6 @@ import {
   Save,
   Loader2,
   CheckCircle2,
-  Plus,
-  X,
   Eye,
   EyeOff,
   Copy,
@@ -37,7 +35,6 @@ export default function SettingsPage() {
     name: "",
     industry: "technology",
     employeeCount: 0,
-    headquarters: [] as string[],
     co2Target: 0,
     logoUrl: "",
   });
@@ -54,9 +51,6 @@ export default function SettingsPage() {
         name: companyData.name || "",
         industry: companyData.industry || "technology",
         employeeCount: companyData.employeeCount || 0,
-        headquarters: Array.isArray(companyData.headquarters)
-          ? companyData.headquarters
-          : [],
         co2Target: companyData.co2Target || 0,
         logoUrl: companyData.logoUrl || "",
       });
@@ -85,23 +79,6 @@ export default function SettingsPage() {
     } finally {
       setIsUploading(false);
     }
-  };
-
-  // --- HEADQUARTERS ARRAY LOGIC ---
-  const updateHQ = (index: number, value: string) => {
-    const newHQs = [...formData.headquarters];
-    newHQs[index] = value;
-    setFormData({ ...formData, headquarters: newHQs });
-  };
-
-  const addHQ = () =>
-    setFormData({ ...formData, headquarters: [...formData.headquarters, ""] });
-
-  const removeHQ = (index: number) => {
-    setFormData({
-      ...formData,
-      headquarters: formData.headquarters.filter((_, i) => i !== index),
-    });
   };
 
   // --- COPY ACCESS CODE ---
@@ -152,7 +129,7 @@ export default function SettingsPage() {
         <div>
           <h1 className="text-3xl font-bold text-[#2a2c38]">Configuración</h1>
           <p className="text-gray-500">
-            Actualiza el perfil y sedes de {formData.name}
+            Actualiza el perfil de {formData.name}
           </p>
         </div>
         <button
@@ -291,38 +268,6 @@ export default function SettingsPage() {
                     <option value="finance">Finanzas</option>
                     <option value="healthcare">Salud</option>
                   </select>
-                </div>
-              </div>
-
-              {/* SEDES (ARRAY DISPLAY) */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase ml-1">
-                  Sedes / Headquarters
-                </label>
-                <div className="space-y-3">
-                  {formData.headquarters.map((hq, index) => (
-                    <div key={index} className="flex gap-2">
-                      <input
-                        type="text"
-                        value={hq}
-                        onChange={(e) => updateHQ(index, e.target.value)}
-                        placeholder="Dirección de la sede..."
-                        className="flex-1 bg-gray-50 border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#9dd187]"
-                      />
-                      <button
-                        onClick={() => removeHQ(index)}
-                        className="p-4 bg-red-50 text-red-400 rounded-2xl hover:bg-red-100 transition-colors"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    onClick={addHQ}
-                    className="flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed border-gray-100 rounded-2xl text-gray-400 hover:border-[#9dd187] hover:text-[#9dd187] transition-all font-bold text-sm"
-                  >
-                    <Plus size={18} /> Añadir Sede
-                  </button>
                 </div>
               </div>
             </div>

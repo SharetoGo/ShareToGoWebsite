@@ -2,7 +2,7 @@
 'use client'
 
 import { useState, useMemo } from "react";
-import { useDashboard } from "@/app/intranet-empresas/dashboard/DashboardContext";
+import { useDashboard } from "@/app/intranet-empresas/providers/DashboardContext";
 import { useAuth } from "@/app/intranet-empresas/providers/AuthContext";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
@@ -65,10 +65,10 @@ const employees = useMemo<Employee[]>(() => {
       totalTrips: (user.passengerTravels || 0) + (user.driverTravels || 0),
 
       reviews: user.reviews?.map(r => ({
-        authorName: r.authorName,
-        authorUid: "unknown",          // ⚠️ o r.authorUid si existe
-        rating: r.rating,
-        comment: r.comment,
+        authorName: r.authorName || "Usuario",
+        authorUid: r.authorUid || "unknown",
+        rating: r.rating || 0,
+        comment: r.comment || "",
         createdAt: null,               // ⚠️ o serverTimestamp()
         travelId: null
       }))

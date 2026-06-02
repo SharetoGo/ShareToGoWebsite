@@ -32,12 +32,20 @@ export interface User {
     passengerTravels: number;
     driverTravels: number;
     co2SavedKg: number;
+    reviews?: Array<{
+        authorName?: string;
+        authorUid?: string;
+        rating?: number;
+        comment?: string;
+        createdAt?: any;
+        travelId?: string | null;
+    }>;
 }
 
 export interface MonthlyMetrics {
     activeDrivers: number;
     availableSeats: number;
-    co2SavedKg: number;
+    co2SavedKg: number | null;
     participationRate: number;
     reservedSeats: number;
     seatOccupancyRate: number;
@@ -60,6 +68,29 @@ interface DashboardContextData {
 }
 
 const DashboardContext = createContext<DashboardContextData | undefined>(undefined);
+
+function getSummarySavedCo2(data: any): number | null {
+    if (typeof data.co2SavedKg === "number") return data.co2SavedKg;
+    if (typeof data.savedco2 === "number") return data.savedco2;
+    if (typeof data.savedCo2 === "number") return data.savedCo2;
+    if (typeof data.savedCO2 === "number") return data.savedCO2;
+    return null;
+}
+
+function normalizeMonthlyMetrics(data: any): MonthlyMetrics {
+    return {
+        activeDrivers: data.activeDrivers ?? 0,
+        availableSeats: data.availableSeats ?? 0,
+        co2SavedKg: getSummarySavedCo2(data),
+        participationRate: data.participationRate ?? 0,
+        reservedSeats: data.reservedSeats ?? 0,
+        seatOccupancyRate: data.seatOccupancyRate ?? 0,
+        totalTravels: data.totalTravels ?? 0,
+        totalTrips: data.totalTrips ?? 0,
+        totalUsers: data.totalUsers ?? 0,
+        travelModeBreakdown: data.travelModeBreakdown,
+    };
+}
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
     const { companyData, loading: authLoading } = useAuth();
@@ -87,7 +118,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             let accumulatedMetrics: MonthlyMetrics = {
                 activeDrivers: 0,
                 availableSeats: 0,
-                co2SavedKg: 0,
+                co2SavedKg: null,
                 participationRate: 0,
                 reservedSeats: 0,
                 seatOccupancyRate: 0,
@@ -105,9 +136,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                     const mRef = doc(db, "companies", companyData.id, "month", mId, "metrics", "summary");
                     const mSnap = await getDoc(mRef);
                     if (mSnap.exists()) {
-                        const data = mSnap.data() as MonthlyMetrics;
+                        const data = normalizeMonthlyMetrics(mSnap.data());
                         accumulatedMetrics.totalTravels += (data.totalTravels || 0);
-                        accumulatedMetrics.co2SavedKg += (data.co2SavedKg || 0);
+                        if (typeof data.co2SavedKg === "number") {
+                            accumulatedMetrics.co2SavedKg = (accumulatedMetrics.co2SavedKg ?? 0) + data.co2SavedKg;
+                        }
                         accumulatedMetrics.reservedSeats += (data.reservedSeats || 0);
                         accumulatedMetrics.activeDrivers += (data.activeDrivers || 0);
                         // For rates, we use averages or the latest month's value depending on preference
@@ -124,7 +157,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 const travelsRef = collection(db, "companies", companyData.id, "month", targetMonth, "travels");
                 const travelsSnap = await getDocs(travelsRef);
                 
-                setMonthlyMetrics(metricsSnap.exists() ? (metricsSnap.data() as MonthlyMetrics) : null);
+                setMonthlyMetrics(metricsSnap.exists() ? normalizeMonthlyMetrics(metricsSnap.data()) : null);
                 setTravels(travelsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
             }
 

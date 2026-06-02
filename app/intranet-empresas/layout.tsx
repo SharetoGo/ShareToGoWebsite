@@ -68,11 +68,9 @@ export default function DefaultLayout({ children }: { children: React.ReactNode 
 
   return (
     <AuthProvider>
-      <DashboardProvider>
-        <IntranetShell>
-          {children}
-        </IntranetShell>
-      </DashboardProvider>
+      <IntranetShell>
+        {children}
+      </IntranetShell>
     </AuthProvider>
   )
 }

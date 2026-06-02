@@ -7,7 +7,7 @@ export function AnalyticsHub({
   totalCo2,
   onViewAnalytics,
 }: {
-  totalCo2: number;
+  totalCo2: number | null;
   onViewAnalytics: () => void;
 }) {
   const router = useRouter();
@@ -50,21 +50,6 @@ export function AnalyticsHub({
         </div>
 
         {/* Mini Stat Card */}
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 w-full">
-            <div className="p-2 bg-[#9dd187] rounded-lg">
-              <Leaf size={16} className="text-[#2a2c38]" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                Ahorro Mensual
-              </p>
-              <p className="text-xl font-black text-white">
-                {totalCo2.toFixed(0)} <span className="text-xs font-medium text-gray-500">kg CO₂e</span>
-              </p>
-            </div>
-          </div>
-        </div>
 
         <div className="mt-auto pt-4">
           <button

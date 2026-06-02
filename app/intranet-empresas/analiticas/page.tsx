@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/intranet-empresas/providers/AuthContext";
 import { db } from "@/lib/firebase";
 import {
   collection,
-  getDocs,
   doc,
-  getDoc,
-  setDoc,
-  serverTimestamp,
+  onSnapshot,
 } from "firebase/firestore";
+import type { Unsubscribe } from "firebase/firestore";
 import { Card } from "@/components/ui/card";
 import { CompanyGoals } from "@/components/dashboard/widgets/company-goals";
 import {
@@ -54,12 +53,6 @@ import {
    CONSTANTS
    ═══════════════════════════════════════════════════════════ */
 
-/** Average one-way commute in km — used for CO₂ estimation. */
-const AVG_COMMUTE_KM = 15;
-
-/** kg of CO₂ avoided per km per replaced car trip. */
-const CO2_KG_PER_KM = 0.21;
-
 const MONTH_NAMES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
   "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
@@ -80,18 +73,6 @@ const TRAVEL_MODE_CONFIG = {
 
 type TravelMode = "car" | "walking" | "bicycle" | "e_scooter" | "public_transport";
 
-interface TravelDoc {
-  id: string;
-  userId: string;
-  carSeatsAvailable: number;
-  carSeatsTaken: number;
-  reservedBy: string[];
-  travelMode?: TravelMode;
-  /** Per-travel CO₂ already computed by the mobile app (kg). Falls back to estimation if missing. */
-  co2SavedKg?: number;
-  totalCo2SavedKg?: number;
-}
-
 interface MonthlyMetric {
   /** "YYYY-MM" — used for sorting and Firestore queries */
   month: string;
@@ -99,7 +80,7 @@ interface MonthlyMetric {
   monthLabel: string;
   totalTravels: number;
   totalTrips: number;
-  co2: number;
+  savedCo2: number | null;
   occupancy: number;
   participationRate: number;
   activeDrivers: number;
@@ -111,263 +92,153 @@ interface MonthlyMetric {
   travelModeBreakdown: Record<TravelMode, number>;
 }
 
+interface AnalyticsCacheEntry {
+  data: MonthlyMetric[];
+  selectedMonth: string;
+}
+
+const analyticsCache = new Map<string, AnalyticsCacheEntry>();
+
 /* ═══════════════════════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════════════════════ */
-
-function toYearMonth(d: Date): string {
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
 
 function toMonthLabel(yearMonth: string): string {
   const [year, month] = yearMonth.split("-");
   return `${MONTH_NAMES[parseInt(month, 10) - 1]} ${year}`;
 }
 
-/* ═══════════════════════════════════════════════════════════
-   METRIC COMPUTATION
-   Source:  /companies/{id}/month/{YYYY-MM}/travels/{travelId}
-   Target:  /companies/{id}/month/{YYYY-MM}/metrics/summary
-   ═══════════════════════════════════════════════════════════ */
+function getSummarySavedCo2(data: any): number | null {
+  if (typeof data.co2SavedKg === "number") return data.co2SavedKg;
+  if (typeof data.savedco2 === "number") return data.savedco2;
+  if (typeof data.savedCo2 === "number") return data.savedCo2;
+  if (typeof data.savedCO2 === "number") return data.savedCO2;
+  return null;
+}
 
-/**
- * Computes all KPIs for a given month from its travel subcollection
- * and writes (or refreshes) metrics/summary.
- *
- * Rules:
- *  - Past months  → skip if summary already exists (data is final).
- *                   Pass forceRecompute=true to override (e.g. after a bug fix).
- *  - Current month → skip if summary was already written today.
- */
-async function computeAndSaveMetrics(
-  companyId: string,
-  yearMonth: string,
-  memberIds: string[],
-  forceRecompute = false,
-): Promise<void> {
-  const summaryRef = doc(
-    db,
-    "companies", companyId,
-    "month", yearMonth,
-    "metrics", "summary",
-  );
-
-  const now = new Date();
-  const currentYM = toYearMonth(now);
-  const isPastMonth = yearMonth < currentYM;
-
-  const existing = await getDoc(summaryRef);
-  if (existing.exists() && !forceRecompute) {
-    if (isPastMonth) return; // Past months are immutable — never recompute.
-
-    // Current month: skip only if already computed today.
-    const computedAt = existing.data()?.computedAt;
-    if (computedAt) {
-      const computed: Date = computedAt.toDate ? computedAt.toDate() : new Date(computedAt);
-      const sameDay =
-        computed.getFullYear() === now.getFullYear() &&
-        computed.getMonth() === now.getMonth() &&
-        computed.getDate() === now.getDate();
-      if (sameDay) return;
-    }
-  }
-
-  // ── Fetch travels for this specific month ──────────────────────
-  const travelsSnap = await getDocs(
-    collection(db, "companies", companyId, "month", yearMonth, "travels"),
-  );
-
-  const travels: TravelDoc[] = travelsSnap.docs.map(d => ({
-    id: d.id,
-    ...(d.data() as Omit<TravelDoc, "id">),
-  }));
-
-  // ── Aggregate ──────────────────────────────────────────────────
-  const driverIds = new Set<string>();
-  const passengerIds = new Set<string>();
-  let reservedSeats = 0;
-  let availableSeats = 0;
-  let co2SumKg = 0;
-
-  const ALL_MODES: TravelMode[] = ["car", "walking", "bicycle", "e_scooter", "public_transport"];
-  const travelModeBreakdown: Record<TravelMode, number> = {
-    car: 0, walking: 0, bicycle: 0, e_scooter: 0, public_transport: 0,
+function summaryToMonthlyMetric(yearMonth: string, data: any): MonthlyMetric {
+  return {
+    month: yearMonth,
+    monthLabel: toMonthLabel(yearMonth),
+    totalTravels: data.totalTravels ?? 0,
+    totalTrips: data.totalTrips ?? 0,
+    savedCo2: getSummarySavedCo2(data),
+    occupancy: data.seatOccupancyRate ?? 0,
+    participationRate: data.participationRate ?? 0,
+    activeDrivers: data.activeDrivers ?? 0,
+    totalUsers: data.totalUsers ?? 0,
+    availableSeats: data.availableSeats ?? 0,
+    reservedSeats: data.reservedSeats ?? 0,
+    newDrivers: data.newDrivers ?? 0,
+    travelModeBreakdown: data.travelModeBreakdown ?? {
+      car: 0, walking: 0, bicycle: 0, e_scooter: 0, public_transport: 0,
+    },
   };
-
-  for (const t of travels) {
-    const capacity = t.carSeatsAvailable ?? 0;
-    const reserved = Array.isArray(t.reservedBy) ? t.reservedBy.length : 0;
-
-    reservedSeats += reserved;
-    availableSeats += Math.max(capacity, 0);
-
-    // Prefer the co2 value already stored on the travel document (computed by the app).
-    // Fall back to the estimation formula only when it is absent.
-    const travelCo2 =
-      t.totalCo2SavedKg ?? t.co2SavedKg ?? reserved * AVG_COMMUTE_KM * CO2_KG_PER_KM;
-    co2SumKg += travelCo2;
-
-    if (t.userId) driverIds.add(t.userId);
-    if (Array.isArray(t.reservedBy)) {
-      t.reservedBy.forEach(uid => passengerIds.add(uid));
-    }
-
-    const mode = t.travelMode && ALL_MODES.includes(t.travelMode) ? t.travelMode : "car";
-    travelModeBreakdown[mode] += 1;
-  }
-
-  const totalTravels = travels.length;
-  /** totalTrips = number of seat reservations made this month (one per passenger per ride). */
-  const totalTrips = reservedSeats;
-  const co2SavedKg = parseFloat(co2SumKg.toFixed(2));
-  const seatOccupancyRate = availableSeats > 0
-    ? parseFloat(((reservedSeats / availableSeats) * 100).toFixed(2))
-    : 0;
-
-  const uniqueParticipants = new Set([...driverIds, ...passengerIds]);
-  const totalMembers = memberIds.length;
-  const participationRate = totalMembers > 0
-    ? parseFloat(((uniqueParticipants.size / totalMembers) * 100).toFixed(2))
-    : 0;
-
-  // ── New drivers: those who never posted before this month ──────
-  const monthsSnap = await getDocs(collection(db, "companies", companyId, "month"));
-  const priorMonths = monthsSnap.docs
-    .map(d => d.id)
-    .filter(id => /^\d{4}-\d{2}$/.test(id) && id < yearMonth);
-
-  const historicDrivers = new Set<string>();
-  for (const m of priorMonths) {
-    const prevSnap = await getDoc(
-      doc(db, "companies", companyId, "month", m, "metrics", "summary"),
-    );
-    if (prevSnap.exists()) {
-      const prevData = prevSnap.data();
-      if (Array.isArray(prevData?.driverIds)) {
-        prevData.driverIds.forEach((uid: string) => historicDrivers.add(uid));
-      }
-    }
-  }
-
-  let newDrivers = 0;
-  driverIds.forEach(uid => { if (!historicDrivers.has(uid)) newDrivers++; });
-
-  // ── Write summary ──────────────────────────────────────────────
-  await setDoc(summaryRef, {
-    totalTravels,
-    totalTrips,
-    availableSeats,
-    reservedSeats,
-    co2SavedKg,
-    seatOccupancyRate,
-    participationRate,
-    activeDrivers: driverIds.size,
-    totalUsers: totalMembers,
-    newDrivers,
-    travelModeBreakdown,
-    // Stored so future months can detect "new drivers" accurately
-    driverIds: Array.from(driverIds),
-    computedAt: serverTimestamp(),
-  });
 }
 
 /* ═══════════════════════════════════════════════════════════
    COMPONENT
    ═══════════════════════════════════════════════════════════ */
 
-export default function AnalyticsPage({
-  setActiveTab,
-}: {
-  setActiveTab: (tab: string) => void;
-}) {
+export default function AnalyticsPage() {
+  const router = useRouter();
   const { companyData } = useAuth();
 
-  const [loading, setLoading] = useState(true);
-  const [allMonthlyData, setAllMonthlyData] = useState<MonthlyMetric[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string>(""); // "YYYY-MM"
+  const cachedAnalytics = companyData?.id ? analyticsCache.get(companyData.id) : undefined;
+  const [loading, setLoading] = useState(!cachedAnalytics);
+  const [allMonthlyData, setAllMonthlyData] = useState<MonthlyMetric[]>(cachedAnalytics?.data ?? []);
+  const [selectedMonth, setSelectedMonth] = useState<string>(cachedAnalytics?.selectedMonth ?? ""); // "YYYY-MM"
   const [compareMonth, setCompareMonth] = useState<string>("");  // "YYYY-MM"
   const [heroTooltip, setHeroTooltip] = useState(false);
 
-  /* ─────────────────────────────────────────────────────────
-     FETCH  ·  discovers all months from DB, ensures metrics
-     exist for each, then loads every summary into state
-  ───────────────────────────────────────────────────────── */
-
-  const fetchAnalytics = useCallback(async () => {
-    if (!companyData?.id) return;
-
-    try {
-      setLoading(true);
-
-      const companyId = companyData.id;
-      const memberIds = companyData.membersIds || [];
-
-      // 1. Discover all month sub-documents under this company
-      const monthsSnap = await getDocs(
-        collection(db, "companies", companyId, "month"),
-      );
-
-      const monthIds: string[] = monthsSnap.docs
-        .map(d => d.id)
-        .filter(id => /^\d{4}-\d{2}$/.test(id)) // guard stray docs
-        .sort(); // oldest → newest (lexicographic "YYYY-MM" is correct)
-
-      if (monthIds.length === 0) {
-        setLoading(false);
-        return;
-      }
-
-      // 2. For each month: ensure metrics/summary exists, then read it
-      const data: MonthlyMetric[] = [];
-
-      for (const yearMonth of monthIds) {
-        // Compute metrics if the summary is missing or stale
-        await computeAndSaveMetrics(companyId, yearMonth, memberIds);
-
-        const summarySnap = await getDoc(
-          doc(db, "companies", companyId, "month", yearMonth, "metrics", "summary"),
-        );
-
-        if (!summarySnap.exists()) continue;
-
-        const m = summarySnap.data();
-
-        data.push({
-          month: yearMonth,
-          monthLabel: toMonthLabel(yearMonth),
-          totalTravels: m.totalTravels ?? 0,
-          totalTrips: m.totalTrips ?? 0,
-          co2: m.co2SavedKg ?? 0,
-          occupancy: m.seatOccupancyRate ?? 0,
-          participationRate: m.participationRate ?? 0,
-          activeDrivers: m.activeDrivers ?? 0,
-          totalUsers: m.totalUsers ?? 0,
-          availableSeats: m.availableSeats ?? 0,
-          reservedSeats: m.reservedSeats ?? 0,
-          newDrivers: m.newDrivers ?? 0,
-          travelModeBreakdown: m.travelModeBreakdown ?? {
-            car: 0, walking: 0, bicycle: 0, e_scooter: 0, public_transport: 0,
-          },
-        });
-      }
-
-      // Selector: most recent first
-      const sorted = [...data].sort((a, b) => b.month.localeCompare(a.month));
-      setAllMonthlyData(sorted);
-      console.log("All monthly data:", sorted);
-
-      // Default selected month = most recent
-      if (sorted.length > 0) setSelectedMonth(sorted[0].month);
-    } catch (err) {
-      console.error("Error loading analytics:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [companyData?.id, companyData?.membersIds]);
-
   useEffect(() => {
-    fetchAnalytics();
-  }, [fetchAnalytics]);
+    if (!companyData?.id) {
+      setLoading(false);
+      return;
+    }
+
+    const companyId = companyData.id;
+    const cached = analyticsCache.get(companyId);
+    if (cached) {
+      setAllMonthlyData(cached.data);
+      setSelectedMonth(cached.selectedMonth);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+
+    const summaryUnsubs = new Map<string, Unsubscribe>();
+    const summariesByMonth = new Map<string, MonthlyMetric>();
+    cached?.data.forEach(metric => summariesByMonth.set(metric.month, metric));
+
+    const publishData = () => {
+      const sorted = [...summariesByMonth.values()].sort((a, b) => b.month.localeCompare(a.month));
+
+      setAllMonthlyData(sorted);
+      setSelectedMonth(current => {
+        const nextSelected = current && sorted.some(m => m.month === current)
+          ? current
+          : sorted[0]?.month ?? "";
+
+        analyticsCache.set(companyId, {
+          data: sorted,
+          selectedMonth: nextSelected,
+        });
+
+        return nextSelected;
+      });
+      setLoading(false);
+    };
+
+    const monthsUnsub = onSnapshot(
+      collection(db, "companies", companyId, "month"),
+      monthsSnap => {
+        const monthIds = monthsSnap.docs
+          .map(d => d.id)
+          .filter(id => /^\d{4}-\d{2}$/.test(id));
+        const monthIdSet = new Set(monthIds);
+
+        for (const [monthId, unsub] of summaryUnsubs) {
+          if (!monthIdSet.has(monthId)) {
+            unsub();
+            summaryUnsubs.delete(monthId);
+            summariesByMonth.delete(monthId);
+          }
+        }
+
+        for (const monthId of monthIds) {
+          if (summaryUnsubs.has(monthId)) continue;
+
+          const summaryRef = doc(db, "companies", companyId, "month", monthId, "metrics", "summary");
+          const summaryUnsub = onSnapshot(summaryRef, summarySnap => {
+            if (summarySnap.exists()) {
+              summariesByMonth.set(monthId, summaryToMonthlyMetric(monthId, summarySnap.data()));
+            } else {
+              summariesByMonth.delete(monthId);
+            }
+            publishData();
+          }, err => {
+            console.error(`Error listening analytics summary ${monthId}:`, err);
+            setLoading(false);
+          });
+
+          summaryUnsubs.set(monthId, summaryUnsub);
+        }
+
+        if (monthIds.length === 0) publishData();
+      },
+      err => {
+        console.error("Error listening analytics months:", err);
+        setLoading(false);
+      },
+    );
+
+    return () => {
+      monthsUnsub();
+      summaryUnsubs.forEach(unsub => unsub());
+      summaryUnsubs.clear();
+    };
+  }, [companyData?.id]);
 
   if (!companyData) return null;
 
@@ -382,9 +253,9 @@ export default function AnalyticsPage({
     : null;
 
   // Accumulated totals across ALL months (impact header only)
+  const hasCo2Data = allMonthlyData.some(m => typeof m.savedCo2 === "number" && Number.isFinite(m.savedCo2));
   const totalCo2Accumulated = allMonthlyData.reduce((s, m) => {
-    // Ensure m.co2 is a valid positive number
-    const val = typeof m.co2 === 'number' ? m.co2 : 0;
+    const val = typeof m.savedCo2 === "number" ? m.savedCo2 : 0;
     return s + val;
   }, 0);
 
@@ -459,11 +330,25 @@ export default function AnalyticsPage({
     return num === 0 ? "0" : `${value}${suffix}`;
   };
 
+  const displayOptionalNumber = (
+    value: number | null | undefined,
+    fractionDigits = 0,
+    suffix = "",
+  ) => (
+    typeof value === "number" && Number.isFinite(value)
+      ? displayValue(value.toFixed(fractionDigits), suffix)
+      : "-"
+  );
+
   const calculateTrend = (current: number, previous: number) => {
     if (previous === 0) return { value: "0", isPositive: true };
     const change = ((current - previous) / previous) * 100;
     return { value: Math.abs(change).toFixed(1), isPositive: change >= 0 };
   };
+
+  const hasMetricNumber = (value: number | null | undefined): value is number => (
+    typeof value === "number" && Number.isFinite(value)
+  );
 
   /* ═══════════════════════════════════════════════════════════
      RENDER
@@ -592,7 +477,7 @@ export default function AnalyticsPage({
               <p className="text-4xl font-black text-white">
                 {loading
                   ? <Loader2 className="w-7 h-7 animate-spin" />
-                  : displayValue(currentMonthData?.co2.toFixed(0) ?? 0, " kg")}
+                  : displayOptionalNumber(currentMonthData?.savedCo2, 0, " kg")}
               </p>
             </div>
             <div>
@@ -600,7 +485,7 @@ export default function AnalyticsPage({
               <p className="text-4xl font-black text-[#9dd187]">
                 {loading
                   ? <Loader2 className="w-7 h-7 animate-spin" />
-                  : displayValue(totalCo2Accumulated.toFixed(0), " kg")}
+                  : hasCo2Data ? displayValue(totalCo2Accumulated.toFixed(0), " kg") : "-"}
               </p>
             </div>
             <div>
@@ -608,9 +493,11 @@ export default function AnalyticsPage({
               <p className="text-4xl font-black text-white">
                 {loading
                   ? <Loader2 className="w-7 h-7 animate-spin" />
-                  : companyData.co2Target && companyData.co2Target > 0
-                    ? `${((totalCo2Accumulated / companyData.co2Target) * 100).toFixed(0)}%`
-                    : <span className="text-sm text-gray-500">Sin meta definida</span>}
+                  : !hasCo2Data
+                    ? "-"
+                    : companyData.co2Target && companyData.co2Target > 0
+                      ? `${((totalCo2Accumulated / companyData.co2Target) * 100).toFixed(0)}%`
+                      : <span className="text-sm text-gray-500">Sin meta definida</span>}
               </p>
             </div>
           </div>
@@ -647,10 +534,12 @@ export default function AnalyticsPage({
               {
                 label: "CO₂e Evitado",
                 icon: <Leaf className="w-4 h-4 text-green-600" />,
-                curr: currentMonthData.co2.toFixed(0),
-                prev: compareMonthData.co2.toFixed(0),
+                curr: displayOptionalNumber(currentMonthData.savedCo2),
+                prev: displayOptionalNumber(compareMonthData.savedCo2),
                 suffix: "kg",
-                trend: calculateTrend(currentMonthData.co2, compareMonthData.co2),
+                trend: hasMetricNumber(currentMonthData.savedCo2) && hasMetricNumber(compareMonthData.savedCo2)
+                  ? calculateTrend(currentMonthData.savedCo2, compareMonthData.savedCo2)
+                  : null,
               },
               {
                 label: "Trayectos",
@@ -684,17 +573,21 @@ export default function AnalyticsPage({
                 </div>
                 <div className="flex items-baseline gap-1.5 mb-2">
                   <p className="text-3xl font-black text-[#2a2c38]">{item.curr}</p>
-                  {item.suffix && <span className="text-sm text-gray-400">{item.suffix}</span>}
+                  {item.suffix && item.curr !== "-" && <span className="text-sm text-gray-400">{item.suffix}</span>}
                 </div>
                 <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                  <span className="text-xs text-gray-400">vs {item.prev}{item.suffix}</span>
-                  <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${item.trend.isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                    }`}>
-                    {item.trend.isPositive
-                      ? <ArrowUpRight className="w-3 h-3" />
-                      : <ArrowDownRight className="w-3 h-3" />}
-                    {item.trend.value}%
-                  </div>
+                  <span className="text-xs text-gray-400">vs {item.prev}{item.prev !== "-" ? item.suffix : ""}</span>
+                  {item.trend ? (
+                    <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full ${item.trend.isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                      }`}>
+                      {item.trend.isPositive
+                        ? <ArrowUpRight className="w-3 h-3" />
+                        : <ArrowDownRight className="w-3 h-3" />}
+                      {item.trend.value}%
+                    </div>
+                  ) : (
+                    <span className="text-xs font-bold text-gray-300 px-2 py-1">-</span>
+                  )}
                 </div>
               </div>
             ))}
@@ -774,7 +667,7 @@ export default function AnalyticsPage({
           <h3 className="text-4xl font-black text-[#2a2c38]">
             {loading
               ? <Loader2 className="w-6 h-6 animate-spin text-gray-300" />
-              : displayValue(currentMonthData?.co2.toFixed(0) ?? 0)}
+              : displayOptionalNumber(currentMonthData?.savedCo2)}
           </h3>
           <p className="text-xs text-gray-600 mt-2 font-medium">kilogramos este mes</p>
         </Card>
@@ -801,16 +694,16 @@ export default function AnalyticsPage({
                   {currentMonthData?.monthLabel ?? "Seleccionado"}
                 </p>
                 <p className="text-2xl font-black text-white">
-                  {displayValue(currentMonthData?.co2.toFixed(0) ?? 0)}
-                  <span className="text-sm font-medium text-gray-500 ml-1">kg</span>
+                  {displayOptionalNumber(currentMonthData?.savedCo2)}
+                  {hasMetricNumber(currentMonthData?.savedCo2) && <span className="text-sm font-medium text-gray-500 ml-1">kg</span>}
                 </p>
               </div>
               <div className="w-px bg-gray-700" />
               <div className="text-right">
                 <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Acumulado</p>
                 <p className="text-2xl font-black text-[#9dd187]">
-                  {displayValue(totalCo2Accumulated.toFixed(0))}
-                  <span className="text-sm font-medium text-gray-500 ml-1">kg</span>
+                  {hasCo2Data ? displayValue(totalCo2Accumulated.toFixed(0)) : "-"}
+                  {hasCo2Data && <span className="text-sm font-medium text-gray-500 ml-1">kg</span>}
                 </p>
               </div>
               <div className="w-px bg-gray-700" />
@@ -828,16 +721,14 @@ export default function AnalyticsPage({
                         <div className="flex items-start gap-2">
                           <Car className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
                           <div>
-                            <p className="font-semibold text-white mb-1">¿Cómo se calcula?</p>
+                            <p className="font-semibold text-white mb-1">Fuente del dato</p>
                             <p className="text-gray-400 leading-relaxed">
-                              Cada plaza reservada reemplaza un coche en carretera.
-                              Se asume {AVG_COMMUTE_KM} km por trayecto y{" "}
-                              <span className="text-[#9dd187] font-bold">{CO2_KG_PER_KM} kg CO₂/km</span>.
+                              El CO₂e evitado se lee del resumen mensual guardado.
                               Un coche medio emite ~192 kg/mes, por lo que{" "}
                               <span className="text-[#9dd187] font-bold">
-                                {Math.floor(totalCo2Accumulated / 192)} coches
+                                {hasCo2Data ? Math.floor(totalCo2Accumulated / 192) : "-"} coches
                               </span>{" "}
-                              equivalen a {totalCo2Accumulated.toFixed(0)} kg fuera de carretera un mes.
+                              equivalen a {hasCo2Data ? totalCo2Accumulated.toFixed(0) : "-"} kg fuera de carretera un mes.
                             </p>
                           </div>
                         </div>
@@ -849,8 +740,8 @@ export default function AnalyticsPage({
                   </div>
                 </div>
                 <p className="text-2xl font-black text-white">
-                  {displayValue(Math.floor(totalCo2Accumulated / 192))}
-                  <span className="text-sm font-medium text-gray-500 ml-1">coches/mes</span>
+                  {hasCo2Data ? displayValue(Math.floor(totalCo2Accumulated / 192)) : "-"}
+                  {hasCo2Data && <span className="text-sm font-medium text-gray-500 ml-1">coches/mes</span>}
                 </p>
               </div>
             </div>
@@ -862,7 +753,7 @@ export default function AnalyticsPage({
             <div className="h-64 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
             </div>
-          ) : chartData.length > 0 ? (
+          ) : hasCo2Data ? (
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
@@ -881,7 +772,7 @@ export default function AnalyticsPage({
                     formatter={(value: number) => [`${value} kg`, "CO₂e evitado"]}
                   />
                   <Area
-                    type="monotone" dataKey="co2" stroke="#9dd187" strokeWidth={3}
+                    type="monotone" dataKey="savedCo2" stroke="#9dd187" strokeWidth={3}
                     fill="url(#colorCo2Hero)"
                     dot={{ r: 5, fill: "#9dd187", strokeWidth: 0 }}
                     activeDot={{ r: 7, fill: "#9dd187", stroke: "#1a1c26", strokeWidth: 3 }}
@@ -896,11 +787,13 @@ export default function AnalyticsPage({
       </div>
 
       {/* Company Goals */}
-      <CompanyGoals
-        co2Target={companyData.co2Target || undefined}
-        totalCo2={totalCo2Accumulated}
-        onViewSettings={() => setActiveTab("settings")}
-      />
+      {hasCo2Data && (
+        <CompanyGoals
+          co2Target={companyData.co2Target || undefined}
+          totalCo2={totalCo2Accumulated}
+          onViewSettings={() => router.push("/intranet-empresas/ajustes")}
+        />
+      )}
 
       {/* ══════════════════════════════════════════
           TREND CHARTS  (all months, chronological)
@@ -1393,9 +1286,8 @@ export default function AnalyticsPage({
           <div>
             <p className="text-sm font-bold text-[#2a2c38] mb-1">Acerca de estos datos</p>
             <p className="text-xs text-gray-600 leading-relaxed">
-              Cada mes se calcula de forma independiente a partir de los trayectos guardados.
-              El CO₂ se estima con {AVG_COMMUTE_KM} km de trayecto medio y {CO2_KG_PER_KM} kg CO₂/km por plaza reservada.
-              Los meses pasados se computan una única vez. Los valores &quot;-&quot; indican ausencia de datos.
+              Cada mes se muestra exclusivamente a partir del documento metrics/summary guardado.
+              Los valores &quot;-&quot; indican ausencia de datos en el resumen mensual.
             </p>
           </div>
         </div>
