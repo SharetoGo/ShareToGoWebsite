@@ -2,12 +2,12 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth"
 import { collection, query, where, getDocs } from "firebase/firestore"
 import { auth, db } from "@/lib/firebase"
 import Image from "next/image"
 import Link from "next/link"
-import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, Globe } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck, Globe, CheckCircle2 } from "lucide-react"
 
 export default function AuthPage() {
   const [email, setEmail] = useState("")
@@ -19,48 +19,70 @@ export default function AuthPage() {
   const [forgotEmail, setForgotEmail] = useState("")
   const [reason, setReason] = useState("")
   const [sending, setSending] = useState(false)
+  const [resetSent, setResetSent] = useState(false)
   const router = useRouter()
 
-// Inside handleLogin function
-const handleLogin = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
+  // Inside handleLogin function
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    const user = userCredential.user;
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    // Find all companies where this user is an admin
-    const q = query(collection(db, 'companies'), where("adminIds", "array-contains", user.uid));
-    const snap = await getDocs(q);
+      // Find all companies where this user is an admin
+      const q = query(collection(db, 'companies'), where("adminIds", "array-contains", user.uid));
+      const snap = await getDocs(q);
 
-    if (snap.empty) {
-      setError("No tienes permisos de administrador.");
-      await auth.signOut();
-      return;
+      if (snap.empty) {
+        setError("No tienes permisos de administrador.");
+        await auth.signOut();
+        return;
+      }
+
+      const companies = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Logic: If user is admin of "SharetoGo" (SuperAdmin) OR has multiple companies
+      const isSuperAdmin = companies.some((c: any) => c.name === "SharetoGo");
+
+      if (isSuperAdmin || companies.length > 1) {
+        // Redirect to the new selection bubble page
+        router.push("/intranet-empresas/seleccion");
+      } else {
+        // Just one company, go straight to dashboard
+        // We'll store the companyId in localStorage so the Layout knows which one to load
+        localStorage.setItem('selectedCompanyId', companies[0].id);
+        router.push("/intranet-empresas");
+      }
+    } catch (err) {
+      setError("Credenciales inválidas.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const companies = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
-    // Logic: If user is admin of "SharetoGo" (SuperAdmin) OR has multiple companies
-    const isSuperAdmin = companies.some((c: any) => c.name === "SharetoGo");
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) return;
 
-    if (isSuperAdmin || companies.length > 1) {
-      // Redirect to the new selection bubble page
-      router.push("/intranet-empresas/seleccion");
-    } else {
-      // Just one company, go straight to dashboard
-      // We'll store the companyId in localStorage so the Layout knows which one to load
-      localStorage.setItem('selectedCompanyId', companies[0].id);
-      router.push("/intranet-empresas");
+    setSending(true);
+    try {
+      await sendPasswordResetEmail(auth, forgotEmail);
+      setResetSent(true);
+      // Automatically close after 3 seconds
+      setTimeout(() => {
+        setShowForgotForm(false);
+        setResetSent(false);
+        setForgotEmail("");
+      }, 4000);
+    } catch (err: any) {
+      alert("Error: No pudimos encontrar una cuenta con ese correo.");
+    } finally {
+      setSending(false);
     }
-  } catch (err) {
-    setError("Credenciales inválidas.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleForgotSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -163,8 +185,13 @@ const handleLogin = async (e: React.FormEvent) => {
             <div className="space-y-2">
               <div className="flex justify-between items-center px-1">
                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Contraseña</label>
-                <button type="button" onClick={() => setShowForgotForm(true)} className="text-[10px] font-black uppercase tracking-widest text-[#9dd187] hover:underline">¿Olvidaste tu clave?</button>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => setShowForgotForm(true)}
+                  className="text-[10px] font-black uppercase tracking-widest text-[#9dd187] hover:underline"
+                >
+                  ¿Deseas cambiar tu clave?
+                </button>              </div>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#9dd187] transition-colors" size={18} />
                 <input
@@ -193,7 +220,7 @@ const handleLogin = async (e: React.FormEvent) => {
 
             <button
               type="submit"
-              disabled={loading} 
+              disabled={loading}
               className="w-full py-4 px-6 bg-[#2a2c38] text-white rounded-2xl font-black uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:bg-black hover:shadow-xl hover:shadow-[#2a2c38]/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               {loading ? "Verificando..." : "Entrar al Panel"}
@@ -210,80 +237,61 @@ const handleLogin = async (e: React.FormEvent) => {
         </div>
       </div>
 
-      {/* Modal de recuperación */}
+      {/* RE-DESIGNED PASSWORD RESET MODAL */}
       {showForgotForm && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6 relative">
-            <h3 className="text-xl font-semibold text-[#2a2c38] text-center mb-4">
-              Recuperar acceso
-            </h3>
-            <form onSubmit={handleForgotSubmit} className="space-y-4">
-              <input
-                type="email"
-                placeholder="Tu correo electrónico"
-                value={forgotEmail}
-                onChange={(e) => setForgotEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-[#9dd187]/70 focus:border-[#9dd187] outline-none"
-                required
-              />
+        <div className="fixed inset-0 bg-[#2a2c38]/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-md p-8 relative border border-white/20 animate-in fade-in zoom-in duration-300">
+            {!resetSent ? (
+              <>
+                <div className="text-center mb-8">
+                  <div className="w-16 h-16 bg-[#9dd187]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Lock className="text-[#9dd187]" size={32} />
+                  </div>
+                  <h3 className="text-2xl font-black text-[#2a2c38]">Seguridad de Cuenta</h3>
+                  <p className="text-gray-500 text-sm mt-2">Introduce tu email corporativo para recibir un enlace de cambio de contraseña.</p>
+                </div>
 
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 cursor-pointer">
+                <form onSubmit={handlePasswordReset} className="space-y-4">
                   <input
-                    type="radio"
-                    name="reason"
-                    value="Necesito una nueva contraseña"
-                    checked={reason === "Necesito una nueva contraseña"}
-                    onChange={(e) => setReason(e.target.value)}
-                    className="text-[#9dd187] focus:ring-[#9dd187]"
+                    type="email"
+                    placeholder="nombre@empresa.com"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-5 py-4 focus:bg-white focus:border-[#9dd187] outline-none transition-all"
+                    required
                   />
-                  <span>Necesito una nueva contraseña</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="reason"
-                    value="He olvidado mi contraseña"
-                    checked={reason === "He olvidado mi contraseña"}
-                    onChange={(e) => setReason(e.target.value)}
-                    className="text-[#9dd187] focus:ring-[#9dd187]"
-                  />
-                  <span>He olvidado mi contraseña</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="reason"
-                    value="Mi cuenta está bloqueada"
-                    checked={reason === "Mi cuenta está bloqueada"}
-                    onChange={(e) => setReason(e.target.value)}
-                    className="text-[#9dd187] focus:ring-[#9dd187]"
-                  />
-                  <span>Mi cuenta está bloqueada</span>
-                </label>
-              </div>
 
-              <div className="flex justify-between gap-4 mt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowForgotForm(false)}
-                  className="flex-1 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={sending}
-                  className={`flex-1 py-2 rounded-md text-white transition ${
-                    sending
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-[#9dd187] hover:bg-[#8bc475]"
-                  }`}
-                >
-                  {sending ? "Enviando..." : "Enviar"}
-                </button>
+                  <div className="flex flex-col gap-3 mt-6">
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      className="w-full py-4 bg-[#2a2c38] text-white rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-black transition-all disabled:opacity-50"
+                    >
+                      {sending ? "Enviando enlace..." : "Enviar enlace de recuperación"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotForm(false)}
+                      className="w-full py-4 text-gray-400 font-bold text-xs uppercase tracking-widest hover:text-gray-600 transition-colors"
+                    >
+                      Volver
+                    </button>
+                  </div>
+                </form>
+              </>
+            ) : (
+              <div className="text-center py-8 animate-in zoom-in duration-500">
+                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle2 className="text-emerald-500" size={48} />
+                </div>
+                <h3 className="text-2xl font-black text-[#2a2c38] mb-2">¡Email Enviado!</h3>
+                <p className="text-gray-500 leading-relaxed">
+                  Hemos enviado un enlace seguro a <br />
+                  <span className="font-bold text-[#2a2c38]">{forgotEmail}</span>
+                </p>
+                <p className="text-xs text-gray-400 mt-6 italic">Esta ventana se cerrará automáticamente...</p>
               </div>
-            </form>
+            )}
           </div>
         </div>
       )}
