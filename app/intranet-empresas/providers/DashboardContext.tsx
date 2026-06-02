@@ -109,11 +109,29 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             setLoading(true);
             setError(null);
 
-            // 1. Get all available month IDs
+            // 1. Get month IDs that have a metrics/summary document
             const monthsRef = collection(db, "companies", companyData.id, "month");
             const monthsSnap = await getDocs(query(monthsRef, orderBy("__name__", "desc")));
-            const monthsList = monthsSnap.docs.map(d => d.id);
+            const monthIds = monthsSnap.docs.map(d => d.id);
+            const summariesByMonth = new Map<string, MonthlyMetrics>();
+
+            for (const mId of monthIds) {
+                const mRef = doc(db, "companies", companyData.id, "month", mId, "metrics", "summary");
+                const mSnap = await getDoc(mRef);
+                if (mSnap.exists()) {
+                    summariesByMonth.set(mId, normalizeMonthlyMetrics(mSnap.data()));
+                }
+            }
+
+            const monthsList = monthIds.filter(mId => summariesByMonth.has(mId));
             setAvailableMonths(["all", ...monthsList]);
+
+            if (targetMonth !== "all" && !summariesByMonth.has(targetMonth)) {
+                setSelectedMonth("all");
+                setMonthlyMetrics(null);
+                setTravels([]);
+                return;
+            }
 
             let accumulatedMetrics: MonthlyMetrics = {
                 activeDrivers: 0,
@@ -133,10 +151,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
                 // --- ACCUMULATION LOGIC ---
                 // We loop through every month and sum the metrics
                 for (const mId of monthsList) {
-                    const mRef = doc(db, "companies", companyData.id, "month", mId, "metrics", "summary");
-                    const mSnap = await getDoc(mRef);
-                    if (mSnap.exists()) {
-                        const data = normalizeMonthlyMetrics(mSnap.data());
+                    const data = summariesByMonth.get(mId);
+                    if (data) {
                         accumulatedMetrics.totalTravels += (data.totalTravels || 0);
                         if (typeof data.co2SavedKg === "number") {
                             accumulatedMetrics.co2SavedKg = (accumulatedMetrics.co2SavedKg ?? 0) + data.co2SavedKg;
