@@ -10,7 +10,7 @@ import ClientI18nProvider from "@/components/ClientI18nProvider";
 import ConditionalFooterWrapper from "../components/common/ConditionalFooterWrapper";
 
 export const metadata: Metadata = {
-  title: "SharetoGo - Plataforma de coche compartido para empresas",
+  title: "SharetoGo - Impulsamos la movilidad sostenible en tu empresa",
   description:
     "Impulsa la movilidad sostenible en tu empresa con SharetoGo, la plataforma que permite a los empleados compartir coche y registrar trayectos sostenibles, mientras la empresa obtiene datos ESG verificables sobre su movilidad.",
   keywords: [
