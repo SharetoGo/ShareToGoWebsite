@@ -121,13 +121,11 @@ export default function AuthPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#2a2c38]/10 blur-[120px] rounded-full" />
 
       <div className="relative z-10 w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 bg-white/80 backdrop-blur-xl shadow-[0_32px_64px_-12px_rgba(0,0,0,0.1)] rounded-[2.5rem] overflow-hidden border border-white/20">
-
         {/* Left Side: Visual/Marketing (Hidden on mobile) */}
         <div className="hidden lg:flex flex-col justify-between p-12 bg-[#2a2c38] text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 p-12 opacity-10">
             <Globe size={300} className="text-[#9dd187]" />
           </div>
-
           <div className="relative z-10">
             <Image
               src="/logos/side_logo.png"
