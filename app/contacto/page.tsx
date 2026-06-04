@@ -100,7 +100,8 @@ export default function Contacto() {
                 </div>
                 <div>
                   <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Email</p>
-                  <p className="text-[#2a2c38] font-medium text-sm">{t("co_info_email_value")}</p>
+                  <p className="text-[#3f424e] font-medium text-sm">mario@sharetogo.es</p>
+                  <p className="text-[#3f424e] font-medium text-sm">{t("co_info_email_value")}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100">

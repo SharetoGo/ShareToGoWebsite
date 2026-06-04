@@ -310,6 +310,7 @@ export default function Contratar() {
                     </div>
                     <div className="flex items-center gap-3">
                       <Mail size={20} className="text-[#9dd187]" />
+                      <span>mario@sharetogo.es</span>
                       <span>{t("ct_contact_email")}</span>
                     </div>
                     <div className="flex items-center gap-3">
